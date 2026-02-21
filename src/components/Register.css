@@ -1,0 +1,23 @@
+/* src/components/Register.css */
+.terms-checkbox {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.terms-checkbox label {
+    font-size: 14px;
+}
+
+.terms-checkbox a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.terms-checkbox a:hover {
+    text-decoration: underline;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

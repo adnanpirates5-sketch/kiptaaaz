@@ -1,0 +1,57 @@
+/* src/components/Modal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it's on top of other content */
+}
+
+.modal-content {
+    background-color: #111;  /* Set the modal background to black */
+    color: #ffd700;  /* Set the text color to white */
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative; /* Needed for positioning the close button */
+}
+
+.close-btn {
+    background-color: transparent;
+    color: #ffd700;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close-btn:hover {
+    background-color: darkred;
+}
+
+/* Styling for the Terms and Conditions text inside the modal */
+.modal-content p {
+    color: #ffd700;  /* Change the text color of the terms to yellow */
+}
+
+/* Styling for the "Terms and Conditions" link */
+.terms-link {
+    color: #ffd700;  /* Change the color of the link text to yellow */
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
