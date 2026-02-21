@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import TermsConditions from "./components/TermsConditions";
 import ForgotPassword from "./components/ForgotPassword";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [page, setPage] = useState("home");
@@ -28,6 +29,7 @@ function App() {
             onSwitchToRegister={() => setPage("register")}
             onBackHome={() => setPage("home")}
             onForgotPassword={() => setPage("forgot")}
+            onLoginSuccess={() => setPage("dashboard")}
           />
         )}
 
@@ -35,13 +37,16 @@ function App() {
           <Register
             onSwitchToLogin={() => setPage("login")}
             onBackHome={() => setPage("home")}
+            onRegisterSuccess={() => setPage("dashboard")}
           />
         )}
 
         {page === "forgot" && (
-          <ForgotPassword
-            onBackToLogin={() => setPage("login")}
-          />
+          <ForgotPassword onBackToLogin={() => setPage("login")} />
+        )}
+
+        {page === "dashboard" && (
+          <Dashboard onLogout={() => setPage("home")} />
         )}
 
         <Routes>

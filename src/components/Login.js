@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 
-const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword }) => {
+const Login = ({
+  onSwitchToRegister,
+  onBackHome,
+  onForgotPassword,
+  onLoginSuccess
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Logged in as: ${email}`);
+    alert("Login successful");
+    onLoginSuccess();
   };
 
   return (

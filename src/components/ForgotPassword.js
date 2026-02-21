@@ -1,30 +1,28 @@
 import React, { useState } from "react";
 
 const ForgotPassword = ({ onBackToLogin }) => {
-  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Recovery link sent to: ${recoveryEmail}`);
+    alert("Recovery link sent to " + email);
   };
 
   return (
     <div className="form-card">
-      <h2 className="form-title">Recover Your Account</h2>
+      <h2 className="form-title">Recover Account</h2>
 
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Recovery Email Address"
+          placeholder="Recovery Email"
           className="input-field"
-          value={recoveryEmail}
-          onChange={(e) => setRecoveryEmail(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
 
-        <button type="submit" className="start-btn">
-          Send Recovery Link
-        </button>
+        <button className="start-btn">Send Recovery Link</button>
       </form>
 
       <p className="switch-text">
