@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Login = ({ onSwitchToRegister, onBackHome }) => {
+const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,6 +36,10 @@ const Login = ({ onSwitchToRegister, onBackHome }) => {
           Login
         </button>
       </form>
+
+      <p className="switch-text">
+        <span onClick={onForgotPassword}>Forgot Password?</span>
+      </p>
 
       <p className="switch-text">
         Don't have an account?{" "}
