@@ -1,8 +1,8 @@
 import React from "react";
 
-const BalanceSummary = ({ income, expenses }) => {
+const BalanceSummary = ({ totalIncome, expenses }) => {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const balance = income - totalExpenses;
+  const balance = totalIncome - totalExpenses;
 
   return (
     <div className="summary-cards">
@@ -12,7 +12,7 @@ const BalanceSummary = ({ income, expenses }) => {
       </div>
       <div className="card income">
         <h3>Income</h3>
-        <p>৳ {income}</p>
+        <p>৳ {totalIncome}</p>
       </div>
       <div className="card expenses">
         <h3>Expenses</h3>

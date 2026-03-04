@@ -293,3 +293,42 @@
 .expense-form h3 {
   color: black !important;
 }
+.income-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.income-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.income-list li button {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.summaries-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.summaries-row > * {
+  flex: 1;
+  min-width: 300px;
+}
+.category-summary h3 {
+  color: #ffd700 !important;  /* bright yellow */
+}
+.dashboard-container .income-list h3,
+.dashboard-container .expense-list h3 {
+  color: #ffd700;
+}
