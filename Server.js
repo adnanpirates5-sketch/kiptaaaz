@@ -1,15 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // ফ্রন্টএন্ড থেকে ডাটা নেওয়ার জন্য এটি দরকার
+const cors = require('cors');
 
 const app = express();
-app.use(express.json()); // JSON ডাটা বোঝার জন্য
+
+// Middleware
+app.use(express.json());
 app.use(cors());
 
-// ডাটাবেস কানেকশন
-mongoose.connect(process.env.MONGO_URI)
+// Database Connection
+// সরাসরি কানেকশন স্ট্রিং ব্যবহার করা হয়েছে যাতে .env ফাইল নিয়ে সমস্যা না হয়
+mongoose.connect('mongodb://127.0.0.1:27017/kiptaaaz_db')
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log("Connection Error:", err));
+  .catch(err => console.error("Connection Error:", err));
 
 app.listen(5000, () => console.log("Server running on port 5000"));
