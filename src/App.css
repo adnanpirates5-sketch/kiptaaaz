@@ -332,3 +332,33 @@
 .dashboard-container .expense-list h3 {
   color: #ffd700;
 }
+
+.category-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(40, 40, 40, 0.85);
+  color: #ffd700;
+  transition: 0.2s;
+}
+
+.category-item:hover {
+  transform: scale(1.05);
+  background: rgba(60, 60, 60, 0.85);
+}
+
+.category-item.selected {
+  background: #ffd700;
+  color: #121212;
+  font-weight: bold;
+}

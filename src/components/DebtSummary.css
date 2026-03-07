@@ -1,0 +1,16 @@
+.card.expenses {
+  background-color: #f44336;
+}
+
+.card.income {
+  background-color: #2196f3;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+}
+
+.card p {
+  font-size: 1.5em;
+  font-weight: bold;
+}
