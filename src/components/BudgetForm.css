@@ -1,0 +1,22 @@
+.budget-form input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.budget-form button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.budget-form button:hover {
+  background: #45a049;
+}

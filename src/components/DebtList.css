@@ -1,0 +1,29 @@
+.debt-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.debt-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  background: #282828;
+  color: #ffd700;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.debt-list li button {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.debt-list li button:hover {
+  background: #d32f2f;
+}
