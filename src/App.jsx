@@ -61,7 +61,11 @@ function App() {
         )}
 
         {page === "dashboard" && (
-          <Dashboard onLogout={() => setPage("home")} />
+          <Dashboard onLogout={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setPage("home");
+          }} />
         )}
 
         {page === "about" && (

@@ -25,10 +25,10 @@ export const translations = {
     register: 'Register',
     haveAccount: 'Already have an account? Login here',
     agreeTerms: 'I agree to the Terms and Conditions',
-    // Dashboard
-    dashboard: 'Dashboard',
-    logout: 'Logout',
-    // Add more as needed
+    // Forgot Password
+    recoverAccount: 'Recover Account',
+    recoveryEmail: 'Recovery Email',
+    sendRecoveryLink: 'Send Recovery Link',
   },
   bn: {
     // Navbar
@@ -56,9 +56,9 @@ export const translations = {
     register: 'রেজিস্টার',
     haveAccount: 'ইতিমধ্যে অ্যাকাউন্ট আছে? এখানে লগইন করুন',
     agreeTerms: 'আমি শর্তাবলীতে সম্মত',
-    // Dashboard
-    dashboard: 'ড্যাশবোর্ড',
-    logout: 'লগআউট',
-    // Add more as needed
+    // Forgot Password
+    recoverAccount: 'অ্যাকাউন্ট পুনরুদ্ধার',
+    recoveryEmail: 'পুনরুদ্ধার ইমেইল',
+    sendRecoveryLink: 'পুনরুদ্ধার লিঙ্ক পাঠান',
   }
 };

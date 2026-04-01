@@ -11,10 +11,35 @@ const Login = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Login successful");
-    onLoginSuccess();
+
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store token
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        alert(data.message);
+        onLoginSuccess();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert('Login failed: ' + err.message);
+    }
   };
 
   return (

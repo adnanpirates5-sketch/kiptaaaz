@@ -11,14 +11,37 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isChecked) {
       alert("You must agree to the Terms and Conditions.");
       return;
     }
-    alert("Account created successfully");
-    onRegisterSuccess();
+
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        onRegisterSuccess();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert('Registration failed: ' + err.message);
+    }
   };
 
   return (
