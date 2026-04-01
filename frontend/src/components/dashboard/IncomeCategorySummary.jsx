@@ -1,9 +1,11 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { useCurrency } from "../theme/useCurrency";
 
 const COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#FF5722", "#607D8B"];
 
 const IncomeCategorySummary = ({ incomes }) => {
+  const { currency } = useCurrency();
   const categoryTotals = incomes.reduce((acc, inc) => {
     acc[inc.category] = (acc[inc.category] || 0) + inc.amount;
     return acc;
@@ -28,7 +30,7 @@ const IncomeCategorySummary = ({ incomes }) => {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={(entry) => `${entry.name}: ৳ ${entry.value}`}
+            label={(entry) => `${entry.name}: ${currency} ${entry.value}`}
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
@@ -37,7 +39,7 @@ const IncomeCategorySummary = ({ incomes }) => {
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => `৳ ${value}`} />
+          <Tooltip formatter={(value) => `${currency} ${value}`} />
           <Legend />
         </PieChart>
       </div>
@@ -45,7 +47,7 @@ const IncomeCategorySummary = ({ incomes }) => {
         {data.map((cat) => (
           <li key={cat.name}>
             <span>{cat.name}</span>
-            <span>৳ {cat.value}</span>
+            <span>{currency} {cat.value}</span>
           </li>
         ))}
       </ul>

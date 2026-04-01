@@ -1,9 +1,11 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { useCurrency } from "../theme/useCurrency";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28DFF", "#FF6B6B"];
 
 const CategorySummary = ({ expenses }) => {
+  const { currency } = useCurrency();
   // Group expenses by category
   const categoryTotals = expenses.reduce((acc, exp) => {
     acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
@@ -30,7 +32,7 @@ const CategorySummary = ({ expenses }) => {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={(entry) => `${entry.name}: ৳ ${entry.value}`}
+            label={(entry) => `${entry.name}: ${currency} ${entry.value}`}
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
@@ -39,7 +41,7 @@ const CategorySummary = ({ expenses }) => {
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => `৳ ${value}`} />
+          <Tooltip formatter={(value) => `${currency} ${value}`} />
           <Legend />
         </PieChart>
       </div>
@@ -47,7 +49,7 @@ const CategorySummary = ({ expenses }) => {
         {data.map((cat) => (
           <li key={cat.name}>
             <span>{cat.name}</span>
-            <span>৳ {cat.value}</span>
+            <span>{currency} {cat.value}</span>
           </li>
         ))}
       </ul>

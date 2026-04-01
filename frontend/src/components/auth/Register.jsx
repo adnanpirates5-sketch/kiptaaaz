@@ -91,7 +91,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
         </div>
 
         <button type="submit" className="start-btn" disabled={!isChecked}>
-          {t('register')}
+          {t('registerBtn')}
         </button>
       </form>
 

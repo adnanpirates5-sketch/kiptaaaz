@@ -1,7 +1,9 @@
 import React from "react";
+import { useCurrency } from "../theme/useCurrency";
 import "./DebtList.css";
 
 const DebtList = ({ debts, onDeleteDebt }) => {
+  const { currency } = useCurrency();
   if (debts.length === 0) return <p>No debts or lendings added yet.</p>;
 
   return (
@@ -13,7 +15,7 @@ const DebtList = ({ debts, onDeleteDebt }) => {
             <span>
               {item.type === "debt" ? "Owe to" : "Lent to"} {item.name}
             </span>
-            <span>৳ {item.amount}</span>
+            <span>{currency} {item.amount}</span>
             <button onClick={() => onDeleteDebt(item.id)}>Delete</button>
           </li>
         ))}

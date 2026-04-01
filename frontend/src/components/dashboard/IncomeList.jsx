@@ -1,6 +1,8 @@
 import React from "react";
+import { useCurrency } from "../theme/useCurrency";
 
 const IncomeList = ({ incomes, onDeleteIncome }) => {
+  const { currency } = useCurrency();
   if (incomes.length === 0) {
     return <p>No income added yet.</p>;
   }
@@ -12,7 +14,7 @@ const IncomeList = ({ incomes, onDeleteIncome }) => {
         {incomes.map((inc) => (
           <li key={inc.id}>
             <span>{inc.category}</span>
-            <span>৳ {inc.amount}</span>
+            <span>{currency} {inc.amount}</span>
             {onDeleteIncome && (
               <button onClick={() => onDeleteIncome(inc.id)}>Delete</button>
             )}

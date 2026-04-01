@@ -66,7 +66,7 @@ const Login = ({
         />
 
         <button type="submit" className="start-btn">
-          {t('login')}
+          {t('loginBtn')}
         </button>
       </form>
 

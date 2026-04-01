@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useTranslation } from "../theme/TranslationContext";
+import CategoryModal from "./CategoryModal";
 
 const categories = [
   { name: "Salary", icon: "💰" },
@@ -19,8 +21,10 @@ const categories = [
 ];
 
 const IncomeForm = ({ onAddIncome }) => {
+  const { t } = useTranslation();
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,32 +37,32 @@ const IncomeForm = ({ onAddIncome }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form income-form">
-      <h3>Add Income</h3>
+    <>
+      <form onSubmit={handleSubmit} className="form income-form">
+        <h3>{t('addIncome')}</h3>
 
-      <div className="category-grid">
-        {categories.map((cat) => (
-          <div
-            key={cat.name}
-            className={`category-item ${category === cat.name ? "selected" : ""}`}
-            onClick={() => setCategory(cat.name)}
-          >
-            <span className="icon">{cat.icon}</span>
-            <span>{cat.name}</span>
-          </div>
-        ))}
-      </div>
+        <button type="button" className="select-category-btn" onClick={() => setIsModalOpen(true)}>
+          {category || t('selectCategory')}
+        </button>
 
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        min="0"
-        step="0.01"
+        <input
+          type="number"
+          placeholder={t('amount')}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          min="0"
+          step="0.01"
+          required
+        />
+        <button type="submit">{t('addIncome')}</button>
+      </form>
+      <CategoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        categories={categories}
+        onSelectCategory={setCategory}
       />
-      <button type="submit">Add Income</button>
-    </form>
+    </>
   );
 };
 

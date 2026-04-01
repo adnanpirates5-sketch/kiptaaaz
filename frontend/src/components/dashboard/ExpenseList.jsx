@@ -1,6 +1,8 @@
 import React from "react";
+import { useCurrency } from "../theme/useCurrency";
 
 const ExpenseList = ({ expenses, onDeleteExpense }) => {
+  const { currency } = useCurrency();
   if (expenses.length === 0) {
     return <p>No expenses added yet.</p>;
   }
@@ -12,7 +14,7 @@ const ExpenseList = ({ expenses, onDeleteExpense }) => {
         {expenses.map((exp) => (
           <li key={exp.id}>
             <span>{exp.category}</span>
-            <span>৳ {exp.amount}</span>
+            <span>{currency} {exp.amount}</span>
             <button onClick={() => onDeleteExpense(exp.id)}>Delete</button>
           </li>
         ))}

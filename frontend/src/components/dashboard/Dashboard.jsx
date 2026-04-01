@@ -5,8 +5,6 @@ import IncomeForm from "./IncomeForm";
 import ExpenseForm from "./ExpenseForm";
 import IncomeList from "./IncomeList";
 import ExpenseList from "./ExpenseList";
-import CategorySummary from "./CategorySummary";
-import IncomeCategorySummary from "./IncomeCategorySummary";
 
 import DebtForm from "./DebtForm";
 import DebtList from "./DebtList";
@@ -14,10 +12,17 @@ import DebtSummary from "./DebtSummary";
 
 import BudgetForm from "./BudgetForm";
 import BudgetSummary from "./BudgetSummary";
+
+import Profile from "./Profile";
+import Stats from "./Stats";
+import Settings from "./Settings";
+
 import { useTranslation } from "../theme/TranslationContext";
 
 const Dashboard = ({ onLogout }) => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   // Existing states
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -79,36 +84,73 @@ const Dashboard = ({ onLogout }) => {
 
   return (
     <div className="dashboard-container">
-      <h2>Expense Dashboard</h2>
-
-      {/* Summary Cards */}
-      <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
-
-      {/* Forms */}
-      <div className="forms-row">
-        <IncomeForm onAddIncome={addIncome} />
-        <ExpenseForm onAddExpense={addExpense} />
-        <DebtForm onAddDebt={addDebt} />
-        <BudgetForm budget={budget} setBudget={setBudget} />
+      <div className="dashboard-header">
+        <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+          ☰
+        </button>
+        <h2>Expense Dashboard</h2>
       </div>
+      <div className="dashboard-main">
+        <div className={`dashboard-sidebar ${sidebarOpen ? 'open' : ''}`}>
+          <h3>Menu</h3>
+          <button className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => { setActiveTab('dashboard'); setSidebarOpen(false); }}>Dashboard</button>
+          <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => { setActiveTab('profile'); setSidebarOpen(false); }}>Profile</button>
+          <button className={activeTab === 'stats' ? 'active' : ''} onClick={() => { setActiveTab('stats'); setSidebarOpen(false); }}>Stats</button>
+          <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }}>Settings</button>
+        </div>
+        <div className="dashboard-content">
+          {activeTab === 'dashboard' && (
+            <>
+              <h2>{t('expenseDashboard')}</h2>
 
-      {/* Lists */}
-      <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
-      <ExpenseList expenses={expenses} onDeleteExpense={deleteExpense} />
-      <DebtList debts={debts} onDeleteDebt={deleteDebt} />
+              {/* Summary Cards */}
+              <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
 
-      {/* Category Summaries */}
-      <div className="summaries-row">
-        <IncomeCategorySummary incomes={incomes} />
-        <CategorySummary expenses={expenses} />
-        <DebtSummary debts={debts} />
-        <BudgetSummary budget={budget} expenses={expenses} />
+              {/* Forms */}
+              <div className="forms-row">
+                <IncomeForm onAddIncome={addIncome} />
+                <ExpenseForm onAddExpense={addExpense} />
+                <DebtForm onAddDebt={addDebt} />
+                <BudgetForm budget={budget} setBudget={setBudget} />
+              </div>
+
+              {/* Lists */}
+              <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
+              <ExpenseList expenses={expenses} onDeleteExpense={deleteExpense} />
+              <DebtList debts={debts} onDeleteDebt={deleteDebt} />
+
+              {/* Category Summaries */}
+              <div className="summaries-row">
+                <DebtSummary debts={debts} />
+                <BudgetSummary budget={budget} expenses={expenses} />
+              </div>
+
+              {/* Logout */}
+              <button className="logout-btn" onClick={onLogout}>
+                {t('logout')}
+              </button>
+            </>
+          )}
+          {activeTab === 'profile' && (
+            <>
+              <h2>{t('profileTitle')}</h2>
+              <Profile />
+            </>
+          )}
+          {activeTab === 'stats' && (
+            <>
+              <h2>{t('statsTitle')}</h2>
+              <Stats incomes={incomes} expenses={expenses} />
+            </>
+          )}
+          {activeTab === 'settings' && (
+            <>
+              <h2>{t('settingsTitle')}</h2>
+              <Settings onLogout={onLogout} />
+            </>
+          )}
+        </div>
       </div>
-
-      {/* Logout */}
-      <button className="logout-btn" onClick={onLogout}>
-        {t('logout')}
-      </button>
     </div>
   );
 };

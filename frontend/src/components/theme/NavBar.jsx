@@ -1,9 +1,11 @@
 import React from 'react';
 import './NavBar.css'; // We'll create this CSS file
 import { useTranslation } from './TranslationContext';
+import { useTheme } from './ThemeContext';
 
-const NavBar = ({ onNavigate, theme, onThemeToggle, language, onLanguageToggle }) => {
-  const { t } = useTranslation();
+const NavBar = ({ onNavigate }) => {
+  const { t, language, toggleLanguage } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className={`navbar ${theme}`}>
@@ -16,10 +18,10 @@ const NavBar = ({ onNavigate, theme, onThemeToggle, language, onLanguageToggle }
         </ul>
         <h1 className="navbar-logo">Kipta</h1>
         <div className="navbar-switches">
-          <button className="switch-btn theme-switch" onClick={onThemeToggle}>
+          <button className="switch-btn theme-switch" onClick={toggleTheme}>
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
-          <button className="switch-btn lang-switch" onClick={onLanguageToggle}>
+          <button className="switch-btn lang-switch" onClick={toggleLanguage}>
             {language === 'en' ? 'EN' : 'BN'}
           </button>
         </div>

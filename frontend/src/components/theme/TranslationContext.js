@@ -1,13 +1,23 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { translations } from './translations';
 
 const TranslationContext = createContext();
 
-export const TranslationProvider = ({ language, children }) => {
+export const TranslationProvider = ({ children }) => {
+  const [language, setLanguage] = useState(localStorage.getItem('language') || 'en');
+
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'bn' : 'en');
+  };
+
   const t = (key) => translations[language][key] || key;
 
   return (
-    <TranslationContext.Provider value={{ t }}>
+    <TranslationContext.Provider value={{ t, language, toggleLanguage }}>
       {children}
     </TranslationContext.Provider>
   );
