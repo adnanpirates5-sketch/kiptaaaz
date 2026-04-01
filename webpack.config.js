@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js', // The entry point of your app
+  entry: './frontend/src/index.js', // The entry point of your app
   output: {
     path: path.resolve(__dirname, 'dist'), // Output folder
     filename: 'bundle.js', // Output file name
@@ -27,11 +27,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html', // Template for the HTML file
+      template: './frontend/public/index.html', // Template for the HTML file
     }),
   ],
   devServer: {
-    static: path.join(__dirname, 'public'), // Use 'static' instead of 'contentBase'
+    static: path.join(__dirname, 'frontend/public'), // Use 'static' instead of 'contentBase'
     compress: true,
     port: 9000, // Port for the dev server
   },
