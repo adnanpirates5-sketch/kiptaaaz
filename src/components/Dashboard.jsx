@@ -14,8 +14,10 @@ import DebtSummary from "./DebtSummary";
 
 import BudgetForm from "./BudgetForm";
 import BudgetSummary from "./BudgetSummary";
+import { useTranslation } from "../contexts/TranslationContext";
 
 const Dashboard = ({ onLogout }) => {
+  const { t } = useTranslation();
   // Existing states
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -105,7 +107,7 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Logout */}
       <button className="logout-btn" onClick={onLogout}>
-        Logout
+        {t('logout')}
       </button>
     </div>
   );

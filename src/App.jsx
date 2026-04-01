@@ -11,14 +11,26 @@ import ForgotPassword from "./components/ForgotPassword";
 import Dashboard from "./components/Dashboard";
 import NavBar from "./components/NavBar";
 import AboutUs from "./components/AboutUs";
+import { useTheme } from "./hooks/useTheme";
+import { useLanguage } from "./hooks/useLanguage";
+import { TranslationProvider } from "./contexts/TranslationContext";
 
 function App() {
   const [page, setPage] = useState("home");
+  const { theme, toggleTheme } = useTheme();
+  const { language, toggleLanguage } = useLanguage();
 
   return (
-    <BrowserRouter>
-      <div className="app-wrapper">
-        <NavBar onNavigate={setPage} />
+    <TranslationProvider language={language}>
+      <BrowserRouter>
+        <div className={`app-wrapper ${theme}`}>
+          <NavBar 
+            onNavigate={setPage} 
+            theme={theme} 
+            onThemeToggle={toggleTheme}
+            language={language}
+            onLanguageToggle={toggleLanguage}
+          />
 
         {page === "home" && (
           <>
@@ -62,6 +74,7 @@ function App() {
 
       </div>
     </BrowserRouter>
+  </TranslationProvider>
   );
 }
 

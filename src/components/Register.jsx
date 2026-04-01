@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import "./Register.css";
+import { useTranslation } from "../contexts/TranslationContext";
 
 const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,12 +23,12 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
 
   return (
     <div className="form-card">
-      <h2 className="form-title">Create Account</h2>
+      <h2 className="form-title">{t('createAccount')}</h2>
 
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Full Name"
+          placeholder={t('fullName')}
           className="input-field"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -35,7 +37,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t('email')}
           className="input-field"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -44,7 +46,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t('password')}
           className="input-field"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -58,7 +60,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
               checked={isChecked}
               onChange={() => setIsChecked(!isChecked)}
             />
-            I agree to the{" "}
+            {t('agreeTerms')}{" "}
             <span className="terms-link" onClick={() => setIsModalOpen(true)}>
               Terms and Conditions
             </span>
@@ -66,17 +68,16 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
         </div>
 
         <button type="submit" className="start-btn" disabled={!isChecked}>
-          Register
+          {t('register')}
         </button>
       </form>
 
       <p className="switch-text">
-        Already have an account?{" "}
-        <span onClick={onSwitchToLogin}>Login</span>
+        {t('haveAccount')}
       </p>
 
       <p className="switch-text">
-        <span onClick={onBackHome}>Back to Home</span>
+        <span onClick={onBackHome}>{t('backToHome')}</span>
       </p>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

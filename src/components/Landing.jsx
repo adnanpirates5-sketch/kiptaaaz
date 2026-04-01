@@ -1,14 +1,17 @@
 import React from "react";
+import { useTranslation } from "../contexts/TranslationContext";
 
 const Landing = ({ onGetStarted }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="app-card">
-      <h1 className="app-title">Welcome to Kipta</h1>
+      <h1 className="app-title">{t('welcome')}</h1>
       <p className="app-subtitle">
-        Track your expenses. Understand your spending.
+        {t('subtitle')}
       </p>
       <button className="start-btn" onClick={onGetStarted}>
-        Get Started
+        {t('getStarted')}
       </button>
     </div>
   );
