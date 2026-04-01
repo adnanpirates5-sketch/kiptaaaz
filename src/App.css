@@ -6,6 +6,7 @@
   color: #e0e0e0;
   scroll-behavior: smooth;
   padding: 20px;
+  margin-top: 4rem; /* Adjust for fixed navbar */
 }
 
 .app-card {

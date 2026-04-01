@@ -9,6 +9,8 @@ import Register from "./components/Register";
 import TermsConditions from "./components/TermsConditions";
 import ForgotPassword from "./components/ForgotPassword";
 import Dashboard from "./components/Dashboard";
+import NavBar from "./components/NavBar";
+import AboutUs from "./components/AboutUs";
 
 function App() {
   const [page, setPage] = useState("home");
@@ -16,6 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-wrapper">
+        <NavBar onNavigate={setPage} />
 
         {page === "home" && (
           <>
@@ -47,6 +50,10 @@ function App() {
 
         {page === "dashboard" && (
           <Dashboard onLogout={() => setPage("home")} />
+        )}
+
+        {page === "about" && (
+          <AboutUs />
         )}
 
         <Routes>
