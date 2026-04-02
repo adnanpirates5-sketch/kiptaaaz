@@ -17,6 +17,13 @@ import { TranslationProvider } from "./components/theme/TranslationContext";
 function App() {
   const [page, setPage] = useState("home");
 
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setPage("dashboard");
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <TranslationProvider>

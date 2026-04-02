@@ -12,6 +12,7 @@ import BudgetManager from "./BudgetManager";
 import DebtForm from "./DebtForm";
 import DebtList from "./DebtList";
 import DebtSummary from "./DebtSummary";
+import { financeAPI } from "../../api";
 
 const Dashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -22,68 +23,113 @@ const Dashboard = ({ onLogout }) => {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [debts, setDebts] = useState([]);
-  const [budgets, setBudgets] = useState(
-    JSON.parse(localStorage.getItem("budgets")) || []
-  );
+  const [budgets, setBudgets] = useState([]);
 
-  // Load from localStorage on mount
+  // Load from API on mount
   useEffect(() => {
-    const savedIncomes = localStorage.getItem("incomes");
-    const savedExpenses = localStorage.getItem("expenses");
-    const savedDebts = localStorage.getItem("debts");
-    const savedBudgets = localStorage.getItem("budgets");
-    const savedUser = localStorage.getItem('user');
-
-    if (savedIncomes) setIncomes(JSON.parse(savedIncomes));
-    if (savedExpenses) setExpenses(JSON.parse(savedExpenses));
-    if (savedDebts) setDebts(JSON.parse(savedDebts));
-    if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
+    const fetchData = async () => {
+      try {
+        const [incomesRes, expensesRes, debtsRes, budgetsRes] = await Promise.all([
+          financeAPI.getIncomes(),
+          financeAPI.getExpenses(),
+          financeAPI.getDebts(),
+          financeAPI.getBudgets()
+        ]);
+        
+        setIncomes(incomesRes.data);
+        setExpenses(expensesRes.data);
+        setDebts(debtsRes.data);
+        setBudgets(budgetsRes.data);
+        
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) setUser(JSON.parse(savedUser));
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
     
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    } else {
-      setUser({ name: "User", email: "" });
-    }
+    fetchData();
   }, []);
 
-  // Save to localStorage whenever state changes
-  useEffect(() => {
-    localStorage.setItem("incomes", JSON.stringify(incomes));
-  }, [incomes]);
-
-  useEffect(() => {
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-  }, [expenses]);
-
-  useEffect(() => {
-    localStorage.setItem("debts", JSON.stringify(debts));
-  }, [debts]);
-
-  useEffect(() => {
-    localStorage.setItem("budgets", JSON.stringify(budgets));
-  }, [budgets]);
-
   // Handlers
-  const addIncome = (income) => setIncomes((prev) => [...prev, { ...income, id: Date.now() }]);
-  const addExpense = (expense) => setExpenses((prev) => [...prev, { ...expense, id: Date.now() }]);
-  const addDebt = (debt) => setDebts((prev) => [...prev, { ...debt, id: Date.now() }]);
-
-  const deleteIncome = (id) => setIncomes((prev) => prev.filter((inc) => inc.id !== id));
-  const deleteExpense = (id) => setExpenses((prev) => prev.filter((exp) => exp.id !== id));
-  const deleteDebt = (id) => setDebts((prev) => prev.filter((d) => d.id !== id));
-
-  const addBudget = (budget) => {
-    setBudgets((prev) => {
-      const existing = prev.find(b => b.category === budget.category);
-      if (existing) {
-        return prev.map(b => b.category === budget.category ? { ...b, amount: budget.amount } : b);
-      } else {
-        return [...prev, { ...budget, id: Date.now() }];
-      }
-    });
+  const addIncome = async (income) => {
+    try {
+      const res = await financeAPI.addIncome(income);
+      setIncomes((prev) => [...prev, res.data]);
+    } catch (err) {
+      console.error("Error adding income:", err);
+    }
   };
 
-  const deleteBudget = (category) => setBudgets((prev) => prev.filter((b) => b.category !== category));
+  const addExpense = async (expense) => {
+    try {
+      const res = await financeAPI.addExpense(expense);
+      setExpenses((prev) => [...prev, res.data]);
+    } catch (err) {
+      console.error("Error adding expense:", err);
+    }
+  };
+
+  const addDebt = async (debt) => {
+    try {
+      const res = await financeAPI.addDebt(debt);
+      setDebts((prev) => [...prev, res.data]);
+    } catch (err) {
+      console.error("Error adding debt:", err);
+    }
+  };
+
+  const deleteIncome = async (id) => {
+    try {
+      await financeAPI.deleteIncome(id);
+      setIncomes((prev) => prev.filter((inc) => (inc._id || inc.id) !== id));
+    } catch (err) {
+      console.error("Error deleting income:", err);
+    }
+  };
+
+  const deleteExpense = async (id) => {
+    try {
+      await financeAPI.deleteExpense(id);
+      setExpenses((prev) => prev.filter((exp) => (exp._id || exp.id) !== id));
+    } catch (err) {
+      console.error("Error deleting expense:", err);
+    }
+  };
+
+  const deleteDebt = async (id) => {
+    try {
+      await financeAPI.deleteDebt(id);
+      setDebts((prev) => prev.filter((d) => (d._id || d.id) !== id));
+    } catch (err) {
+      console.error("Error deleting debt:", err);
+    }
+  };
+
+  const addBudget = async (budget) => {
+    try {
+      const res = await financeAPI.addBudget(budget);
+      setBudgets((prev) => {
+        const existing = prev.find(b => b.category === budget.category);
+        if (existing) {
+          return prev.map(b => b.category === budget.category ? res.data : b);
+        } else {
+          return [...prev, res.data];
+        }
+      });
+    } catch (err) {
+      console.error("Error adding budget:", err);
+    }
+  };
+
+  const deleteBudget = async (category) => {
+    try {
+      await financeAPI.deleteBudget(category);
+      setBudgets((prev) => prev.filter((b) => b.category !== category));
+    } catch (err) {
+      console.error("Error deleting budget:", err);
+    }
+  };
 
   const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
 

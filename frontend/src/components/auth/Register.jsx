@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import "./Auth.css";
+import { authAPI } from "../../api";
 
 const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate registration
-    const userData = { name, email };
-    localStorage.setItem('token', 'fake-jwt-token');
-    localStorage.setItem('user', JSON.stringify(userData));
-    onRegisterSuccess();
+    setError("");
+    try {
+      const res = await authAPI.register({ name, email, password });
+      // Backend now returns token and user for auto-login
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      onRegisterSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed.");
+    }
   };
 
   return (
@@ -22,6 +29,8 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
           <h2>Create Account</h2>
           <p>Join Kiptaaz to start managing your finances</p>
         </div>
+        
+        {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">

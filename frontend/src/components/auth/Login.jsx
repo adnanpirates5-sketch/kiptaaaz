@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import "./Auth.css";
+import { authAPI } from "../../api";
 
 const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate login
-    // Try to get existing name from localStorage if they registered before
-    const existingUser = JSON.parse(localStorage.getItem('user'));
-    const name = (existingUser && existingUser.email === email) ? existingUser.name : email.split('@')[0];
-    
-    const userData = { name, email };
-    localStorage.setItem('token', 'fake-jwt-token');
-    localStorage.setItem('user', JSON.stringify(userData));
-    onLoginSuccess();
+    setError("");
+    try {
+      const res = await authAPI.login({ email, password });
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      onLoginSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+    }
   };
 
   return (
@@ -25,6 +27,8 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
           <h2>Welcome back</h2>
           <p>Please enter your details to sign in</p>
         </div>
+        
+        {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">

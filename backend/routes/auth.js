@@ -32,7 +32,15 @@ router.post('/register', async (req, res) => {
     });
 
     const savedUser = await user.save();
-    res.status(201).json({ message: 'User registered successfully', userId: savedUser._id });
+    
+    // Create token for auto-login
+    const token = jwt.sign({ _id: savedUser._id, email: savedUser.email }, JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(201).json({ 
+      message: 'User registered successfully', 
+      token,
+      user: { id: savedUser._id, name: savedUser.name, email: savedUser.email }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -80,8 +88,6 @@ router.post('/forgot-password', async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-    // In a real app, send email with reset link
-    // For now, just return the token (for testing)
     res.json({ message: 'Password reset token generated', resetToken });
   } catch (err) {
     res.status(500).json({ message: err.message });

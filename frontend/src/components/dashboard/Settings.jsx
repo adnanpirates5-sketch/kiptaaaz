@@ -11,9 +11,6 @@ const Settings = ({ onLogout }) => {
   const currencies = [
     { symbol: '৳', name: 'BDT' },
     { symbol: '$', name: 'USD' },
-    { symbol: '€', name: 'EUR' },
-    { symbol: '£', name: 'GBP' },
-    { symbol: '¥', name: 'JPY' },
   ];
 
   return (
