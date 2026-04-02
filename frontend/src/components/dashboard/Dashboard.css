@@ -68,6 +68,39 @@
   gap: 2rem;
 }
 
+.recent-transactions-box {
+  height: 500px; /* Fixed constant size */
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-transactions-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.description-text {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.preview-list {
+  flex: 1;
+  overflow-y: hidden;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.see-all-btn {
+  width: 100%;
+  margin-top: auto;
+}
+
 .section-card {
   height: 100%;
 }

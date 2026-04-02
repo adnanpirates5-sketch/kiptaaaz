@@ -94,13 +94,21 @@ const Dashboard = ({ onLogout }) => {
           <div className="animate-fade-in">
             <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
             <div className="dashboard-main-grid">
-              <div className="section-card premium-card">
+              <div className="section-card premium-card recent-transactions-box">
                 <div className="section-header">
                   <h3>Recent Transactions</h3>
                 </div>
-                <div className="summaries-row">
-                  <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
-                  <ExpenseList expenses={expenses} onDeleteExpense={deleteExpense} />
+                <div className="recent-transactions-content">
+                  <p className="description-text">
+                    Monitor your latest financial activities. You can view, manage, and track all your income and expense entries in detail.
+                  </p>
+                  <div className="preview-list">
+                    <IncomeList incomes={incomes.slice(-2)} />
+                    <ExpenseList expenses={expenses.slice(-2)} />
+                  </div>
+                  <button className="premium-btn secondary see-all-btn" onClick={() => setActiveTab("transactions")}>
+                    See All Transactions
+                  </button>
                 </div>
               </div>
               <div className="transaction-forms-container">
@@ -116,6 +124,25 @@ const Dashboard = ({ onLogout }) => {
                   </div>
                   <ExpenseForm onAddExpense={addExpense} />
                 </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "transactions":
+        return (
+          <div className="animate-fade-in">
+            <div className="section-header" style={{ marginBottom: '2rem' }}>
+              <button className="premium-btn secondary" onClick={() => setActiveTab("overview")} style={{ padding: '0.5rem 1rem' }}>
+                ← Back to Overview
+              </button>
+              <h2 className="premium-title" style={{ margin: 0, fontSize: '1.75rem' }}>All Transactions</h2>
+            </div>
+            <div className="dashboard-main-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+              <div className="section-card premium-card">
+                <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
+              </div>
+              <div className="section-card premium-card">
+                <ExpenseList expenses={expenses} onDeleteExpense={deleteExpense} />
               </div>
             </div>
           </div>
@@ -163,6 +190,12 @@ const Dashboard = ({ onLogout }) => {
             onClick={() => { setActiveTab('overview'); setIsSidebarOpen(false); }}
           >
             <span>🏠</span> Overview
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'transactions' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('transactions'); setIsSidebarOpen(false); }}
+          >
+            <span>📝</span> Transactions
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'stats' ? 'active' : ''}`}
