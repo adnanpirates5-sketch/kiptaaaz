@@ -2,7 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useCurrency } from "../theme/useCurrency";
 
-const COLORS = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#FF5722", "#607D8B"];
+const COLORS = ["#facc15", "#fbbf24", "#f87171", "#ef4444", "#eab308", "#ca8a04"];
 
 const IncomeCategorySummary = ({ incomes }) => {
   const { currency } = useCurrency();
