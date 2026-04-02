@@ -6,18 +6,18 @@ const Landing = ({ onGetStarted }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="landing-page">
+    <div className="landing-page animate-fade-in">
       <div className="hero-section">
         <div className="hero-container">
           <div className="hero-content">
-            <h1 className="premium-title animate-fade-in-up">
+            <h1>
               {t('welcome')}
             </h1>
-            <p className="premium-subtitle animate-fade-in-up">
+            <p>
               {t('subtitle')}
             </p>
 
-            <div className="hero-features animate-fade-in-up">
+            <div className="hero-features">
               <div className="feature-item">
                 <div className="feature-icon">📊</div>
                 <span>Smart Analytics</span>
@@ -32,19 +32,17 @@ const Landing = ({ onGetStarted }) => {
               </div>
             </div>
 
-            <div className="hero-actions animate-fade-in-up">
+            <div className="hero-actions">
               <button className="premium-btn" onClick={onGetStarted}>
-                <span className="btn-icon">🚀</span>
                 {t('getStarted')}
               </button>
-              <button className="premium-btn ghost">
-                <span className="btn-icon">📖</span>
+              <button className="premium-btn secondary">
                 Learn More
               </button>
             </div>
           </div>
 
-          <div className="hero-visual animate-slide-in-right">
+          <div className="hero-visual">
             <div className="visual-card">
               <div className="card-header">
                 <div className="avatar">💰</div>
@@ -63,16 +61,16 @@ const Landing = ({ onGetStarted }) => {
 
             <div className="floating-elements">
               <div className="floating-card card-1">
-                <span className="emoji">📈</span>
-                <span className="text">+12%</span>
+                <span>📈</span>
+                <span>+12%</span>
               </div>
               <div className="floating-card card-2">
-                <span className="emoji">💡</span>
-                <span className="text">AI Insights</span>
+                <span>💡</span>
+                <span>AI Insights</span>
               </div>
               <div className="floating-card card-3">
-                <span className="emoji">🎯</span>
-                <span className="text">Goals</span>
+                <span>🎯</span>
+                <span>Goals</span>
               </div>
             </div>
           </div>
@@ -81,15 +79,15 @@ const Landing = ({ onGetStarted }) => {
 
       <div className="stats-section">
         <div className="stats-container">
-          <div className="stat-card animate-slide-in-left">
+          <div className="stat-card">
             <div className="stat-number">10K+</div>
             <div className="stat-label">Active Users</div>
           </div>
-          <div className="stat-card animate-fade-in-up">
+          <div className="stat-card">
             <div className="stat-number">$2M+</div>
             <div className="stat-label">Money Saved</div>
           </div>
-          <div className="stat-card animate-slide-in-right">
+          <div className="stat-card">
             <div className="stat-number">4.8★</div>
             <div className="stat-label">User Rating</div>
           </div>

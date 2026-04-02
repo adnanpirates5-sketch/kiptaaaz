@@ -1,24 +1,23 @@
-import React from "react";
-import { useCurrency } from "../theme/useCurrency";
+import React from 'react';
+import './Dashboard.css';
 
-const BalanceSummary = ({ totalIncome, expenses }) => {
-  const { currency } = useCurrency();
+const BalanceSummary = ({ totalIncome = 0, expenses = [] }) => {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const balance = totalIncome - totalExpenses;
 
   return (
-    <div className="summary-cards">
-      <div className="card balance">
-        <h3>Balance</h3>
-        <p>{currency} {balance}</p>
+    <div className="summary-grid">
+      <div className="summary-card premium-card balance">
+        <h3>Total Balance</h3>
+        <p className="amount">${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
-      <div className="card income">
-        <h3>Income</h3>
-        <p>{currency} {totalIncome}</p>
+      <div className="summary-card premium-card income">
+        <h3>Total Income</h3>
+        <p className="amount">${totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
-      <div className="card expenses">
-        <h3>Expenses</h3>
-        <p>{currency} {totalExpenses}</p>
+      <div className="summary-card premium-card expenses">
+        <h3>Total Expenses</h3>
+        <p className="amount">${totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
     </div>
   );

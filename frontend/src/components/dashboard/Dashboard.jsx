@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
-
-import BalanceSummary from "./BalanceSummary";
-import IncomeForm from "./IncomeForm";
+import "./Dashboard.css";
 import ExpenseForm from "./ExpenseForm";
-import IncomeList from "./IncomeList";
+import IncomeForm from "./IncomeForm";
 import ExpenseList from "./ExpenseList";
-
+import IncomeList from "./IncomeList";
+import BalanceSummary from "./BalanceSummary";
+import Stats from "./Stats";
+import Profile from "./Profile";
+import Settings from "./Settings";
+import BudgetManager from "./BudgetManager";
 import DebtForm from "./DebtForm";
 import DebtList from "./DebtList";
 import DebtSummary from "./DebtSummary";
 
-import BudgetManager from "./BudgetManager";
-
-import Profile from "./Profile";
-import Stats from "./Stats";
-import Settings from "./Settings";
-
 const Dashboard = ({ onLogout }) => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  // Existing states
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [user, setUser] = useState({ name: "", email: "" });
+  
+  // State Management
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
-
-  // New states
   const [debts, setDebts] = useState([]);
   const [budgets, setBudgets] = useState(
     JSON.parse(localStorage.getItem("budgets")) || []
@@ -35,24 +32,21 @@ const Dashboard = ({ onLogout }) => {
     const savedExpenses = localStorage.getItem("expenses");
     const savedDebts = localStorage.getItem("debts");
     const savedBudgets = localStorage.getItem("budgets");
+    const savedUser = localStorage.getItem('user');
 
-    // Handle old single-number income if present (optional migration)
-    const oldIncome = localStorage.getItem("income");
-    if (oldIncome && !savedIncomes) {
-      const oldAmount = Number(oldIncome);
-      if (oldAmount > 0) {
-        setIncomes([{ category: "Saved Income", amount: oldAmount, id: Date.now() }]);
-      }
-    } else if (savedIncomes) {
-      setIncomes(JSON.parse(savedIncomes));
-    }
-
+    if (savedIncomes) setIncomes(JSON.parse(savedIncomes));
     if (savedExpenses) setExpenses(JSON.parse(savedExpenses));
     if (savedDebts) setDebts(JSON.parse(savedDebts));
     if (savedBudgets) setBudgets(JSON.parse(savedBudgets));
+    
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    } else {
+      setUser({ name: "User", email: "" });
+    }
   }, []);
 
-  // Save to localStorage whenever incomes, expenses, debts, or budget change
+  // Save to localStorage whenever state changes
   useEffect(() => {
     localStorage.setItem("incomes", JSON.stringify(incomes));
   }, [incomes]);
@@ -93,165 +87,139 @@ const Dashboard = ({ onLogout }) => {
 
   const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
 
-  return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <button className="hamburger-btn premium-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-          <span className="hamburger-icon">☰</span>
-        </button>
-        <h1 className="dashboard-title">Expense Dashboard</h1>
-        <div className="header-actions">
-          <div className="user-welcome">
-            <span>Welcome back!</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="dashboard-main">
-        <div className={`dashboard-sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <div className="sidebar-header">
-            <h3>Navigation</h3>
-          </div>
-
-          <nav className="sidebar-nav">
-            <button
-              className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('dashboard'); setSidebarOpen(false); }}
-            >
-              Dashboard
-            </button>
-
-            <button
-              className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('profile'); setSidebarOpen(false); }}
-            >
-              Profile
-            </button>
-
-            <button
-              className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('stats'); setSidebarOpen(false); }}
-            >
-              Statistics
-            </button>
-
-            <button
-              className={`nav-item ${activeTab === 'debt' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('debt'); setSidebarOpen(false); }}
-            >
-              Debt
-            </button>
-
-            <button
-              className={`nav-item ${activeTab === 'budget' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('budget'); setSidebarOpen(false); }}
-            >
-              Budget
-            </button>
-
-            <button
-              className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-              onClick={() => { setActiveTab('settings'); setSidebarOpen(false); }}
-            >
-              Settings
-            </button>
-          </nav>
-
-          <div className="sidebar-footer">
-            <button className="premium-btn danger logout-btn" onClick={onLogout}>
-              Logout
-            </button>
-          </div>
-        </div>
-        <div className="dashboard-content">
-          {activeTab === 'dashboard' && (
-            <div className="dashboard-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Financial Overview</h1>
-                <p className="tab-subtitle">Track your income, expenses, and financial goals</p>
-              </div>
-
-              {/* Summary Cards */}
-              <div className="summary-section">
-                <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
-              </div>
-
-              {/* Forms */}
-              <div className="forms-section">
-                <h2 className="section-title">Add Transactions</h2>
-                <div className="forms-grid">
-                  <IncomeForm onAddIncome={addIncome} />
-                  <ExpenseForm onAddExpense={addExpense} />
+  const renderContent = () => {
+    switch (activeTab) {
+      case "overview":
+        return (
+          <div className="animate-fade-in">
+            <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
+            <div className="dashboard-main-grid">
+              <div className="section-card premium-card">
+                <div className="section-header">
+                  <h3>Recent Transactions</h3>
                 </div>
-              </div>
-
-              {/* Lists */}
-              <div className="lists-section">
-                <div className="list-container">
+                <div className="summaries-row">
                   <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
-                </div>
-                <div className="list-container">
                   <ExpenseList expenses={expenses} onDeleteExpense={deleteExpense} />
                 </div>
               </div>
-            </div>
-          )}
-
-          {activeTab === 'profile' && (
-            <div className="profile-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Profile Settings</h1>
-                <p className="tab-subtitle">Manage your account information</p>
+              <div className="transaction-forms-container">
+                <div className="section-card premium-card">
+                  <div className="section-header">
+                    <h3>Add Income</h3>
+                  </div>
+                  <IncomeForm onAddIncome={addIncome} />
+                </div>
+                <div className="section-card premium-card">
+                  <div className="section-header">
+                    <h3>Add Expense</h3>
+                  </div>
+                  <ExpenseForm onAddExpense={addExpense} />
+                </div>
               </div>
-              <Profile />
             </div>
-          )}
-
-          {activeTab === 'stats' && (
-            <div className="stats-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Financial Statistics</h1>
-                <p className="tab-subtitle">Detailed analysis of your financial data</p>
-              </div>
-              <Stats incomes={incomes} expenses={expenses} />
-            </div>
-          )}
-
-          {activeTab === 'debt' && (
-            <div className="debt-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Debt Management</h1>
-                <p className="tab-subtitle">Track and manage your debts</p>
-              </div>
-              <div className="debt-content">
+          </div>
+        );
+      case "stats": return <Stats incomes={incomes} expenses={expenses} />;
+      case "debt":
+        return (
+          <div className="animate-fade-in">
+            <div className="dashboard-main-grid">
+              <div className="section-card premium-card">
+                <div className="section-header">
+                  <h3>Debt Management</h3>
+                </div>
                 <DebtForm onAddDebt={addDebt} />
                 <DebtList debts={debts} onDeleteDebt={deleteDebt} />
+              </div>
+              <div className="section-card premium-card">
                 <DebtSummary debts={debts} />
               </div>
             </div>
-          )}
+          </div>
+        );
+      case "budget": 
+        return <BudgetManager 
+          budgets={budgets} 
+          onAddBudget={addBudget} 
+          onDeleteBudget={deleteBudget} 
+          expenses={expenses} 
+        />;
+      case "profile": return <Profile />;
+      case "settings": return <Settings onLogout={onLogout} />;
+      default: return null;
+    }
+  };
 
-          {activeTab === 'budget' && (
-            <div className="budget-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Budget Management</h1>
-                <p className="tab-subtitle">Set and monitor category budgets</p>
-              </div>
-              <BudgetManager budgets={budgets} onAddBudget={addBudget} onDeleteBudget={deleteBudget} expenses={expenses} />
-            </div>
-          )}
+  return (
+    <div className="dashboard-container">
+      <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
+      
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <h2 className="navbar-logo" style={{ marginBottom: '2rem' }}>Kiptaaz</h2>
+        <nav className="sidebar-menu">
+          <button 
+            className={`sidebar-link ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('overview'); setIsSidebarOpen(false); }}
+          >
+            <span>🏠</span> Overview
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'stats' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('stats'); setIsSidebarOpen(false); }}
+          >
+            <span>📊</span> Statistics
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'debt' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('debt'); setIsSidebarOpen(false); }}
+          >
+            <span>💸</span> Debt
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'budget' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('budget'); setIsSidebarOpen(false); }}
+          >
+            <span>🎯</span> Budget
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('profile'); setIsSidebarOpen(false); }}
+          >
+            <span>👤</span> Profile
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}
+          >
+            <span>⚙️</span> Settings
+          </button>
+        </nav>
 
-          {activeTab === 'settings' && (
-            <div className="settings-tab">
-              <div className="tab-header">
-                <h1 className="tab-title">Settings</h1>
-                <p className="tab-subtitle">Customize your experience</p>
-              </div>
-              <Settings onLogout={onLogout} />
-            </div>
-          )}
+        <button 
+          className="premium-btn danger" 
+          style={{ marginTop: 'auto', width: '100%' }}
+          onClick={onLogout}
+        >
+          Logout
+        </button>
+      </aside>
+
+      <header className="dashboard-header">
+        <div className="user-welcome">
+          <button className="premium-btn secondary" style={{ padding: '0.5rem', marginRight: '1rem' }} onClick={() => setIsSidebarOpen(true)}>
+            ☰
+          </button>
+          <div>
+            <h2>Hello, {user.name || 'User'}</h2>
+            <p>Here's what's happening with your money today.</p>
+          </div>
         </div>
-      </div>
+      </header>
+
+      <main className="dashboard-content">
+        {renderContent()}
+      </main>
     </div>
   );
 };

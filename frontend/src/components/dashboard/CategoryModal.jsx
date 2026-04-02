@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { useTranslation } from "../theme/TranslationContext";
 import "./CategoryModal.css";
 
@@ -7,7 +8,7 @@ const CategoryModal = ({ isOpen, onClose, categories, onSelectCategory }) => {
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h3>{t('selectCategory')}</h3>
@@ -32,6 +33,8 @@ const CategoryModal = ({ isOpen, onClose, categories, onSelectCategory }) => {
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 };
 
 export default CategoryModal;

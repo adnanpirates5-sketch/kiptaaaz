@@ -31,22 +31,30 @@ const ExpenseForm = ({ onAddExpense }) => {
     const num = Number(amount);
     if (!category || !amount || num <= 0) return;
 
-    onAddExpense({ category, amount: num });
+    if (onAddExpense) {
+      onAddExpense({ category, amount: num });
+    }
     setCategory("");
     setAmount("");
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="form expense-form">
-        <h3>{t('addExpense')}</h3>
+      <form onSubmit={handleSubmit} className="premium-form">
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('addExpense')}</h3>
 
-        <button type="button" className="select-category-btn" onClick={() => setIsModalOpen(true)}>
+        <button 
+          type="button" 
+          className="premium-input" 
+          style={{ textAlign: 'left', cursor: 'pointer' }}
+          onClick={() => setIsModalOpen(true)}
+        >
           {category || t('selectCategory')}
         </button>
 
         <input
           type="number"
+          className="premium-input"
           placeholder={t('amount')}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -54,7 +62,9 @@ const ExpenseForm = ({ onAddExpense }) => {
           step="0.01"
           required
         />
-        <button type="submit">{t('addExpense')}</button>
+        <button type="submit" className="premium-btn danger" style={{ width: '100%', backgroundColor: 'var(--danger)' }}>
+          {t('addExpense')}
+        </button>
       </form>
       <CategoryModal
         isOpen={isModalOpen}

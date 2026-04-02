@@ -1,109 +1,122 @@
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 9999; /* Ensure it's above everything */
+  animation: fadeIn 0.3s ease-out;
 }
 
 .modal-content {
-  padding: 30px;
-  border-radius: 20px;
+  background: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
   max-width: 600px;
-  max-height: 80vh;
+  width: 90%;
+  max-height: 85vh;
   overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+  position: relative;
+  animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin: auto; /* Extra centering help */
 }
 
-body.dark .modal-content {
-  background: #000000;
-  border: 2px solid #ffffff;
-  color: #ffffff;
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-body.light .modal-content {
-  background: #ffffff;
-  border: 2px solid #000000;
-  color: #000000;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
-  margin: 20px 0;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .category-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px;
-  border: none;
-  border-radius: 15px;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.2s;
-}
-
-body.dark .category-btn {
-  background: #ffff00;
-  color: #000000;
-}
-
-body.light .category-btn {
-  background: #0000ff;
-  color: #ffffff;
+  transition: var(--transition);
+  color: var(--text-primary);
 }
 
 .category-btn:hover {
-  transform: scale(1.05);
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
-.icon {
-  font-size: 2rem;
-  margin-bottom: 5px;
+.category-btn .icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.category-btn span:not(.icon) {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
 }
 
 .close-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 20px;
-}
-
-body.dark .close-btn {
-  background: #ffffff;
-  color: #000000;
-}
-
-body.light .close-btn {
-  background: #000000;
-  color: #ffffff;
-}
-
-.select-category-btn {
-  padding: 15px 20px;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  font-size: 1rem;
   width: 100%;
-  margin: 10px 0;
+  padding: 0.875rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-body.dark .select-category-btn {
-  background: #ffff00;
-  color: #000000;
+.close-btn:hover {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
 }
 
-body.light .select-category-btn {
-  background: #0000ff;
-  color: #ffffff;
+/* Scrollbar Styling for Modal */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }

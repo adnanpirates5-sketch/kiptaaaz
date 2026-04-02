@@ -1,26 +1,39 @@
 import React from "react";
 import { useCurrency } from "../theme/useCurrency";
 
-const IncomeList = ({ incomes, onDeleteIncome }) => {
+const IncomeList = ({ incomes = [], onDeleteIncome }) => {
   const { currency } = useCurrency();
+
   if (incomes.length === 0) {
-    return <p>No income added yet.</p>;
+    return (
+      <div className="income-list">
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Income</h3>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No income added yet.</p>
+      </div>
+    );
   }
 
   return (
     <div className="income-list">
-      <h3>Income List</h3>
-      <ul>
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Income</h3>
+      <div className="transaction-list">
         {incomes.map((inc) => (
-          <li key={inc.id}>
-            <span>{inc.category}</span>
-            <span>{currency} {inc.amount}</span>
-            {onDeleteIncome && (
-              <button onClick={() => onDeleteIncome(inc.id)}>Delete</button>
-            )}
-          </li>
+          <div key={inc.id} className="transaction-item">
+            <div className="transaction-info">
+              <span className="transaction-category">{inc.category}</span>
+              <span className="transaction-desc">Income</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="transaction-amount income">+{currency}{inc.amount}</span>
+              {onDeleteIncome && (
+                <button className="delete-btn" onClick={() => onDeleteIncome(inc.id)}>
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

@@ -1,285 +1,117 @@
-/* Premium Navigation Bar */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  height: 5rem;
+  background-color: rgba(var(--bg-color), 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all var(--transition-normal);
+  transition: var(--transition);
+}
+
+body.light .navbar {
+  background-color: rgba(248, 250, 252, 0.8);
 }
 
 body.dark .navbar {
-  background: rgba(15, 23, 42, 0.95);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background-color: rgba(15, 23, 42, 0.8);
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 4rem;
+  padding: 0 var(--space-6);
 }
 
-/* Brand Section */
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .navbar-logo {
-  font-family: var(--font-secondary);
-  font-size: 1.75rem;
-  font-weight: 800;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
   margin: 0;
-  cursor: pointer;
-  transition: transform var(--transition-fast);
 }
 
-.navbar-logo:hover {
-  transform: scale(1.05);
-}
-
-.brand-accent {
-  width: 4px;
-  height: 24px;
-  background: var(--primary-gradient);
-  border-radius: var(--radius-full);
-  animation: pulse 2s infinite;
-}
-
-/* Navigation Menu */
 .navbar-menu {
   display: flex;
+  align-items: center;
+  gap: var(--space-1);
   list-style: none;
-  gap: var(--space-2);
-  margin: 0;
-  padding: 0;
 }
 
 .nav-link {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  font-family: var(--font-primary);
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.95rem;
-  color: var(--gray-700);
+  font-size: 0.9375rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
   background: transparent;
   border: none;
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: var(--primary-gradient);
-  transition: left var(--transition-normal);
-  z-index: -1;
-}
-
-.nav-link:hover::before {
-  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav-link:hover {
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-body.dark .nav-link {
-  color: var(--gray-300);
+  color: var(--primary);
+  background-color: var(--primary-light);
 }
 
 .nav-icon {
   font-size: 1.1rem;
-  transition: transform var(--transition-fast);
 }
 
-.nav-link:hover .nav-icon {
-  transform: scale(1.1);
-}
-
-/* Controls Section */
 .navbar-controls {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--border-color);
 }
 
 .control-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  position: relative;
-  overflow: hidden;
-}
-
-.control-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--primary-gradient);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.control-btn:hover::before {
-  opacity: 0.1;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-secondary);
+  transition: var(--transition);
 }
 
 .control-btn:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-.control-icon,
-.control-text {
-  font-size: 1.1rem;
-  font-weight: 600;
-  z-index: 1;
-  position: relative;
-}
-
-.theme-toggle {
-  background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--primary-light);
 }
 
 .lang-toggle {
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  min-width: 40px;
+  width: auto;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
-.control-text {
-  color: var(--gray-700);
-  font-size: 0.9rem;
-}
-
-/* Mobile Responsive */
 @media (max-width: 768px) {
-  .navbar-container {
-    padding: 0 var(--space-4);
-  }
-
-  .navbar-logo {
-    font-size: 1.5rem;
-  }
-
   .navbar-menu {
-    display: none; /* Could be replaced with hamburger menu */
+    display: none;
   }
-
-  .navbar-controls {
-    gap: var(--space-2);
-  }
-
-  .control-btn {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* Active States */
-.nav-link.active {
-  background: var(--primary-gradient);
-  color: white;
-}
-
-.nav-link.active::before {
-  left: 0;
-  opacity: 1;
-}
-
-.navbar-menu button {
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  padding: 12px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-body.dark .navbar-menu button {
-  background-color: #ffff00;
-  color: #000000;
-}
-
-body.light .navbar-menu button {
-  background-color: #0000ff;
-  color: #ffffff;
-}
-
-.navbar-menu button:hover {
-  opacity: 0.8;
-}
-
-.navbar-switches {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.switch-btn {
-  border: 2px solid;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 10px 15px;
-  transition: all 0.3s;
-  font-weight: bold;
-}
-
-body.dark .switch-btn {
-  background-color: #ffff00;
-  border-color: #ffff00;
-  color: #000000;
-}
-
-body.light .switch-btn {
-  background-color: #0000ff;
-  border-color: #0000ff;
-  color: #ffffff;
-}
-
-.navbar.dark .switch-btn {
-  border-color: #ffd700;
-  color: #ffd700;
-}
-
-.switch-btn:hover {
-  background-color: rgba(255, 215, 0, 0.1);
-}
-
-.navbar.light .switch-btn:hover {
-  background-color: rgba(51, 51, 51, 0.1);
 }

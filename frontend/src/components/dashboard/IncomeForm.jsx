@@ -31,22 +31,30 @@ const IncomeForm = ({ onAddIncome }) => {
     const num = Number(amount);
     if (!category || !amount || num <= 0) return;
 
-    onAddIncome({ category, amount: num });
+    if (onAddIncome) {
+      onAddIncome({ category, amount: num });
+    }
     setCategory("");
     setAmount("");
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="form income-form">
-        <h3>{t('addIncome')}</h3>
+      <form onSubmit={handleSubmit} className="premium-form">
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('addIncome')}</h3>
 
-        <button type="button" className="select-category-btn" onClick={() => setIsModalOpen(true)}>
+        <button 
+          type="button" 
+          className="premium-input" 
+          style={{ textAlign: 'left', cursor: 'pointer' }}
+          onClick={() => setIsModalOpen(true)}
+        >
           {category || t('selectCategory')}
         </button>
 
         <input
           type="number"
+          className="premium-input"
           placeholder={t('amount')}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -54,7 +62,9 @@ const IncomeForm = ({ onAddIncome }) => {
           step="0.01"
           required
         />
-        <button type="submit">{t('addIncome')}</button>
+        <button type="submit" className="premium-btn success" style={{ width: '100%', backgroundColor: 'var(--success)' }}>
+          {t('addIncome')}
+        </button>
       </form>
       <CategoryModal
         isOpen={isModalOpen}
