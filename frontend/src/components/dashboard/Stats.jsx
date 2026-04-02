@@ -1,9 +1,29 @@
 import React, { useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from "recharts";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+  LineChart, Line, ResponsiveContainer, AreaChart, Area 
+} from "recharts";
 import CategorySummary from "./CategorySummary";
 import IncomeCategorySummary from "./IncomeCategorySummary";
 import { useTranslation } from "../theme/TranslationContext";
 import { useCurrency } from "../theme/useCurrency";
+import "./Stats.css";
+
+const CustomTooltip = ({ active, payload, label, currency }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="tooltip-label">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} className="tooltip-value" style={{ color: entry.color || entry.fill }}>
+            {entry.name}: {currency} {entry.value.toLocaleString()}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 const Stats = ({ incomes, expenses }) => {
   const { t } = useTranslation();
@@ -39,92 +59,137 @@ const Stats = ({ incomes, expenses }) => {
     return acc;
   }, []);
 
+  const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
+  const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const balance = totalIncome - totalExpense;
+
   return (
-    <div className="stats-section">
-      <div className="stats-header">
-        <h3>{t('stats')}</h3>
+    <div className="stats-container-premium animate-fade-in">
+      <div className="stats-header-premium">
+        <div className="stats-title-group">
+          <h2>{t('stats')}</h2>
+          <p className="stats-subtitle">Visual overview of your financial performance</p>
+        </div>
         <button
-          className="premium-btn merge-btn"
+          className="premium-btn secondary"
           onClick={() => setMerged(!merged)}
+          style={{ padding: '0.625rem 1.25rem' }}
         >
-          {merged ? 'Separate Graphs' : 'Merge Graphs'}
+          {merged ? '📊 View Individual' : '📈 View Comparison'}
         </button>
       </div>
 
+      <div className="stats-summary-grid">
+        <div className="premium-card stat-metric-card income">
+          <span className="metric-label">Total Income</span>
+          <span className="metric-value">{currency} {totalIncome.toLocaleString()}</span>
+        </div>
+        <div className="premium-card stat-metric-card expense">
+          <span className="metric-label">Total Expenses</span>
+          <span className="metric-value">{currency} {totalExpense.toLocaleString()}</span>
+        </div>
+        <div className="premium-card stat-metric-card balance">
+          <span className="metric-label">Net Balance</span>
+          <span className="metric-value">{currency} {balance.toLocaleString()}</span>
+        </div>
+      </div>
+
       {merged ? (
-        <div className="merged-charts">
-          <div className="chart-card">
-            <h4>Income vs Expenses by Category</h4>
-            <BarChart width={600} height={300} data={mergedData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Legend />
-              <Bar dataKey="income" fill="#10b981" name="Income" />
-              <Bar dataKey="expense" fill="#f87171" name="Expense" />
-            </BarChart>
+        <div className="charts-main-grid">
+          <div className="premium-card chart-card-premium full-width-chart">
+            <div className="chart-card-header">
+              <h4>Income vs Expenses by Category</h4>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={mergedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="category" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} />
+                  <Legend iconType="circle" />
+                  <Bar dataKey="income" fill="var(--success)" radius={[4, 4, 0, 0]} name="Income" />
+                  <Bar dataKey="expense" fill="var(--danger)" radius={[4, 4, 0, 0]} name="Expense" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="chart-card">
-            <h4>Balance by Category (Income - Expense)</h4>
-            <BarChart width={600} height={300} data={mergedData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Bar dataKey="balance" fill="#3b82f6" name="Balance" />
-            </BarChart>
+          
+          <div className="premium-card chart-card-premium full-width-chart">
+            <div className="chart-card-header">
+              <h4>Balance distribution by Category</h4>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={350}>
+                <AreaChart data={mergedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <defs>
+                    <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="category" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} />
+                  <Area type="monotone" dataKey="balance" stroke="var(--primary)" fillOpacity={1} fill="url(#colorBalance)" strokeWidth={3} name="Net Balance" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="stats-charts">
-          <div className="chart-card">
-            <h4>Income by Category (Pie)</h4>
-            <IncomeCategorySummary incomes={incomes} />
+        <div className="charts-main-grid">
+          <div className="premium-card chart-card-premium">
+            <div className="chart-card-header">
+              <h4>Income Source Breakdown</h4>
+            </div>
+            <div className="chart-wrapper">
+              <IncomeCategorySummary incomes={incomes} />
+            </div>
           </div>
-          <div className="chart-card">
-            <h4>Expenses by Category (Pie)</h4>
-            <CategorySummary expenses={expenses} />
+
+          <div className="premium-card chart-card-premium">
+            <div className="chart-card-header">
+              <h4>Expense Allocation</h4>
+            </div>
+            <div className="chart-wrapper">
+              <CategorySummary expenses={expenses} />
+            </div>
           </div>
-          <div className="chart-card">
-            <h4>Expenses by Category (Bar)</h4>
-            <BarChart width={400} height={300} data={expenseBarData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Bar dataKey="amount" fill="#f87171" />
-            </BarChart>
+
+          <div className="premium-card chart-card-premium">
+            <div className="chart-card-header">
+              <h4>Income by Category</h4>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={incomeBarData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="category" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} />
+                  <Bar dataKey="amount" fill="var(--success)" radius={[4, 4, 0, 0]} name="Income" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="chart-card">
-            <h4>Income by Category (Bar)</h4>
-            <BarChart width={400} height={300} data={incomeBarData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Bar dataKey="amount" fill="#10b981" />
-            </BarChart>
-          </div>
-          <div className="chart-card">
-            <h4>Income Trend (Line)</h4>
-            <LineChart width={400} height={300} data={incomeBarData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Line type="monotone" dataKey="amount" stroke="#3b82f6" strokeWidth={3} />
-            </LineChart>
-          </div>
-          <div className="chart-card">
-            <h4>Expense Trend (Line)</h4>
-            <LineChart width={400} height={300} data={expenseBarData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip formatter={(value) => `${currency} ${value}`} />
-              <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={3} />
-            </LineChart>
+
+          <div className="premium-card chart-card-premium">
+            <div className="chart-card-header">
+              <h4>Expenses by Category</h4>
+            </div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={expenseBarData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="category" axisLine={false} tickLine={false} />
+                  <YAxis axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} />
+                  <Bar dataKey="amount" fill="var(--danger)" radius={[4, 4, 0, 0]} name="Expense" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       )}
