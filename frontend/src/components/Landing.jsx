@@ -93,6 +93,52 @@ const Landing = ({ onGetStarted }) => {
           </div>
         </div>
       </div>
+
+      {/* Testimonials Section */}
+      <section className="testimonials-section">
+        <div className="container">
+          <h2 className="section-title">What Our Users Say</h2>
+          <div className="testimonials-grid">
+            {JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).length > 0 ? (
+              JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).map((review) => (
+                <div key={review.id} className="testimonial-card">
+                  <div className="stars">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>★</span>
+                    ))}
+                  </div>
+                  <p className="comment">"{review.comment}"</p>
+                  <div className="date">{new Date(review.date).toLocaleDateString()}</div>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="testimonial-card">
+                  <div className="stars">
+                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
+                  </div>
+                  <p className="comment">"Kiptaaz has completely changed how I manage my money. The UI is so clean and easy to use!"</p>
+                  <div className="author">- Sarah J.</div>
+                </div>
+                <div className="testimonial-card">
+                  <div className="stars">
+                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
+                  </div>
+                  <p className="comment">"The debt tracking feature is a lifesaver. I finally have a clear path to being debt-free."</p>
+                  <div className="author">- Michael R.</div>
+                </div>
+                <div className="testimonial-card">
+                  <div className="stars">
+                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
+                  </div>
+                  <p className="comment">"Best budgeting app I've ever used. The analytics provide so much insight into my spending."</p>
+                  <div className="author">- Emily W.</div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

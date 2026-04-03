@@ -72,7 +72,7 @@ function App() {
         )}
 
         {page === "about" && (
-          <AboutUs />
+          <AboutUs onBackHome={() => setPage("home")} />
         )}
 
         <Routes>

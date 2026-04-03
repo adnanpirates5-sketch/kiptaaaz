@@ -12,6 +12,8 @@ import BudgetManager from "./BudgetManager";
 import DebtForm from "./DebtForm";
 import DebtList from "./DebtList";
 import DebtSummary from "./DebtSummary";
+import SavingsGoals from "./SavingsGoals";
+import FinancialTips from "./FinancialTips";
 import { financeAPI } from "../../api";
 
 const Dashboard = ({ onLogout }) => {
@@ -167,6 +169,7 @@ const Dashboard = ({ onLogout }) => {
                 </div>
               </div>
               <div className="transaction-forms-container">
+                <FinancialTips />
                 <div className="section-card premium-card">
                   <div className="section-header">
                     <h3>Add Income</h3>
@@ -227,6 +230,7 @@ const Dashboard = ({ onLogout }) => {
           onDeleteBudget={deleteBudget} 
           expenses={expenses} 
         />;
+      case "savings": return <SavingsGoals />;
       case "profile": return <Profile incomes={incomes} expenses={expenses} debts={debts} />;
       case "settings": return <Settings onLogout={onLogout} />;
       default: return null;
@@ -269,6 +273,12 @@ const Dashboard = ({ onLogout }) => {
             onClick={() => { setActiveTab('budget'); setIsSidebarOpen(false); }}
           >
             <span>🎯</span> Budget
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'savings' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('savings'); setIsSidebarOpen(false); }}
+          >
+            <span>💰</span> Savings
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'profile' ? 'active' : ''}`}

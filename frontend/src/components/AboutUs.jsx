@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AboutUs.css';
-import './AboutUs.css';
 
-const AboutUs = () => {
+const AboutUs = ({ onBackHome }) => {
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -59,6 +58,9 @@ const AboutUs = () => {
 
   return (
     <div className="about-us">
+      <button className="back-home-btn" onClick={onBackHome} title="Back to Home">
+        ← Back to Home
+      </button>
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
