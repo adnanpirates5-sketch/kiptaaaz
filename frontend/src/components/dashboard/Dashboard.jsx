@@ -218,7 +218,7 @@ const Dashboard = ({ onLogout }) => {
           onDeleteBudget={deleteBudget} 
           expenses={expenses} 
         />;
-      case "profile": return <Profile />;
+      case "profile": return <Profile incomes={incomes} expenses={expenses} debts={debts} />;
       case "settings": return <Settings onLogout={onLogout} />;
       default: return null;
     }
