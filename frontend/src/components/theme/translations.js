@@ -68,6 +68,12 @@ export const translations = {
     spendingByCategory: 'Spending by Category',
     incomeByCategory: 'Income by Category',
     delete: 'Delete',
+    monthlyTrends: 'Monthly Trends',
+    budgetVsActual: 'Budget vs Actual',
+    debtDistribution: 'Debt Distribution',
+    savingsGrowth: 'Savings Growth',
+    last7Days: 'Last 7 Days Activity',
+    debtByEntity: 'Debt by Entity',
   },
   bn: {
     // Navbar
@@ -138,5 +144,11 @@ export const translations = {
     spendingByCategory: 'ক্যাটাগরি অনুসারে খরচ',
     incomeByCategory: 'ক্যাটাগরি অনুসারে আয়',
     delete: 'মুছুন',
+    monthlyTrends: 'মাসিক প্রবণতা',
+    budgetVsActual: 'বাজেট বনাম প্রকৃত খরচ',
+    debtDistribution: 'ঋণের বণ্টন',
+    savingsGrowth: 'সঞ্চয় বৃদ্ধি',
+    last7Days: 'গত ৭ দিনের কার্যক্রম',
+    debtByEntity: 'প্রতিষ্ঠান অনুসারে ঋণ',
   }
 };

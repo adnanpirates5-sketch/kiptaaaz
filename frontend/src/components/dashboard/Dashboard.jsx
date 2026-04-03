@@ -14,6 +14,7 @@ import DebtList from "./DebtList";
 import DebtSummary from "./DebtSummary";
 import SavingsGoals from "./SavingsGoals";
 import FinancialTips from "./FinancialTips";
+import OverviewCharts from "./OverviewCharts";
 import { financeAPI } from "../../api";
 
 const Dashboard = ({ onLogout }) => {
@@ -151,6 +152,7 @@ const Dashboard = ({ onLogout }) => {
           <div className="animate-fade-in">
             <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
             <div className="dashboard-main-grid">
+              <OverviewCharts expenses={expenses} incomes={incomes} />
               <div className="section-card premium-card recent-transactions-box">
                 <div className="section-header">
                   <h3>Recent Transactions</h3>
@@ -205,7 +207,7 @@ const Dashboard = ({ onLogout }) => {
             </div>
           </div>
         );
-      case "stats": return <Stats incomes={incomes} expenses={expenses} />;
+      case "stats": return <Stats incomes={incomes} expenses={expenses} budgets={budgets} debts={debts} />;
       case "debt":
         return (
           <div className="animate-fade-in">
