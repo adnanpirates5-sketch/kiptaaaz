@@ -14,9 +14,14 @@ const debtSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  type: {
+    type: String,
+    enum: ['debt', 'lending'],
+    default: 'debt'
+  },
   dueDate: {
     type: Date,
-    required: true
+    required: false
   },
   status: {
     type: String,

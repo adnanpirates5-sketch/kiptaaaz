@@ -87,13 +87,14 @@ router.get('/debts', authenticateToken, async (req, res) => {
 });
 
 router.post('/debts', authenticateToken, async (req, res) => {
-  const { name, amount, dueDate, status } = req.body;
+  const { name, amount, dueDate, status, type } = req.body;
   const debt = new Debt({
     user: req.user._id,
     name,
     amount,
     dueDate,
-    status
+    status,
+    type
   });
   try {
     const savedDebt = await debt.save();
@@ -109,6 +110,19 @@ router.delete('/debts/:id', authenticateToken, async (req, res) => {
     res.json({ message: 'Debt deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+router.patch('/debts/:id', authenticateToken, async (req, res) => {
+  try {
+    const updatedDebt = await Debt.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      { $set: req.body },
+      { new: true }
+    );
+    res.json(updatedDebt);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 

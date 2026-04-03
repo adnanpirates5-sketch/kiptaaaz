@@ -32,6 +32,7 @@ export const financeAPI = {
   
   getDebts: () => api.get('/finance/debts'),
   addDebt: (debt) => api.post('/finance/debts', debt),
+  updateDebt: (id, updates) => api.patch(`/finance/debts/${id}`, updates),
   deleteDebt: (id) => api.delete(`/finance/debts/${id}`),
   
   getBudgets: () => api.get('/finance/budgets'),

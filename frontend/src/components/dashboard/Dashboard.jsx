@@ -106,6 +106,15 @@ const Dashboard = ({ onLogout }) => {
     }
   };
 
+  const updateDebt = async (id, updates) => {
+    try {
+      const res = await financeAPI.updateDebt(id, updates);
+      setDebts((prev) => prev.map((d) => ((d._id || d.id) === id ? res.data : d)));
+    } catch (err) {
+      console.error("Error updating debt:", err);
+    }
+  };
+
   const addBudget = async (budget) => {
     try {
       const res = await financeAPI.addBudget(budget);
@@ -203,7 +212,7 @@ const Dashboard = ({ onLogout }) => {
                   <h3>Debt Management</h3>
                 </div>
                 <DebtForm onAddDebt={addDebt} />
-                <DebtList debts={debts} onDeleteDebt={deleteDebt} />
+                <DebtList debts={debts} onDeleteDebt={deleteDebt} onUpdateDebt={updateDebt} />
               </div>
               <div className="section-card premium-card">
                 <DebtSummary debts={debts} />
