@@ -308,7 +308,23 @@ export const translations = {
     termsDesc: 'These terms and conditions govern your use of this website and services. Please read them carefully before proceeding. By using our website, you agree to these terms.',
     close: 'Close',
     noExpenseData: 'No expense data available',
-    noIncomeData: 'No income data available'
+    noIncomeData: 'No income data available',
+
+    // User Guide
+    userGuideTitle: 'User Guide - Master Your Finances',
+    userGuideWelcome: 'Kiptaaz is your personal finance companion, designed to help you track spending, set budgets, and achieve your financial goals.',
+    ugIncomeExpenseTitle: 'Tracking Income & Expenses',
+    ugIncomeExpenseDesc: 'Log your daily income and expenses by selecting the appropriate category. View your transaction history to stay on top of your spending habits.',
+    ugBudgetingTitle: 'Smart Budgeting',
+    ugBudgetingDesc: 'Set monthly budgets for different categories. Monitor your progress with real-time tracking to ensure you stay within your limits.',
+    ugDebtTitle: 'Debt & Lending',
+    ugDebtTitleDesc: 'Keep a record of money you owe and money owed to you. Mark entries as paid to keep your net debt position accurate.',
+    ugSavingsTitle: 'Savings Goals',
+    ugSavingsTitleDesc: 'Create goals for your future and track your progress. Whether it\'s a vacation or an emergency fund, we help you get there.',
+    ugAnalyticsTitle: 'Insights & Stats',
+    ugAnalyticsTitleDesc: 'Explore interactive charts to visualize your financial trends. Get daily financial tips to improve your habits.',
+    ugPersonalizationTitle: 'Personalization',
+    ugPersonalizationTitleDesc: 'Switch between Light and Dark modes. Choose your preferred language and currency in Settings.'
   },
   bn: {
     // Navbar
@@ -619,6 +635,22 @@ export const translations = {
     termsDesc: 'এই শর্তাবলী এই ওয়েবসাইট এবং পরিষেবাগুলোর আপনার ব্যবহার নিয়ন্ত্রণ করে। অনুগ্রহ করে এগিয়ে যাওয়ার আগে সেগুলো সাবধানে পড়ুন। আমাদের ওয়েবসাইট ব্যবহার করে, আপনি এই শর্তাবলীতে সম্মত হন।',
     close: 'বন্ধ করুন',
     noExpenseData: 'কোনো খরচের ডেটা নেই',
-    noIncomeData: 'কোনো আয়ের ডেটা নেই'
+    noIncomeData: 'কোনো আয়ের ডেটা নেই',
+
+    // User Guide
+    userGuideTitle: 'ব্যবহারকারী নির্দেশিকা - আপনার অর্থ ব্যবস্থাপনা আয়ত্ত করুন',
+    userGuideWelcome: 'কিপ্টাজ হলো আপনার ব্যক্তিগত অর্থ ব্যবস্থাপনার সঙ্গী, যা আপনাকে ব্যয় ট্র্যাক করতে, বাজেট সেট করতে এবং আপনার আর্থিক লক্ষ্য অর্জনে সহায়তা করার জন্য ডিজাইন করা হয়েছে।',
+    ugIncomeExpenseTitle: 'আয় ও ব্যয় ট্র্যাকিং',
+    ugIncomeExpenseDesc: 'সঠিক ক্যাটাগরি নির্বাচন করে আপনার দৈনিক আয় এবং ব্যয় রেকর্ড করুন। আপনার ব্যয়ের অভ্যাস সম্পর্কে সচেতন থাকতে লেনদেনের ইতিহাস দেখুন।',
+    ugBudgetingTitle: 'স্মার্ট বাজেটিং',
+    ugBudgetingDesc: 'বিভিন্ন ক্যাটাগরির জন্য মাসিক বাজেট সেট করুন। আপনি আপনার সীমার মধ্যে আছেন কিনা তা নিশ্চিত করতে রিয়েল-টাইম ট্র্যাকিংয়ের মাধ্যমে আপনার অগ্রগতি পর্যবেক্ষণ করুন।',
+    ugDebtTitle: 'ঋণ ও ধার',
+    ugDebtTitleDesc: 'আপনি যা ঋণ নিয়েছেন এবং যা ধার দিয়েছেন তার রেকর্ড রাখুন। আপনার নিট ঋণের অবস্থান সঠিক রাখতে এন্ট্রিগুলোকে পরিশোধিত হিসেবে চিহ্নিত করুন।',
+    ugSavingsTitle: 'সঞ্চয় লক্ষ্য',
+    ugSavingsTitleDesc: 'আপনার ভবিষ্যতের জন্য লক্ষ্য তৈরি করুন এবং আপনার সঞ্চয়ের অগ্রগতি ট্র্যাক করুন। হোক তা ভ্রমণ বা জরুরি তহবিল, আমরা আপনাকে সেখানে পৌঁছাতে সাহায্য করব।',
+    ugAnalyticsTitle: 'ইনসাইটস ও পরিসংখ্যান',
+    ugAnalyticsTitleDesc: 'আপনার আর্থিক প্রবণতা বোঝার জন্য ইন্টারঅ্যাক্টিভ চার্টগুলো দেখুন। আপনার অভ্যাসের উন্নতির জন্য প্রতিদিনের আর্থিক পরামর্শ পান।',
+    ugPersonalizationTitle: 'ব্যক্তিগতকরণ',
+    ugPersonalizationTitleDesc: 'লাইট এবং ডার্ক মোডের মধ্যে পরিবর্তন করুন। সেটিংসে আপনার পছন্দের ভাষা এবং মুদ্রা নির্বাচন করুন।'
   }
 };

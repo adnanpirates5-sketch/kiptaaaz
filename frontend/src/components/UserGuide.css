@@ -1,0 +1,74 @@
+.user-guide-content {
+  padding: 1.5rem;
+  max-width: 800px;
+}
+
+.guide-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-align: center;
+}
+
+.guide-welcome {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.guide-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.guide-section {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease;
+}
+
+.guide-section:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+.guide-icon {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.5rem;
+  height: 3.5rem;
+  background: var(--primary-light);
+  border-radius: 0.75rem;
+}
+
+.guide-text h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.guide-text p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .guide-section {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+}
