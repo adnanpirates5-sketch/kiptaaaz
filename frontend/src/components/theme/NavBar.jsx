@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './NavBar.css';
 import { useTranslation } from './TranslationContext';
 import { useTheme } from './ThemeContext';
@@ -6,9 +6,24 @@ import { useTheme } from './ThemeContext';
 const NavBar = ({ onNavigate }) => {
   const { t, language, toggleLanguage } = useTranslation();
   const { theme, toggleTheme } = useTheme();
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentProgress = (window.pageYOffset / totalScroll) * 100;
+      setScrollProgress(currentProgress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <nav className="navbar">
+      <div className="scroll-progress-container">
+        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
+      </div>
       <div className="navbar-container">
         <div className="navbar-brand" onClick={() => onNavigate('home')}>
           <h1 className="navbar-logo">Kiptaaz</h1>
