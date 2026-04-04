@@ -20,7 +20,7 @@ import { financeAPI } from "../../api";
 const Dashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [user, setUser] = useState({ name: "", email: "" });
+  const [user, setUser] = useState({ name: "", email: "", profilePicture: null });
   
   // State Management
   const [incomes, setIncomes] = useState([]);
@@ -52,6 +52,15 @@ const Dashboard = ({ onLogout }) => {
     };
     
     fetchData();
+
+    // Listen for user updates from Profile component
+    const handleUserUpdate = () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) setUser(JSON.parse(savedUser));
+    };
+
+    window.addEventListener('userUpdate', handleUserUpdate);
+    return () => window.removeEventListener('userUpdate', handleUserUpdate);
   }, []);
 
   // Handlers
@@ -244,7 +253,24 @@ const Dashboard = ({ onLogout }) => {
       <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}></div>
       
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <h2 className="navbar-logo" style={{ marginBottom: '2rem' }}>Kiptaaz</h2>
+        <div className="sidebar-header">
+          <h2 className="navbar-logo">Kiptaaz</h2>
+        </div>
+        
+        <div className="user-profile-section">
+          <div className="user-avatar-small">
+            {user.profilePicture ? (
+              <img src={user.profilePicture} alt="Profile" />
+            ) : (
+              (user.name || "U")[0].toUpperCase()
+            )}
+          </div>
+          <div className="user-info-sidebar">
+            <span className="user-name-sidebar">{user.name || 'User'}</span>
+            <span className="user-email-sidebar">{user.email || 'No email'}</span>
+          </div>
+        </div>
+
         <nav className="sidebar-menu">
           <button 
             className={`sidebar-link ${activeTab === 'overview' ? 'active' : ''}`}

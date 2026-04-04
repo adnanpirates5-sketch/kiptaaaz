@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ 
       message: 'User registered successfully', 
       token,
-      user: { id: savedUser._id, name: savedUser.name, email: savedUser.email }
+      user: { id: savedUser._id, name: savedUser.name, email: savedUser.email, profilePicture: savedUser.profilePicture }
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -66,7 +66,31 @@ router.post('/login', async (req, res) => {
     // Create token
     const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
 
-    res.json({ message: 'Login successful', token, user: { id: user._id, name: user.name, email: user.email } });
+    res.json({ message: 'Login successful', token, user: { id: user._id, name: user.name, email: user.email, profilePicture: user.profilePicture } });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Update Profile
+router.patch('/profile/update', authenticateToken, async (req, res) => {
+  try {
+    const { name, profilePicture } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name) user.name = name;
+    if (profilePicture !== undefined) user.profilePicture = profilePicture;
+
+    await user.save();
+
+    res.json({ 
+      message: 'Profile updated successfully', 
+      user: { id: user._id, name: user.name, email: user.email, profilePicture: user.profilePicture } 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

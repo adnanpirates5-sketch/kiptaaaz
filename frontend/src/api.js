@@ -19,6 +19,8 @@ export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
   getProfile: () => api.get('/auth/profile'),
+  updateProfile: (data) => api.patch('/auth/profile/update', data),
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
 };
 
 export const financeAPI = {

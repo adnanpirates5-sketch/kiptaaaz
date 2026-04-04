@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useTranslation } from "../theme/TranslationContext";
 import { useCurrency } from "../theme/useCurrency";
+import { authAPI } from "../../api";
 import "./Profile.css";
 
 const Profile = ({ incomes, expenses, debts }) => {
   const { t } = useTranslation();
   const { currency } = useCurrency();
+  const fileInputRef = useRef(null);
   
   // Get user from localStorage
-  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   
   const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
   const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -16,7 +20,10 @@ const Profile = ({ incomes, expenses, debts }) => {
   const transactionCount = incomes.length + expenses.length;
   
   const getInitials = (name) => {
-    if (!name) return "U";
+    if (!name) {
+      const savedUser = JSON.parse(localStorage.getItem('user')) || {};
+      name = savedUser.name || "U";
+    }
     return name.split(" ").map(n => n[0]).join("").toUpperCase();
   };
 
@@ -26,17 +33,74 @@ const Profile = ({ incomes, expenses, debts }) => {
     return "New Member";
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file size (limit to 2MB for base64 storage)
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Image size should be less than 2MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      try {
+        setLoading(true);
+        setError("");
+        const res = await authAPI.updateProfile({ profilePicture: base64String });
+        
+        // Update local state and localStorage
+        const updatedUser = res.data.user;
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        
+        // Dispatch custom event to notify other components (like Dashboard sidebar)
+        window.dispatchEvent(new Event('userUpdate'));
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to upload image");
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="profile-container-premium animate-fade-in">
       {/* Header Card */}
       <div className="premium-card profile-header-card">
         <div className="profile-header-bg"></div>
-        <div className="profile-avatar-large">
-          {getInitials(user.name)}
+        <div className="avatar-wrapper" onClick={handleAvatarClick} title="Click to change photo">
+          <div className="profile-avatar-large">
+            {user.profilePicture ? (
+              <img src={user.profilePicture} alt="Profile" className="avatar-img" />
+            ) : (
+              getInitials(user.name)
+            )}
+            <div className="avatar-overlay">
+              <span>📷</span>
+            </div>
+          </div>
+          {loading && <div className="avatar-loader"></div>}
         </div>
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileChange} 
+          accept="image/*" 
+          style={{ display: 'none' }} 
+        />
+        
         <div className="profile-header-info">
           <h2>{user.name || 'User'}</h2>
           <div className="profile-email-badge">{user.email || 'No email provided'}</div>
+          {error && <div className="profile-error-msg">{error}</div>}
           <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
             <span className="achievement-badge">🏆 {getAccountLevel()}</span>
           </div>
