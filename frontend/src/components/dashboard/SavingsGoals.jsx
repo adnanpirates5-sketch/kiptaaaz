@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useCurrency } from '../theme/useCurrency';
 import './SavingsGoals.css';
 
 const SavingsGoals = () => {
+  const { currency } = useCurrency();
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', deadline: '' });
@@ -38,6 +40,7 @@ const SavingsGoals = () => {
   };
 
   const handleUpdateProgress = (id, amount) => {
+    if (!amount || isNaN(amount)) return;
     const updatedGoals = goals.map(g => {
       if (g.id === id) {
         return { ...g, current: Math.min(g.target, g.current + parseFloat(amount)) };
@@ -52,92 +55,115 @@ const SavingsGoals = () => {
     <div className="savings-goals animate-fade-in">
       <div className="section-header">
         <h2 className="premium-title">Savings Goals</h2>
-        <button className="premium-btn" onClick={() => setShowForm(!showForm)}>
+        <button className={`premium-btn ${showForm ? 'danger' : ''}`} onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancel' : '+ New Goal'}
         </button>
       </div>
 
       {showForm && (
         <form className="goal-form section-card premium-card" onSubmit={handleAddGoal}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label>Goal Name</label>
+          <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Goal Name</label>
               <input 
                 type="text" 
+                className="premium-input"
                 placeholder="e.g., New Car, Vacation" 
                 value={newGoal.name}
                 onChange={(e) => setNewGoal({...newGoal, name: e.target.value})}
                 required
               />
             </div>
-            <div className="form-group">
-              <label>Target Amount ($)</label>
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Target Amount ({currency})</label>
               <input 
                 type="number" 
+                className="premium-input"
                 placeholder="0.00" 
                 value={newGoal.target}
                 onChange={(e) => setNewGoal({...newGoal, target: e.target.value})}
                 required
               />
             </div>
-            <div className="form-group">
-              <label>Current Savings ($)</label>
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Current Savings ({currency})</label>
               <input 
                 type="number" 
+                className="premium-input"
                 placeholder="0.00" 
                 value={newGoal.current}
                 onChange={(e) => setNewGoal({...newGoal, current: e.target.value})}
               />
             </div>
-            <div className="form-group">
-              <label>Deadline (Optional)</label>
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Deadline (Optional)</label>
               <input 
                 type="date" 
+                className="premium-input"
                 value={newGoal.deadline}
                 onChange={(e) => setNewGoal({...newGoal, deadline: e.target.value})}
               />
             </div>
           </div>
-          <button type="submit" className="premium-btn" style={{ marginTop: '1rem' }}>Add Goal</button>
+          <button type="submit" className="premium-btn" style={{ marginTop: '1.5rem', width: '200px' }}>🎯 Add Goal</button>
         </form>
       )}
 
-      <div className="goals-grid">
+      <div className="goals-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
         {goals.length === 0 ? (
-          <p className="no-data">No savings goals yet. Start planning your future!</p>
+          <div className="empty-state" style={{ textAlign: 'center', gridColumn: '1/-1', padding: '4rem 0', color: 'var(--text-muted)' }}>
+            <p>No savings goals yet. Start planning your future!</p>
+          </div>
         ) : (
           goals.map(goal => {
             const progress = (goal.current / goal.target) * 100;
             return (
-              <div key={goal.id} className="goal-card section-card premium-card">
-                <div className="goal-header">
-                  <h3>{goal.name}</h3>
-                  <button className="delete-btn" onClick={() => handleDeleteGoal(goal.id)}>×</button>
+              <div key={goal.id} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
+                  <button className="delete-btn" onClick={() => handleDeleteGoal(goal.id)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
                 </div>
-                <div className="goal-stats">
-                  <span className="amount">${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}</span>
-                  <span className="percent">{progress.toFixed(1)}%</span>
+                <div className="goal-stats" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <span className="amount" style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
+                    {currency} {goal.current.toLocaleString()} / {currency} {goal.target.toLocaleString()}
+                  </span>
+                  <span className="percent" style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.875rem' }}>{progress.toFixed(0)}%</span>
                 </div>
-                <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+                <div className="progress-bar" style={{ width: '100%', height: '0.75rem', backgroundColor: 'var(--border-color)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+                  <div className="progress-fill" style={{ width: `${progress}%`, height: '100%', backgroundColor: 'var(--success)', borderRadius: 'var(--radius-full)', transition: 'width 0.6s ease' }}></div>
                 </div>
                 {goal.deadline && (
-                  <div className="deadline">
+                  <div className="deadline" style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     📅 Target Date: {new Date(goal.deadline).toLocaleDateString()}
                   </div>
                 )}
-                <div className="update-progress">
-                  <input 
-                    type="number" 
-                    placeholder="Add amount" 
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleUpdateProgress(goal.id, e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                  />
-                  <span>Press Enter to add savings</span>
+                <div className="update-progress" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input 
+                      type="number" 
+                      className="premium-input"
+                      placeholder="Add savings" 
+                      style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleUpdateProgress(goal.id, e.target.value);
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                    <button 
+                      className="premium-btn" 
+                      style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+                      onClick={(e) => {
+                        const input = e.currentTarget.previousElementSibling;
+                        handleUpdateProgress(goal.id, input.value);
+                        input.value = '';
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Enter amount and press Add or Enter</p>
                 </div>
               </div>
             );
