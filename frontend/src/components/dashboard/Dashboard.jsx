@@ -16,8 +16,10 @@ import SavingsGoals from "./SavingsGoals";
 import FinancialTips from "./FinancialTips";
 import OverviewCharts from "./OverviewCharts";
 import { financeAPI } from "../../api";
+import { useTranslation } from "../theme/TranslationContext";
 
 const Dashboard = ({ onLogout }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", profilePicture: null });
@@ -164,18 +166,19 @@ const Dashboard = ({ onLogout }) => {
               <OverviewCharts expenses={expenses} incomes={incomes} />
               <div className="section-card premium-card recent-transactions-box">
                 <div className="section-header">
-                  <h3>Recent Transactions</h3>
+                  <h3>{t('recentTransactions')}</h3>
                 </div>
                 <div className="recent-transactions-content">
                   <p className="description-text">
-                    Monitor your latest financial activities. You can view, manage, and track all your income and expense entries in detail.
+                    {t('recentTransactionsDesc')}
                   </p>
                   <div className="preview-list">
                     <IncomeList incomes={incomes.slice(-2)} />
+                    <div style={{ margin: '1rem 0' }}></div>
                     <ExpenseList expenses={expenses.slice(-2)} />
                   </div>
                   <button className="premium-btn secondary see-all-btn" onClick={() => setActiveTab("transactions")}>
-                    See All Transactions
+                    {t('seeAllTransactions')}
                   </button>
                 </div>
               </div>
@@ -183,13 +186,13 @@ const Dashboard = ({ onLogout }) => {
                 <FinancialTips />
                 <div className="section-card premium-card">
                   <div className="section-header">
-                    <h3>Add Income</h3>
+                    <h3>{t('addIncome')}</h3>
                   </div>
                   <IncomeForm onAddIncome={addIncome} />
                 </div>
                 <div className="section-card premium-card">
                   <div className="section-header">
-                    <h3>Add Expense</h3>
+                    <h3>{t('addExpense')}</h3>
                   </div>
                   <ExpenseForm onAddExpense={addExpense} />
                 </div>
@@ -202,9 +205,9 @@ const Dashboard = ({ onLogout }) => {
           <div className="animate-fade-in">
             <div className="section-header" style={{ marginBottom: '2rem' }}>
               <button className="premium-btn secondary" onClick={() => setActiveTab("overview")} style={{ padding: '0.5rem 1rem' }}>
-                ← Back to Overview
+                ← {t('backToOverview')}
               </button>
-              <h2 className="premium-title" style={{ margin: 0, fontSize: '1.75rem' }}>All Transactions</h2>
+              <h2 className="premium-title" style={{ margin: 0, fontSize: '1.75rem' }}>{t('allTransactions')}</h2>
             </div>
             <div className="dashboard-main-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
               <div className="section-card premium-card">
@@ -223,7 +226,7 @@ const Dashboard = ({ onLogout }) => {
             <div className="dashboard-main-grid">
               <div className="section-card premium-card">
                 <div className="section-header">
-                  <h3>Debt Management</h3>
+                  <h3>{t('debtManagement')}</h3>
                 </div>
                 <DebtForm onAddDebt={addDebt} />
                 <DebtList debts={debts} onDeleteDebt={deleteDebt} onUpdateDebt={updateDebt} />
@@ -254,7 +257,7 @@ const Dashboard = ({ onLogout }) => {
       
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2 className="navbar-logo">Kiptaaz</h2>
+          <h2 className="navbar-logo">{t('kiptaaz')}</h2>
         </div>
         
         <div className="user-profile-section">
@@ -266,8 +269,8 @@ const Dashboard = ({ onLogout }) => {
             )}
           </div>
           <div className="user-info-sidebar">
-            <span className="user-name-sidebar">{user.name || 'User'}</span>
-            <span className="user-email-sidebar">{user.email || 'No email'}</span>
+            <span className="user-name-sidebar">{user.name || t('user')}</span>
+            <span className="user-email-sidebar">{user.email || t('noEmail')}</span>
           </div>
         </div>
 
@@ -276,49 +279,49 @@ const Dashboard = ({ onLogout }) => {
             className={`sidebar-link ${activeTab === 'overview' ? 'active' : ''}`}
             onClick={() => { setActiveTab('overview'); setIsSidebarOpen(false); }}
           >
-            <span>🏠</span> Overview
+            <span>🏠</span> {t('home')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'transactions' ? 'active' : ''}`}
             onClick={() => { setActiveTab('transactions'); setIsSidebarOpen(false); }}
           >
-            <span>📝</span> Transactions
+            <span>📝</span> {t('transactions')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'stats' ? 'active' : ''}`}
             onClick={() => { setActiveTab('stats'); setIsSidebarOpen(false); }}
           >
-            <span>📊</span> Statistics
+            <span>📊</span> {t('stats')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'debt' ? 'active' : ''}`}
             onClick={() => { setActiveTab('debt'); setIsSidebarOpen(false); }}
           >
-            <span>💸</span> Debt
+            <span>💸</span> {t('debt')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'budget' ? 'active' : ''}`}
             onClick={() => { setActiveTab('budget'); setIsSidebarOpen(false); }}
           >
-            <span>🎯</span> Budget
+            <span>🎯</span> {t('setBudget')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'savings' ? 'active' : ''}`}
             onClick={() => { setActiveTab('savings'); setIsSidebarOpen(false); }}
           >
-            <span>💰</span> Savings
+            <span>💰</span> {t('savingsGoals')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => { setActiveTab('profile'); setIsSidebarOpen(false); }}
           >
-            <span>👤</span> Profile
+            <span>👤</span> {t('profile')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}
           >
-            <span>⚙️</span> Settings
+            <span>⚙️</span> {t('settings')}
           </button>
         </nav>
 
@@ -327,7 +330,7 @@ const Dashboard = ({ onLogout }) => {
           style={{ marginTop: 'auto', width: '100%' }}
           onClick={onLogout}
         >
-          Logout
+          {t('logout')}
         </button>
       </aside>
 
@@ -337,8 +340,8 @@ const Dashboard = ({ onLogout }) => {
             ☰
           </button>
           <div>
-            <h2>Hello, {user.name || 'User'}</h2>
-            <p>Here's what's happening with your money today.</p>
+            <h2>{t('hello')}, {user.name || t('user')}</h2>
+            <p>{t('moneyToday')}</p>
           </div>
         </div>
       </header>

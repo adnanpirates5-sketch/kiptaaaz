@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Auth.css";
 import { authAPI } from "../../api";
+import { useTranslation } from "../theme/TranslationContext";
 
 const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +20,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
       localStorage.setItem('user', JSON.stringify(res.data.user));
       onRegisterSuccess();
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed.");
+      setError(err.response?.data?.message || t('registrationFailed'));
     }
   };
 
@@ -26,15 +28,15 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
     <div className="auth-container animate-fade-in">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>Create Account</h2>
-          <p>Join Kiptaaz to start managing your finances</p>
+          <h2>{t('createAccountTitle')}</h2>
+          <p>{t('joinKipta')}</p>
         </div>
         
         {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full Name</label>
+            <label>{t('fullName')}</label>
             <input
               type="text"
               className="premium-input"
@@ -45,7 +47,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Email Address</label>
+            <label>{t('emailAddress')}</label>
             <input
               type="email"
               className="premium-input"
@@ -56,7 +58,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label>{t('password')}</label>
             <input
               type="password"
               className="premium-input"
@@ -68,17 +70,17 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
           </div>
           
           <button type="submit" className="premium-btn">
-            Sign up
+            {t('registerBtn')}
           </button>
           <button type="button" className="premium-btn secondary" onClick={onBackHome}>
-            Back to Home
+            {t('backToHome')}
           </button>
         </form>
 
         <div className="auth-footer">
-          Already have an account?{" "}
+          {t('haveAccountPrompt')}{" "}
           <button className="auth-link" onClick={onSwitchToLogin}>
-            Sign in
+            {t('login')}
           </button>
         </div>
       </div>

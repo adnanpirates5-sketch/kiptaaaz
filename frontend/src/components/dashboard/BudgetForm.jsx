@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useTranslation } from '../theme/TranslationContext';
 import "./BudgetForm.css";
 
 const BudgetForm = ({ budget, setBudget }) => {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState(budget || "");
 
   const handleSubmit = (e) => {
@@ -13,16 +15,16 @@ const BudgetForm = ({ budget, setBudget }) => {
 
   return (
     <form onSubmit={handleSubmit} className="form budget-form">
-      <h3>Set Monthly Budget</h3>
+      <h3>{t('setBudgetTitle')}</h3>
       <input
         type="number"
-        placeholder="Budget Amount"
+        placeholder={t('amount')}
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         min="0"
         step="0.01"
       />
-      <button type="submit">Save Budget</button>
+      <button type="submit">{t('saveBudget')}</button>
     </form>
   );
 };

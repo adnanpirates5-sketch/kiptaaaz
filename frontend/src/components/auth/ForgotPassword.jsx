@@ -49,7 +49,7 @@ const ForgotPassword = ({ onBackToLogin }) => {
       </form>
 
       <p className="switch-text">
-        <span onClick={onBackToLogin}>Back to Login</span>
+        <span onClick={onBackToLogin}>{t('backToLogin')}</span>
       </p>
     </div>
   );

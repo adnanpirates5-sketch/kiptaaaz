@@ -1,6 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useCurrency } from "../theme/useCurrency";
+import { useTranslation } from "../theme/TranslationContext";
 
 const COLORS = [
   "#6366f1", // Indigo
@@ -11,22 +12,47 @@ const COLORS = [
   "#06b6d4", // Cyan
 ];
 
+const categories = [
+  { name: "Salary", key: "salary" },
+  { name: "Freelance", key: "freelance" },
+  { name: "Investment", key: "investment" },
+  { name: "Gift", key: "gift" },
+  { name: "Bonus", key: "bonus" },
+  { name: "Interest", key: "interest" },
+  { name: "Rental", key: "rental" },
+  { name: "Dividend", key: "dividend" },
+  { name: "Side Hustle", key: "sideHustle" },
+  { name: "Refund", key: "refund" },
+  { name: "Cashback", key: "cashback" },
+  { name: "Commission", key: "commission" },
+  { name: "Allowance", key: "allowance" },
+  { name: "Lottery", key: "lottery" },
+  { name: "Other", key: "other" },
+];
+
 const IncomeCategorySummary = ({ incomes }) => {
   const { currency } = useCurrency();
+  const { t } = useTranslation();
+
+  const getCategoryTranslation = (catName) => {
+    const cat = categories.find(c => c.name === catName);
+    return cat ? t(cat.key) : catName;
+  };
+
   const categoryTotals = incomes.reduce((acc, inc) => {
     acc[inc.category] = (acc[inc.category] || 0) + inc.amount;
     return acc;
   }, {});
 
   const data = Object.keys(categoryTotals).map((cat) => ({
-    name: cat,
+    name: getCategoryTranslation(cat),
     value: categoryTotals[cat],
   }));
 
   if (data.length === 0) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>
-        <p>No income data available</p>
+        <p>{t('noIncomeData')}</p>
       </div>
     );
   }

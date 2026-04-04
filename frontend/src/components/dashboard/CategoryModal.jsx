@@ -23,12 +23,12 @@ const CategoryModal = ({ isOpen, onClose, categories, onSelectCategory }) => {
               }}
             >
               <span className="icon">{cat.icon}</span>
-              <span>{cat.name}</span>
+              <span>{cat.key ? t(cat.key) : cat.name}</span>
             </button>
           ))}
         </div>
         <button className="close-btn" onClick={onClose}>
-          {t('close') || 'Close'}
+          {t('close')}
         </button>
       </div>
     </div>

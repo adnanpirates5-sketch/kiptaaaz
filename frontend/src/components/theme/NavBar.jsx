@@ -26,7 +26,7 @@ const NavBar = ({ onNavigate }) => {
       </div>
       <div className="navbar-container">
         <div className="navbar-brand" onClick={() => onNavigate('home')}>
-          <h1 className="navbar-logo">Kiptaaz</h1>
+          <h1 className="navbar-logo">{t('kiptaaz')}</h1>
         </div>
 
         <ul className="navbar-menu">
@@ -53,10 +53,10 @@ const NavBar = ({ onNavigate }) => {
         </ul>
 
         <div className="navbar-controls">
-          <button className="control-btn theme-toggle" onClick={toggleTheme} title="Toggle Theme">
+          <button className="control-btn theme-toggle" onClick={toggleTheme} title={t('toggleTheme')}>
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
-          <button className="control-btn lang-toggle" onClick={toggleLanguage} title="Switch Language">
+          <button className="control-btn lang-toggle" onClick={toggleLanguage} title={t('switchLanguage')}>
             {language === 'en' ? 'EN' : 'BN'}
           </button>
         </div>

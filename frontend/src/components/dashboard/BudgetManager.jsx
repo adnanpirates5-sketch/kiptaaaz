@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import { useCurrency } from "../theme/useCurrency";
+import { useTranslation } from "../theme/TranslationContext";
 import CategoryModal from "./CategoryModal";
 import "./BudgetManager.css";
 
 const categories = [
-  { name: "Food", icon: "🍔" },
-  { name: "Transport", icon: "🚗" },
-  { name: "Entertainment", icon: "🎬" },
-  { name: "Shopping", icon: "🛍️" },
-  { name: "Bills", icon: "💡" },
-  { name: "Health", icon: "💊" },
-  { name: "Education", icon: "📚" },
-  { name: "Travel", icon: "✈️" },
-  { name: "Subscriptions", icon: "📺" },
-  { name: "Gifts", icon: "🎁" },
-  { name: "Charity", icon: "🙏" },
-  { name: "Pet", icon: "🐶" },
-  { name: "Maintenance", icon: "🛠️" },
-  { name: "Fuel", icon: "⛽" },
-  { name: "Other", icon: "✨" },
+  { name: "Food", icon: "🍔", key: "food" },
+  { name: "Transport", icon: "🚗", key: "transport" },
+  { name: "Entertainment", icon: "🎬", key: "entertainment" },
+  { name: "Shopping", icon: "🛍️", key: "shopping" },
+  { name: "Bills", icon: "💡", key: "bills" },
+  { name: "Health", icon: "💊", key: "health" },
+  { name: "Education", icon: "📚", key: "education" },
+  { name: "Travel", icon: "✈️", key: "travel" },
+  { name: "Subscriptions", icon: "📺", key: "subscriptions" },
+  { name: "Gifts", icon: "🎁", key: "gifts" },
+  { name: "Charity", icon: "🙏", key: "charity" },
+  { name: "Pet", icon: "🐶", key: "pet" },
+  { name: "Maintenance", icon: "🛠️", key: "maintenance" },
+  { name: "Fuel", icon: "⛽", key: "fuel" },
+  { name: "Other", icon: "✨", key: "other" },
 ];
 
 const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
   const { currency } = useCurrency();
+  const { t } = useTranslation();
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,29 +48,34 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
     return cat ? cat.icon : "✨";
   };
 
+  const getCategoryTranslation = (catName) => {
+    const cat = categories.find(c => c.name === catName);
+    return cat ? t(cat.key) : catName;
+  };
+
   return (
     <div className="budget-manager animate-fade-in">
       <div className="dashboard-main-grid">
         <div className="section-card premium-card">
           <div className="section-header">
-            <h3>Set Budget</h3>
+            <h3>{t('setBudget')}</h3>
           </div>
           <form onSubmit={handleSubmit} className="premium-form">
             <div className="form-group">
-              <label className="input-label">Category</label>
+              <label className="input-label">{t('category')}</label>
               <button 
                 type="button" 
                 className="premium-input select-category-btn" 
                 onClick={() => setIsModalOpen(true)}
                 style={{ textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <span>{category ? `${getCategoryIcon(category)} ${category}` : "Select Category"}</span>
+                <span>{category ? `${getCategoryIcon(category)} ${getCategoryTranslation(category)}` : t('selectCategory')}</span>
                 <span>▼</span>
               </button>
             </div>
 
             <div className="form-group">
-              <label className="input-label">Budget Amount ({currency})</label>
+              <label className="input-label">{t('amount')} ({currency})</label>
               <input
                 type="number"
                 className="premium-input"
@@ -81,19 +88,19 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
             </div>
 
             <button type="submit" className="premium-btn" style={{ width: '100%', marginTop: '0.5rem' }}>
-              🎯 Save Budget
+              🎯 {t('saveBudget')}
             </button>
           </form>
         </div>
 
         <div className="section-card premium-card">
           <div className="section-header">
-            <h3>Budget Progress</h3>
+            <h3>{t('budgetProgress')}</h3>
           </div>
           <div className="budget-list">
             {budgets.length === 0 ? (
               <div className="empty-state">
-                <p>No budgets set yet. Start by adding one!</p>
+                <p>{t('noBudgets')}</p>
               </div>
             ) : (
               budgets.map((budget) => {
@@ -108,16 +115,16 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
                       <div className="budget-item-info">
                         <span className="budget-icon">{icon}</span>
                         <div className="budget-item-details">
-                          <span className="budget-category-name">{budget.category}</span>
+                          <span className="budget-category-name">{getCategoryTranslation(budget.category)}</span>
                           <span className="budget-usage-text">
-                            {currency} {spent.toLocaleString()} of {currency} {budget.amount.toLocaleString()}
+                            {currency} {spent.toLocaleString()} {t('of')} {currency} {budget.amount.toLocaleString()}
                           </span>
                         </div>
                       </div>
                       <button 
                         className="delete-budget-btn" 
                         onClick={() => onDeleteBudget(budget.category)}
-                        title="Delete Budget"
+                        title={t('delete')}
                       >
                         🗑️
                       </button>
@@ -133,13 +140,13 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
                       <div className="budget-status-footer">
                         <span className={`status-text ${isOver ? 'over' : ''}`}>
                           {isOver 
-                            ? `Over by ${currency} ${(spent - budget.amount).toLocaleString()}` 
-                            : `${percentage.toFixed(0)}% used`
+                            ? `${t('overBy')} ${currency} ${(spent - budget.amount).toLocaleString()}` 
+                            : `${percentage.toFixed(0)}% ${t('used')}`
                           }
                         </span>
                         {!isOver && (
                           <span className="remaining-text">
-                            {currency} {(budget.amount - spent).toLocaleString()} left
+                            {currency} {(budget.amount - spent).toLocaleString()} {t('remaining')}
                           </span>
                         )}
                       </div>

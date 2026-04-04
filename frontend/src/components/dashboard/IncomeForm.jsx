@@ -3,21 +3,21 @@ import { useTranslation } from "../theme/TranslationContext";
 import CategoryModal from "./CategoryModal";
 
 const categories = [
-  { name: "Salary", icon: "💰" },
-  { name: "Freelance", icon: "🖋️" },
-  { name: "Investment", icon: "📈" },
-  { name: "Gift", icon: "🎁" },
-  { name: "Bonus", icon: "🏆" },
-  { name: "Interest", icon: "🏦" },
-  { name: "Rental", icon: "🏠" },
-  { name: "Dividend", icon: "💵" },
-  { name: "Side Hustle", icon: "🛠️" },
-  { name: "Refund", icon: "🔄" },
-  { name: "Cashback", icon: "💳" },
-  { name: "Commission", icon: "📬" },
-  { name: "Allowance", icon: "🧾" },
-  { name: "Lottery", icon: "🎰" },
-  { name: "Other", icon: "✨" },
+  { name: "Salary", icon: "💰", key: "salary" },
+  { name: "Freelance", icon: "🖋️", key: "freelance" },
+  { name: "Investment", icon: "📈", key: "investment" },
+  { name: "Gift", icon: "🎁", key: "gift" },
+  { name: "Bonus", icon: "🏆", key: "bonus" },
+  { name: "Interest", icon: "🏦", key: "interest" },
+  { name: "Rental", icon: "🏠", key: "rental" },
+  { name: "Dividend", icon: "💵", key: "dividend" },
+  { name: "Side Hustle", icon: "🛠️", key: "sideHustle" },
+  { name: "Refund", icon: "🔄", key: "refund" },
+  { name: "Cashback", icon: "💳", key: "cashback" },
+  { name: "Commission", icon: "📬", key: "commission" },
+  { name: "Allowance", icon: "🧾", key: "allowance" },
+  { name: "Lottery", icon: "🎰", key: "lottery" },
+  { name: "Other", icon: "✨", key: "other" },
 ];
 
 const IncomeForm = ({ onAddIncome }) => {
@@ -38,6 +38,11 @@ const IncomeForm = ({ onAddIncome }) => {
     setAmount("");
   };
 
+  const getCategoryTranslation = (catName) => {
+    const cat = categories.find(c => c.name === catName);
+    return cat ? t(cat.key) : catName;
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="premium-form">
@@ -49,7 +54,7 @@ const IncomeForm = ({ onAddIncome }) => {
           style={{ textAlign: 'left', cursor: 'pointer' }}
           onClick={() => setIsModalOpen(true)}
         >
-          {category || t('selectCategory')}
+          {category ? getCategoryTranslation(category) : t('selectCategory')}
         </button>
 
         <input

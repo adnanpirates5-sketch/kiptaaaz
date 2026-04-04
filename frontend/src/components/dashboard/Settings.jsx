@@ -18,7 +18,7 @@ const Settings = ({ onLogout }) => {
     <div className="settings-container-premium animate-fade-in">
       <div className="settings-header-premium">
         <h2>{t('settings')}</h2>
-        <p className="settings-subtitle">Manage your account preferences and application configuration</p>
+        <p className="settings-subtitle">{t('settingsDesc')}</p>
       </div>
 
       <div className="settings-grid">
@@ -26,13 +26,13 @@ const Settings = ({ onLogout }) => {
         <div className="premium-card settings-group-card">
           <div className="settings-group-header">
             <span className="settings-group-icon">🎨</span>
-            <h4>Preferences</h4>
+            <h4>{t('preferences')}</h4>
           </div>
           
           <div className="setting-row">
             <div className="setting-info">
               <span className="setting-label">{t('darkMode')}</span>
-              <span className="setting-description">Switch between light and dark visual modes</span>
+              <span className="setting-description">{t('darkModeDesc')}</span>
             </div>
             <div 
               className={`premium-toggle ${theme === 'dark' ? 'active' : ''}`}
@@ -45,7 +45,7 @@ const Settings = ({ onLogout }) => {
           <div className="setting-row">
             <div className="setting-info">
               <span className="setting-label">{t('language')}</span>
-              <span className="setting-description">Choose your preferred interface language</span>
+              <span className="setting-description">{t('languageDesc')}</span>
             </div>
             <button 
               onClick={toggleLanguage} 
@@ -64,7 +64,7 @@ const Settings = ({ onLogout }) => {
             <h4>{t('currency')}</h4>
           </div>
           <div className="setting-info" style={{ marginBottom: '1rem' }}>
-            <span className="setting-description">Select the primary currency for your transactions and reports</span>
+            <span className="setting-description">{t('currencyDesc')}</span>
           </div>
           <div className="currency-grid">
             {currencies.map((curr) => (
@@ -84,8 +84,8 @@ const Settings = ({ onLogout }) => {
       {/* Danger Zone */}
       <div className="premium-card logout-zone">
         <div className="logout-text">
-          <h4>Account Session</h4>
-          <span className="setting-description">Sign out of your account on this device</span>
+          <h4>{t('accountSession')}</h4>
+          <span className="setting-description">{t('logoutDesc')}</span>
         </div>
         <button onClick={onLogout} className="premium-btn danger" style={{ background: 'var(--danger)' }}>
           {t('logout')}

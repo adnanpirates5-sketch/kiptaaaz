@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useCurrency } from "../theme/useCurrency";
+import { useTranslation } from '../theme/TranslationContext';
 import "./DebtList.css";
 
 const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
   const { currency } = useCurrency();
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
 
@@ -13,14 +15,14 @@ const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
     return matchesSearch && matchesFilter;
   });
 
-  if (debts.length === 0) return <p className="description-text">No debts or lendings added yet.</p>;
+  if (debts.length === 0) return <p className="description-text">{t('noDebts')}</p>;
 
   return (
     <div className="debt-list">
       <div className="list-controls">
         <input 
           type="text" 
-          placeholder="Search by name..." 
+          placeholder={t('searchByName')} 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
@@ -30,16 +32,16 @@ const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
           onChange={(e) => setFilterType(e.target.value)}
           className="filter-select"
         >
-          <option value="all">All Types</option>
-          <option value="debt">Debts</option>
-          <option value="lending">Lendings</option>
+          <option value="all">{t('allTypes')}</option>
+          <option value="debt">{t('debts')}</option>
+          <option value="lending">{t('lendings')}</option>
         </select>
       </div>
 
-      <h3>Debt & Lending History</h3>
+      <h3>{t('debtHistory')}</h3>
       <div className="list-items">
         {filteredDebts.length === 0 ? (
-          <p className="description-text">No matches found.</p>
+          <p className="description-text">{t('noMatches')}</p>
         ) : (
           filteredDebts.map((item) => {
             const itemId = item._id || item.id;
@@ -48,12 +50,12 @@ const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
                 <div className="item-info">
                   <div className="item-main">
                     <span className={`type-tag ${item.type}`}>
-                      {item.type === "debt" ? "Owe" : "Lent"}
+                      {item.type === "debt" ? t('owe') : t('lent')}
                     </span>
                     <span className="name">{item.name}</span>
                   </div>
                   {item.dueDate && (
-                    <span className="due-date">Due: {new Date(item.dueDate).toLocaleDateString()}</span>
+                    <span className="due-date">{t('due')}: {new Date(item.dueDate).toLocaleDateString()}</span>
                   )}
                 </div>
                 
@@ -63,14 +65,14 @@ const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
                     <button 
                       className={`status-btn ${item.status}`}
                       onClick={() => onUpdateDebt(itemId, { status: item.status === 'paid' ? 'pending' : 'paid' })}
-                      title={item.status === 'paid' ? "Mark as Pending" : "Mark as Paid"}
+                      title={item.status === 'paid' ? t('markAsPending') : t('markAsPaid')}
                     >
                       {item.status === 'paid' ? "✅" : "⏳"}
                     </button>
                     <button 
                       className="delete-btn"
                       onClick={() => onDeleteDebt(itemId)}
-                      title="Delete"
+                      title={t('delete')}
                     >
                       🗑️
                     </button>

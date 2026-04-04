@@ -15,7 +15,7 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
-      const dateStr = date.toLocaleDateString('default', { month: 'short', day: 'numeric' });
+      const dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
       
       const dayExpenses = expenses
         .filter(exp => {
@@ -88,7 +88,7 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
               fillOpacity={1} 
               fill="url(#colorIncome)" 
               strokeWidth={2}
-              name="Income"
+              name={t('income')}
             />
             <Area 
               type="monotone" 
@@ -97,7 +97,7 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
               fillOpacity={1} 
               fill="url(#colorExpense)" 
               strokeWidth={2}
-              name="Expense"
+              name={t('expense')}
             />
           </AreaChart>
         </ResponsiveContainer>

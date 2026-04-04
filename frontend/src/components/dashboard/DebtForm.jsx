@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useTranslation } from '../theme/TranslationContext';
 import "./DebtForm.css";
 
 const DebtForm = ({ onAddDebt }) => {
+  const { t } = useTranslation();
   const [type, setType] = useState("debt");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -25,7 +27,7 @@ const DebtForm = ({ onAddDebt }) => {
 
   return (
     <form onSubmit={handleSubmit} className="premium-form">
-      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Add Debt / Lending</h3>
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('addDebtLending')}</h3>
       
       <div className="form-group">
         <select 
@@ -33,15 +35,15 @@ const DebtForm = ({ onAddDebt }) => {
           onChange={(e) => setType(e.target.value)}
           className="premium-input"
         >
-          <option value="debt">Debt (You owe)</option>
-          <option value="lending">Lending (You lent)</option>
+          <option value="debt">{t('debtYouOwe')}</option>
+          <option value="lending">{t('lendingYouLent')}</option>
         </select>
       </div>
 
       <div className="form-group">
         <input
           type="text"
-          placeholder="Person / Source"
+          placeholder={t('personSource')}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="premium-input"
@@ -52,7 +54,7 @@ const DebtForm = ({ onAddDebt }) => {
       <div className="form-group">
         <input
           type="number"
-          placeholder="Amount"
+          placeholder={t('amount')}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           min="0"
@@ -64,7 +66,7 @@ const DebtForm = ({ onAddDebt }) => {
 
       <div className="form-group">
         <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>
-          Due Date (Optional)
+          {t('dueDateOptional')}
         </label>
         <input
           type="date"
@@ -75,7 +77,7 @@ const DebtForm = ({ onAddDebt }) => {
       </div>
 
       <button type="submit" className="premium-btn" style={{ width: '100%', marginTop: '0.5rem' }}>
-        Add Entry
+        {t('addEntry')}
       </button>
     </form>
   );

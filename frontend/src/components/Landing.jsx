@@ -20,15 +20,15 @@ const Landing = ({ onGetStarted }) => {
             <div className="hero-features">
               <div className="feature-item">
                 <div className="feature-icon">📊</div>
-                <span>Smart Analytics</span>
+                <span>{t('smartAnalytics')}</span>
               </div>
               <div className="feature-item">
                 <div className="feature-icon">🎯</div>
-                <span>Goal Tracking</span>
+                <span>{t('goalTracking')}</span>
               </div>
               <div className="feature-item">
                 <div className="feature-icon">🔒</div>
-                <span>Secure & Private</span>
+                <span>{t('securePrivate')}</span>
               </div>
             </div>
 
@@ -37,7 +37,7 @@ const Landing = ({ onGetStarted }) => {
                 {t('getStarted')}
               </button>
               <button className="premium-btn secondary">
-                Learn More
+                {t('learnMore')}
               </button>
             </div>
           </div>
@@ -47,7 +47,7 @@ const Landing = ({ onGetStarted }) => {
               <div className="card-header">
                 <div className="avatar">💰</div>
                 <div className="card-info">
-                  <h3>Monthly Budget</h3>
+                  <h3>{t('monthlyBudget')}</h3>
                   <p>$2,450.00</p>
                 </div>
               </div>
@@ -55,7 +55,7 @@ const Landing = ({ onGetStarted }) => {
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: '75%' }}></div>
                 </div>
-                <p className="progress-text">$1,837.50 spent</p>
+                <p className="progress-text">$1,837.50 {t('spent')}</p>
               </div>
             </div>
 
@@ -66,11 +66,11 @@ const Landing = ({ onGetStarted }) => {
               </div>
               <div className="floating-card card-2">
                 <span>💡</span>
-                <span>AI Insights</span>
+                <span>{t('aiInsights')}</span>
               </div>
               <div className="floating-card card-3">
                 <span>🎯</span>
-                <span>Goals</span>
+                <span>{t('goals')}</span>
               </div>
             </div>
           </div>
@@ -81,15 +81,15 @@ const Landing = ({ onGetStarted }) => {
         <div className="stats-container">
           <div className="stat-card">
             <div className="stat-number">10K+</div>
-            <div className="stat-label">Active Users</div>
+            <div className="stat-label">{t('activeUsers')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-number">$2M+</div>
-            <div className="stat-label">Money Saved</div>
+            <div className="stat-label">{t('moneySaved')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-number">4.8★</div>
-            <div className="stat-label">User Rating</div>
+            <div className="stat-label">{t('userRating')}</div>
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@ const Landing = ({ onGetStarted }) => {
       {/* Testimonials Section */}
       <section className="testimonials-section">
         <div className="container">
-          <h2 className="section-title">What Our Users Say</h2>
+          <h2 className="section-title">{t('reviewsFeedback')}</h2>
           <div className="testimonials-grid">
             {JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).length > 0 ? (
               JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).map((review) => (
@@ -117,21 +117,21 @@ const Landing = ({ onGetStarted }) => {
                   <div className="stars">
                     <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
                   </div>
-                  <p className="comment">"Kiptaaz has completely changed how I manage my money. The UI is so clean and easy to use!"</p>
+                  <p className="comment">"{t('testimonial1')}"</p>
                   <div className="author">- Sarah J.</div>
                 </div>
                 <div className="testimonial-card">
                   <div className="stars">
                     <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
                   </div>
-                  <p className="comment">"The debt tracking feature is a lifesaver. I finally have a clear path to being debt-free."</p>
+                  <p className="comment">"{t('testimonial2')}"</p>
                   <div className="author">- Michael R.</div>
                 </div>
                 <div className="testimonial-card">
                   <div className="stars">
                     <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
                   </div>
-                  <p className="comment">"Best budgeting app I've ever used. The analytics provide so much insight into my spending."</p>
+                  <p className="comment">"{t('testimonial3')}"</p>
                   <div className="author">- Emily W.</div>
                 </div>
               </>

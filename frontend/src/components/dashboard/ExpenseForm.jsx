@@ -3,21 +3,21 @@ import { useTranslation } from "../theme/TranslationContext";
 import CategoryModal from "./CategoryModal";
 
 const categories = [
-  { name: "Food", icon: "🍔" },
-  { name: "Transport", icon: "🚗" },
-  { name: "Entertainment", icon: "🎬" },
-  { name: "Shopping", icon: "🛍️" },
-  { name: "Bills", icon: "💡" },
-  { name: "Health", icon: "💊" },
-  { name: "Education", icon: "📚" },
-  { name: "Travel", icon: "✈️" },
-  { name: "Subscriptions", icon: "📺" },
-  { name: "Gifts", icon: "🎁" },
-  { name: "Charity", icon: "🙏" },
-  { name: "Pet", icon: "🐶" },
-  { name: "Maintenance", icon: "🛠️" },
-  { name: "Fuel", icon: "⛽" },
-  { name: "Other", icon: "✨" },
+  { name: "Food", icon: "🍔", key: "food" },
+  { name: "Transport", icon: "🚗", key: "transport" },
+  { name: "Entertainment", icon: "🎬", key: "entertainment" },
+  { name: "Shopping", icon: "🛍️", key: "shopping" },
+  { name: "Bills", icon: "💡", key: "bills" },
+  { name: "Health", icon: "💊", key: "health" },
+  { name: "Education", icon: "📚", key: "education" },
+  { name: "Travel", icon: "✈️", key: "travel" },
+  { name: "Subscriptions", icon: "📺", key: "subscriptions" },
+  { name: "Gifts", icon: "🎁", key: "gifts" },
+  { name: "Charity", icon: "🙏", key: "charity" },
+  { name: "Pet", icon: "🐶", key: "pet" },
+  { name: "Maintenance", icon: "🛠️", key: "maintenance" },
+  { name: "Fuel", icon: "⛽", key: "fuel" },
+  { name: "Other", icon: "✨", key: "other" },
 ];
 
 const ExpenseForm = ({ onAddExpense }) => {
@@ -38,6 +38,11 @@ const ExpenseForm = ({ onAddExpense }) => {
     setAmount("");
   };
 
+  const getCategoryTranslation = (catName) => {
+    const cat = categories.find(c => c.name === catName);
+    return cat ? t(cat.key) : catName;
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="premium-form">
@@ -49,7 +54,7 @@ const ExpenseForm = ({ onAddExpense }) => {
           style={{ textAlign: 'left', cursor: 'pointer' }}
           onClick={() => setIsModalOpen(true)}
         >
-          {category || t('selectCategory')}
+          {category ? getCategoryTranslation(category) : t('selectCategory')}
         </button>
 
         <input

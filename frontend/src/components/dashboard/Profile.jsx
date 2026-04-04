@@ -28,9 +28,9 @@ const Profile = ({ incomes, expenses, debts }) => {
   };
 
   const getAccountLevel = () => {
-    if (transactionCount > 50) return "Finance Pro";
-    if (transactionCount > 20) return "Regular Saver";
-    return "New Member";
+    if (transactionCount > 50) return t('financePro');
+    if (transactionCount > 20) return t('regularSaver');
+    return t('newMember');
   };
 
   const handleAvatarClick = () => {
@@ -43,7 +43,7 @@ const Profile = ({ incomes, expenses, debts }) => {
 
     // Check file size (limit to 2MB for base64 storage)
     if (file.size > 2 * 1024 * 1024) {
-      setError("Image size should be less than 2MB");
+      setError(t('imageSizeLimit'));
       return;
     }
 
@@ -63,7 +63,7 @@ const Profile = ({ incomes, expenses, debts }) => {
         // Dispatch custom event to notify other components (like Dashboard sidebar)
         window.dispatchEvent(new Event('userUpdate'));
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to upload image");
+        setError(err.response?.data?.message || t('uploadFailed'));
       } finally {
         setLoading(false);
       }
@@ -76,7 +76,7 @@ const Profile = ({ incomes, expenses, debts }) => {
       {/* Header Card */}
       <div className="premium-card profile-header-card">
         <div className="profile-header-bg"></div>
-        <div className="avatar-wrapper" onClick={handleAvatarClick} title="Click to change photo">
+        <div className="avatar-wrapper" onClick={handleAvatarClick} title={t('changePhoto')}>
           <div className="profile-avatar-large">
             {user.profilePicture ? (
               <img src={user.profilePicture} alt="Profile" className="avatar-img" />
@@ -98,8 +98,8 @@ const Profile = ({ incomes, expenses, debts }) => {
         />
         
         <div className="profile-header-info">
-          <h2>{user.name || 'User'}</h2>
-          <div className="profile-email-badge">{user.email || 'No email provided'}</div>
+          <h2>{user.name || t('user')}</h2>
+          <div className="profile-email-badge">{user.email || t('noEmail')}</div>
           {error && <div className="profile-error-msg">{error}</div>}
           <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
             <span className="achievement-badge">🏆 {getAccountLevel()}</span>
@@ -110,15 +110,15 @@ const Profile = ({ incomes, expenses, debts }) => {
       {/* Stats Quick View */}
       <div className="profile-stats-grid">
         <div className="premium-card stat-metric-card income" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">Total Earnings</span>
+          <span className="metric-label">{t('totalEarnings')}</span>
           <span className="metric-value">{currency} {totalIncome.toLocaleString()}</span>
         </div>
         <div className="premium-card stat-metric-card expense" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">Total Spending</span>
+          <span className="metric-label">{t('totalSpending')}</span>
           <span className="metric-value">{currency} {totalExpense.toLocaleString()}</span>
         </div>
         <div className="premium-card stat-metric-card balance" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">Active Debts</span>
+          <span className="metric-label">{t('activeDebts')}</span>
           <span className="metric-value" style={{ color: totalDebt > 0 ? 'var(--danger)' : 'var(--text-primary)' }}>
             {currency} {totalDebt.toLocaleString()}
           </span>
@@ -130,23 +130,23 @@ const Profile = ({ incomes, expenses, debts }) => {
         <div className="premium-card info-group">
           <div className="settings-group-header">
             <span className="settings-group-icon">👤</span>
-            <h4>Account Information</h4>
+            <h4>{t('accountInfo')}</h4>
           </div>
           
           <div className="info-item">
-            <span className="info-label">Full Name</span>
+            <span className="info-label">{t('fullName')}</span>
             <span className="info-value">{user.name || 'N/A'}</span>
           </div>
           
           <div className="info-item">
-            <span className="info-label">Email Address</span>
+            <span className="info-label">{t('emailAddress')}</span>
             <span className="info-value">{user.email || 'N/A'}</span>
           </div>
           
           <div className="info-item">
-            <span className="info-label">Member Since</span>
+            <span className="info-label">{t('memberSince')}</span>
             <span className="info-value">
-              {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
+              {user.createdAt ? new Date(user.createdAt).toLocaleDateString(undefined, { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
@@ -159,22 +159,22 @@ const Profile = ({ incomes, expenses, debts }) => {
         <div className="premium-card info-group">
           <div className="settings-group-header">
             <span className="settings-group-icon">🛡️</span>
-            <h4>Security & Status</h4>
+            <h4>{t('securityStatus')}</h4>
           </div>
           
           <div className="info-item">
-            <span className="info-label">Account Status</span>
+            <span className="info-label">{t('accountStatus')}</span>
             <div className="account-status-card">
               <div className="status-indicator"></div>
-              <span className="info-value" style={{ color: 'var(--success)' }}>Active & Verified</span>
+              <span className="info-value" style={{ color: 'var(--success)' }}>{t('activeVerified')}</span>
             </div>
           </div>
 
           <div className="info-item">
-            <span className="info-label">Data Usage</span>
+            <span className="info-label">{t('dataUsage')}</span>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-              <span className="info-value">{transactionCount} Transactions</span>
-              <span className="info-value" style={{ color: 'var(--text-muted)' }}>{((transactionCount/500)*100).toFixed(1)}% of limit</span>
+              <span className="info-value">{transactionCount} {t('transactionsCount')}</span>
+              <span className="info-value" style={{ color: 'var(--text-muted)' }}>{((transactionCount/500)*100).toFixed(1)}% {t('ofLimit')}</span>
             </div>
             <div style={{ height: '6px', backgroundColor: 'var(--bg-color)', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{ width: `${Math.min((transactionCount/500)*100, 100)}%`, height: '100%', backgroundColor: 'var(--primary)' }}></div>
@@ -182,8 +182,8 @@ const Profile = ({ incomes, expenses, debts }) => {
           </div>
 
           <div className="info-item">
-            <span className="info-label">Two-Factor Authentication</span>
-            <span className="info-value" style={{ color: 'var(--text-muted)' }}>Not Enabled</span>
+            <span className="info-label">{t('twoFactor')}</span>
+            <span className="info-value" style={{ color: 'var(--text-muted)' }}>{t('notEnabled')}</span>
           </div>
         </div>
       </div>

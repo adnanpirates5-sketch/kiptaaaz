@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Auth.css";
 import { authAPI } from "../../api";
+import { useTranslation } from "../theme/TranslationContext";
 
 const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSuccess }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,7 +18,7 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
       localStorage.setItem('user', JSON.stringify(res.data.user));
       onLoginSuccess();
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+      setError(err.response?.data?.message || t('loginFailed'));
     }
   };
 
@@ -24,15 +26,15 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
     <div className="auth-container animate-fade-in">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>Welcome back</h2>
-          <p>Please enter your details to sign in</p>
+          <h2>{t('welcomeBack')}</h2>
+          <p>{t('enterDetails')}</p>
         </div>
         
         {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email Address</label>
+            <label>{t('emailAddress')}</label>
             <input
               type="email"
               className="premium-input"
@@ -43,7 +45,7 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label>{t('password')}</label>
             <input
               type="password"
               className="premium-input"
@@ -53,22 +55,22 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
               required
             />
             <span className="forgot-password" onClick={onForgotPassword}>
-              Forgot password?
+              {t('forgotPassword')}
             </span>
           </div>
           
           <button type="submit" className="premium-btn">
-            Sign in
+            {t('loginBtn')}
           </button>
           <button type="button" className="premium-btn secondary" onClick={onBackHome}>
-            Back to Home
+            {t('backToHome')}
           </button>
         </form>
 
         <div className="auth-footer">
-          Don't have an account?{" "}
+          {t('noAccountPrompt')}{" "}
           <button className="auth-link" onClick={onSwitchToRegister}>
-            Sign up
+            {t('register')}
           </button>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useCurrency } from '../theme/useCurrency';
+import { useTranslation } from '../theme/TranslationContext';
 import './SavingsGoals.css';
 
 const SavingsGoals = () => {
   const { currency } = useCurrency();
+  const { t } = useTranslation();
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', deadline: '' });
@@ -54,9 +56,9 @@ const SavingsGoals = () => {
   return (
     <div className="savings-goals animate-fade-in">
       <div className="section-header">
-        <h2 className="premium-title">Savings Goals</h2>
+        <h2 className="premium-title">{t('savingsGoals')}</h2>
         <button className={`premium-btn ${showForm ? 'danger' : ''}`} onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : '+ New Goal'}
+          {showForm ? t('cancel') : t('newGoal')}
         </button>
       </div>
 
@@ -64,7 +66,7 @@ const SavingsGoals = () => {
         <form className="goal-form section-card premium-card" onSubmit={handleAddGoal}>
           <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Goal Name</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('goalName')}</label>
               <input 
                 type="text" 
                 className="premium-input"
@@ -75,7 +77,7 @@ const SavingsGoals = () => {
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Target Amount ({currency})</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('targetAmount')} ({currency})</label>
               <input 
                 type="number" 
                 className="premium-input"
@@ -86,7 +88,7 @@ const SavingsGoals = () => {
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Current Savings ({currency})</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('currentSavings')} ({currency})</label>
               <input 
                 type="number" 
                 className="premium-input"
@@ -96,7 +98,7 @@ const SavingsGoals = () => {
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Deadline (Optional)</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('deadline')} ({t('optional')})</label>
               <input 
                 type="date" 
                 className="premium-input"
@@ -105,14 +107,14 @@ const SavingsGoals = () => {
               />
             </div>
           </div>
-          <button type="submit" className="premium-btn" style={{ marginTop: '1.5rem', width: '200px' }}>🎯 Add Goal</button>
+          <button type="submit" className="premium-btn" style={{ marginTop: '1.5rem', width: '200px' }}>🎯 {t('addGoal')}</button>
         </form>
       )}
 
       <div className="goals-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
         {goals.length === 0 ? (
           <div className="empty-state" style={{ textAlign: 'center', gridColumn: '1/-1', padding: '4rem 0', color: 'var(--text-muted)' }}>
-            <p>No savings goals yet. Start planning your future!</p>
+            <p>{t('noGoals')}</p>
           </div>
         ) : (
           goals.map(goal => {
@@ -134,7 +136,7 @@ const SavingsGoals = () => {
                 </div>
                 {goal.deadline && (
                   <div className="deadline" style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    📅 Target Date: {new Date(goal.deadline).toLocaleDateString()}
+                    📅 {t('targetDate')}: {new Date(goal.deadline).toLocaleDateString()}
                   </div>
                 )}
                 <div className="update-progress" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
@@ -142,7 +144,7 @@ const SavingsGoals = () => {
                     <input 
                       type="number" 
                       className="premium-input"
-                      placeholder="Add savings" 
+                      placeholder={t('addSavings')} 
                       style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
@@ -160,10 +162,10 @@ const SavingsGoals = () => {
                         input.value = '';
                       }}
                     >
-                      Add
+                      {t('add')}
                     </button>
                   </div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Enter amount and press Add or Enter</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{t('enterAmountAdd')}</p>
                 </div>
               </div>
             );

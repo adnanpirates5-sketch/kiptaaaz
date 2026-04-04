@@ -1,9 +1,11 @@
 import React from "react";
 import { useCurrency } from "../theme/useCurrency";
+import { useTranslation } from "../theme/TranslationContext";
 import "./BudgetSummary.css";
 
 const BudgetSummary = ({ budget, expenses }) => {
   const { currency } = useCurrency();
+  const { t } = useTranslation();
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
   const remaining = budget - totalExpenses;
 
@@ -12,15 +14,15 @@ const BudgetSummary = ({ budget, expenses }) => {
   return (
     <div className="summary-cards">
       <div className="card balance">
-        <h3>Monthly Budget</h3>
+        <h3>{t('monthlyBudget')}</h3>
         <p>{currency} {budget}</p>
       </div>
       <div className="card expenses">
-        <h3>Spent</h3>
+        <h3>{t('spent')}</h3>
         <p>{currency} {totalExpenses}</p>
       </div>
       <div className="card income">
-        <h3>Remaining</h3>
+        <h3>{t('remaining')}</h3>
         <p>{currency} {remaining >= 0 ? remaining : 0}</p>
       </div>
     </div>
