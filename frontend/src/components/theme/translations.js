@@ -5,6 +5,7 @@ export const translations = {
     login: 'Login',
     register: 'Register',
     about: 'About Us',
+    reviews: 'Reviews',
     toggleTheme: 'Toggle Theme',
     switchLanguage: 'Switch Language',
 

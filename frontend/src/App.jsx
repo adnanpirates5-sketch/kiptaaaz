@@ -11,7 +11,9 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import Dashboard from "./components/dashboard/Dashboard";
 import NavBar from "./components/theme/NavBar";
 import AboutUs from "./components/AboutUs";
+import Reviews from "./components/Reviews";
 import { ThemeProvider } from "./components/theme/ThemeContext";
+
 import { TranslationProvider } from "./components/theme/TranslationContext";
 
 function App() {
@@ -29,7 +31,7 @@ function App() {
       <TranslationProvider>
         <BrowserRouter>
           <div className="app-wrapper">
-            {page === "home" && (
+            {(page === "home" || page === "about" || page === "reviews") && (
               <NavBar 
                 onNavigate={setPage} 
               />
@@ -73,6 +75,10 @@ function App() {
 
         {page === "about" && (
           <AboutUs onBackHome={() => setPage("home")} />
+        )}
+
+        {page === "reviews" && (
+          <Reviews onBackHome={() => setPage("home")} />
         )}
 
         <Routes>

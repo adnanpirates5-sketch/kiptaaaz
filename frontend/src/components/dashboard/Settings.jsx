@@ -9,10 +9,63 @@ const Settings = ({ onLogout }) => {
   const { theme, toggleTheme } = useTheme();
   const { currency, changeCurrency } = useCurrency();
 
+  // Review Form State
+  const [rating, setRating] = React.useState(0);
+  const [hoverRating, setHoverRating] = React.useState(0);
+  const [comment, setComment] = React.useState('');
+  const [showReviewForm, setShowReviewForm] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState(null);
+
   const currencies = [
     { symbol: '৳', name: 'BDT' },
     { symbol: '$', name: 'USD' },
   ];
+
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    if (rating === 0 || !comment.trim()) return;
+
+    const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const userName = savedUser.name || 'Anonymous User';
+
+    const newReview = {
+      id: Date.now(),
+      author: userName,
+      rating,
+      comment,
+      date: new Date().toISOString(),
+    };
+
+    const savedReviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+    const updatedReviews = [newReview, ...savedReviews];
+    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
+
+    // Reset form
+    setRating(0);
+    setComment('');
+    setSubmitStatus('success');
+    setTimeout(() => {
+      setSubmitStatus(null);
+      setShowReviewForm(false);
+    }, 2000);
+  };
+
+  const renderStars = () => {
+    return [...Array(5)].map((_, index) => {
+      const starValue = index + 1;
+      return (
+        <span
+          key={index}
+          className={`settings-star ${starValue <= (hoverRating || rating) ? 'filled' : ''}`}
+          onClick={() => setRating(starValue)}
+          onMouseEnter={() => setHoverRating(starValue)}
+          onMouseLeave={() => setHoverRating(0)}
+        >
+          ★
+        </span>
+      );
+    });
+  };
 
   return (
     <div className="settings-container-premium animate-fade-in">
@@ -79,6 +132,65 @@ const Settings = ({ onLogout }) => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Review Section */}
+      <div className="premium-card settings-group-card">
+        <div className="settings-group-header">
+          <span className="settings-group-icon">⭐</span>
+          <h4>{t('reviewsFeedback')}</h4>
+        </div>
+        <div className="setting-info" style={{ marginBottom: '1rem' }}>
+          <span className="setting-description">{t('reviewsDesc')}</span>
+        </div>
+        
+        {!showReviewForm ? (
+          <button 
+            className="premium-btn secondary"
+            onClick={() => setShowReviewForm(true)}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('writeReview')}
+          </button>
+        ) : (
+          <form className="settings-review-form" onSubmit={handleSubmitReview}>
+            {submitStatus === 'success' ? (
+              <div className="submit-success-msg">
+                {t('submitReviewSuccess') || 'Thank you for your review!'}
+              </div>
+            ) : (
+              <>
+                <div className="settings-rating-section">
+                  <div className="settings-stars">
+                    {renderStars()}
+                  </div>
+                </div>
+
+                <div className="settings-form-group">
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder={t('reviewPlaceholder')}
+                    required
+                  />
+                </div>
+
+                <div className="settings-review-actions">
+                  <button type="submit" className="premium-btn primary">
+                    {t('submitReview')}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="premium-btn ghost" 
+                    onClick={() => setShowReviewForm(false)}
+                  >
+                    {t('cancel')}
+                  </button>
+                </div>
+              </>
+            )}
+          </form>
+        )}
       </div>
 
       {/* Danger Zone */}

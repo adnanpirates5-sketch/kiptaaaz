@@ -50,6 +50,11 @@ const NavBar = ({ onNavigate }) => {
               {t('about')}
             </button>
           </li>
+          <li>
+            <button className="nav-link" onClick={() => onNavigate('reviews')}>
+              {t('reviews')}
+            </button>
+          </li>
         </ul>
 
         <div className="navbar-controls">

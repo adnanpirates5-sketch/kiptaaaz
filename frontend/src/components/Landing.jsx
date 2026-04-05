@@ -100,52 +100,6 @@ const Landing = ({ onGetStarted }) => {
         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <section className="testimonials-section">
-        <div className="container">
-          <h2 className="section-title">{t('reviewsFeedback')}</h2>
-          <div className="testimonials-grid">
-            {JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).length > 0 ? (
-              JSON.parse(localStorage.getItem('reviews') || '[]').slice(0, 3).map((review) => (
-                <div key={review.id} className="testimonial-card">
-                  <div className="stars">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>★</span>
-                    ))}
-                  </div>
-                  <p className="comment">"{review.comment}"</p>
-                  <div className="date">{new Date(review.date).toLocaleDateString()}</div>
-                </div>
-              ))
-            ) : (
-              <>
-                <div className="testimonial-card">
-                  <div className="stars">
-                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
-                  </div>
-                  <p className="comment">"{t('testimonial1')}"</p>
-                  <div className="author">- Sarah J.</div>
-                </div>
-                <div className="testimonial-card">
-                  <div className="stars">
-                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
-                  </div>
-                  <p className="comment">"{t('testimonial2')}"</p>
-                  <div className="author">- Michael R.</div>
-                </div>
-                <div className="testimonial-card">
-                  <div className="stars">
-                    <span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span><span className="star filled">★</span>
-                  </div>
-                  <p className="comment">"{t('testimonial3')}"</p>
-                  <div className="author">- Emily W.</div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
       <Modal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)}>
         <UserGuide />
       </Modal>
