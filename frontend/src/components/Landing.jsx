@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "./theme/TranslationContext";
-import Modal from "./Modal";
-import UserGuide from "./UserGuide";
 import "./Landing.css";
 
 const Landing = ({ onGetStarted }) => {
   const { t } = useTranslation();
-  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   return (
     <div className="landing-page animate-fade-in">
@@ -38,12 +35,6 @@ const Landing = ({ onGetStarted }) => {
             <div className="hero-actions">
               <button className="premium-btn" onClick={onGetStarted}>
                 {t('getStarted')}
-              </button>
-              <button 
-                className="premium-btn secondary" 
-                onClick={() => setIsGuideOpen(true)}
-              >
-                {t('learnMore')}
               </button>
             </div>
           </div>
@@ -99,10 +90,6 @@ const Landing = ({ onGetStarted }) => {
           </div>
         </div>
       </div>
-
-      <Modal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)}>
-        <UserGuide />
-      </Modal>
     </div>
   );
 };

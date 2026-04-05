@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './AboutUs.css';
 import { useTranslation } from './theme/TranslationContext';
 
@@ -8,106 +8,80 @@ const AboutUs = ({ onBackHome }) => {
   return (
     <div className="about-us">
       <button className="back-home-btn" onClick={onBackHome} title={t('backToHome')}>
-        ← {t('backToHome')}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        {t('backToHome')}
       </button>
+
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1 className="hero-title">{t('aboutKipta')}</h1>
-          <p className="hero-subtitle">
-            {t('subtitle')}
-          </p>
-          <div className="hero-stats">
-            <div className="stat">
-              <h3>10K+</h3>
-              <p>{t('activeUsers')}</p>
-            </div>
-            <div className="stat">
-              <h3>$2M+</h3>
-              <p>{t('moneySaved')}</p>
-            </div>
-            <div className="stat">
-              <h3>4.8★</h3>
-              <p>{t('userRating')}</p>
-            </div>
+      <section className="about-hero">
+        <span className="hero-badge">{t('kiptaaz')}</span>
+        <h1>{t('aboutKipta')}</h1>
+        <p className="hero-description">
+          {t('subtitle')}
+        </p>
+      </section>
+
+      {/* Mission Narrative */}
+      <section className="narrative-section">
+        <div className="narrative-grid">
+          <div className="narrative-content">
+            <h2>{t('ourMission')}</h2>
+            <p>{t('teamDesc')}</p>
+          </div>
+          <div className="narrative-visual">
+            🎯
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="mission-section">
-        <div className="container">
-          <h2>{t('ourMission')}</h2>
-          <p>
-            {t('teamDesc')}
-          </p>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
+      {/* Feature Showcase */}
+      <section className="showcase-section">
+        <div className="showcase-header">
           <h2>{t('whyChooseKipta')}</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>{t('smartAnalytics')}</h3>
-              <p>{t('smartAnalyticsDesc')}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🎯</div>
-              <h3>{t('goalTracking')}</h3>
-              <p>{t('goalTrackingDesc')}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🔒</div>
-              <h3>{t('securePrivate')}</h3>
-              <p>{t('securePrivateDesc')}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📱</div>
-              <h3>{t('crossPlatform')}</h3>
-              <p>{t('crossPlatformDesc')}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💡</div>
-              <h3>{t('aiInsights')}</h3>
-              <p>{t('aiInsightsDesc')}</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🌍</div>
-              <h3>{t('multiCurrency')}</h3>
-              <p>{t('multiCurrencyDesc')}</p>
-            </div>
+        </div>
+        <div className="showcase-grid">
+          <div className="showcase-card">
+            <div className="card-icon">📊</div>
+            <h3>{t('smartAnalytics')}</h3>
+            <p>{t('smartAnalyticsDesc')}</p>
+          </div>
+          <div className="showcase-card">
+            <div className="card-icon">🎯</div>
+            <h3>{t('goalTracking')}</h3>
+            <p>{t('goalTrackingDesc')}</p>
+          </div>
+          <div className="showcase-card">
+            <div className="card-icon">🔒</div>
+            <h3>{t('securePrivate')}</h3>
+            <p>{t('securePrivateDesc')}</p>
           </div>
         </div>
       </section>
 
       {/* Team Section */}
-      <section className="team-section">
-        <div className="container">
-          <h2>{t('meetOurTeam')}</h2>
-          <p>{t('teamDesc')}</p>
-          <div className="team-grid">
-            <div className="team-member">
-              <div className="member-avatar">👨‍💻</div>
-              <h3>{t('devTeam')}</h3>
-              <p>{t('devTeamDesc')}</p>
-            </div>
-            <div className="team-member">
-              <div className="member-avatar">📈</div>
-              <h3>{t('finExperts')}</h3>
-              <p>{t('finExpertsDesc')}</p>
-            </div>
-            <div className="team-member">
-              <div className="member-avatar">🎨</div>
-              <h3>{t('uxDesigners')}</h3>
-              <p>{t('uxDesignersDesc')}</p>
-            </div>
+      <section className="about-team">
+        <h2>{t('meetOurTeam')}</h2>
+        <div className="team-members-grid">
+          <div className="member-card">
+            <div className="avatar-circle">👨‍💻</div>
+            <h3>{t('devTeam')}</h3>
+            <p>{t('devTeamDesc')}</p>
+          </div>
+          <div className="member-card">
+            <div className="avatar-circle">📈</div>
+            <h3>{t('finExperts')}</h3>
+            <p>{t('finExpertsDesc')}</p>
+          </div>
+          <div className="member-card">
+            <div className="avatar-circle">🎨</div>
+            <h3>{t('uxDesigners')}</h3>
+            <p>{t('uxDesignersDesc')}</p>
           </div>
         </div>
       </section>
-
     </div>
   );
 };
