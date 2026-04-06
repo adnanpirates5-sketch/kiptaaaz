@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,6 +14,15 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Better error logging
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
@@ -40,6 +49,11 @@ export const financeAPI = {
   getBudgets: () => api.get('/finance/budgets'),
   addBudget: (budget) => api.post('/finance/budgets', budget),
   deleteBudget: (category) => api.delete(`/finance/budgets/${category}`),
+  
+  getSavingsGoals: () => api.get('/finance/savings-goals'),
+  addSavingsGoal: (goal) => api.post('/finance/savings-goals', goal),
+  updateSavingsGoal: (id, updates) => api.patch(`/finance/savings-goals/${id}`, updates),
+  deleteSavingsGoal: (id) => api.delete(`/finance/savings-goals/${id}`),
 };
 
 export default api;
