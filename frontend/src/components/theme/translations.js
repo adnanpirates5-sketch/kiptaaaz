@@ -520,6 +520,10 @@ export const translations = {
     writeReview: 'একটি পর্যালোচনা লিখুন',
     reviewPlaceholder: 'কিপ্টাজ-এর সাথে আপনার অভিজ্ঞতা আমাদের জানান...',
     suggestionPlaceholder: 'আপনি দেখতে চান এমন কোনো ফিচার বা আমাদের উন্নতির জন্য কোনো পরামর্শ?',
+    submitting: 'জমা দেওয়া হচ্ছে...',
+    submitReviewSuccess: 'আপনার পর্যালোচনার জন্য ধন্যবাদ!',
+    submitReviewError: 'পর্যালোচনা জমা দিতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
+    loading: 'লোড হচ্ছে...',
 
     // Features
     whyKipta: 'কেন কিপ্টা?',

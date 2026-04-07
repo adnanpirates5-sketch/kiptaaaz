@@ -56,4 +56,9 @@ export const financeAPI = {
   deleteSavingsGoal: (id) => api.delete(`/finance/savings-goals/${id}`),
 };
 
+export const reviewAPI = {
+  getReviews: () => api.get('/reviews'),
+  addReview: (review) => api.post('/reviews', review),
+};
+
 export default api;

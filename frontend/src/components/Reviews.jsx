@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import './Reviews.css';
 import { useTranslation } from './theme/TranslationContext';
+import { reviewAPI } from '../api';
 
 const Reviews = ({ onBackHome }) => {
   const { t } = useTranslation();
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedReviews = localStorage.getItem('reviews');
-    if (savedReviews) {
-      setReviews(JSON.parse(savedReviews));
-    }
+    const fetchReviews = async () => {
+      try {
+        const response = await reviewAPI.getReviews();
+        setReviews(response.data);
+      } catch (error) {
+        console.error('Failed to fetch reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
   }, []);
 
   const renderStars = (currentRating) => {
@@ -47,7 +56,11 @@ const Reviews = ({ onBackHome }) => {
       <section className="reviews-content">
         <div className="container">
           <div className="reviews-list">
-            {reviews.length === 0 ? (
+            {loading ? (
+              <div className="loading-container">
+                <p>{t('loading') || 'Loading reviews...'}</p>
+              </div>
+            ) : reviews.length === 0 ? (
               <div className="no-reviews-container">
                 <p className="no-reviews">{t('noReviews')}</p>
               </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "../theme/TranslationContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useCurrency } from "../theme/useCurrency";
+import { reviewAPI } from "../../api";
 import "./Settings.css";
 
 const Settings = ({ onLogout }) => {
@@ -15,39 +16,39 @@ const Settings = ({ onLogout }) => {
   const [comment, setComment] = React.useState('');
   const [showReviewForm, setShowReviewForm] = React.useState(false);
   const [submitStatus, setSubmitStatus] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const currencies = [
     { symbol: '৳', name: 'BDT' },
     { symbol: '$', name: 'USD' },
   ];
 
-  const handleSubmitReview = (e) => {
+  const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (rating === 0 || !comment.trim()) return;
 
-    const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const userName = savedUser.name || 'Anonymous User';
+    setLoading(true);
+    try {
+      await reviewAPI.addReview({
+        rating,
+        comment,
+      });
 
-    const newReview = {
-      id: Date.now(),
-      author: userName,
-      rating,
-      comment,
-      date: new Date().toISOString(),
-    };
-
-    const savedReviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-    const updatedReviews = [newReview, ...savedReviews];
-    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-
-    // Reset form
-    setRating(0);
-    setComment('');
-    setSubmitStatus('success');
-    setTimeout(() => {
-      setSubmitStatus(null);
-      setShowReviewForm(false);
-    }, 2000);
+      // Reset form
+      setRating(0);
+      setComment('');
+      setSubmitStatus('success');
+      setTimeout(() => {
+        setSubmitStatus(null);
+        setShowReviewForm(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to submit review:', error);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStars = () => {
@@ -160,6 +161,11 @@ const Settings = ({ onLogout }) => {
               </div>
             ) : (
               <>
+                {submitStatus === 'error' && (
+                  <div className="submit-error-msg" style={{ color: 'var(--danger)', marginBottom: '1rem' }}>
+                    {t('submitReviewError') || 'Failed to submit review. Please try again.'}
+                  </div>
+                )}
                 <div className="settings-rating-section">
                   <div className="settings-stars">
                     {renderStars()}
@@ -172,17 +178,19 @@ const Settings = ({ onLogout }) => {
                     onChange={(e) => setComment(e.target.value)}
                     placeholder={t('reviewPlaceholder')}
                     required
+                    disabled={loading}
                   />
                 </div>
 
                 <div className="settings-review-actions">
-                  <button type="submit" className="premium-btn primary">
-                    {t('submitReview')}
+                  <button type="submit" className="premium-btn primary" disabled={loading}>
+                    {loading ? t('submitting') || 'Submitting...' : t('submitReview')}
                   </button>
                   <button 
                     type="button" 
                     className="premium-btn ghost" 
                     onClick={() => setShowReviewForm(false)}
+                    disabled={loading}
                   >
                     {t('cancel')}
                   </button>
