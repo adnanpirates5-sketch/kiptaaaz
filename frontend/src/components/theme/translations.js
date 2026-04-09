@@ -570,6 +570,8 @@ export const translations = {
     totalBalance: 'মোট ব্যালেন্স',
     totalIncome: 'মোট আয়',
     totalExpenses: 'মোট খরচ',
+    custom: 'কাস্টম',
+    enterCategoryName: 'ক্যাটাগরির নাম লিখুন',
 
     // Debt
     noDebts: 'এখনও কোনো ঋণ বা ধার যোগ করা হয়নি।',
