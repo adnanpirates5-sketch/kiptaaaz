@@ -395,6 +395,8 @@ export const translations = {
     emailAddress: 'ইমেইল ঠিকানা',
     noAccountPrompt: 'অ্যাকাউন্ট নেই?',
     loginFailed: 'লগইন ব্যর্থ হয়েছে। আপনার তথ্যাদি পরীক্ষা করুন।',
+    showPassword: 'পাসওয়ার্ড দেখান',
+    hidePassword: 'পাসওয়ার্ড লুকান',
 
     // Register
     registerToKipta: 'কিপ্টায় রেজিস্টার করুন',
