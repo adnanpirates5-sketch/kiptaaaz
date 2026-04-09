@@ -8,6 +8,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import TermsConditions from "./components/TermsConditions";
 import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 import Dashboard from "./components/dashboard/Dashboard";
 import NavBar from "./components/theme/NavBar";
 import AboutUs from "./components/AboutUs";
@@ -23,6 +24,11 @@ function App() {
     const token = localStorage.getItem('token');
     if (token) {
       setPage("dashboard");
+    }
+
+    // Check if the URL is for password reset
+    if (window.location.pathname.startsWith('/reset-password/')) {
+      setPage("reset-password");
     }
   }, []);
 
@@ -83,6 +89,7 @@ function App() {
 
         <Routes>
           <Route path="/terms-and-conditions" element={<TermsConditions />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
 
       </div>

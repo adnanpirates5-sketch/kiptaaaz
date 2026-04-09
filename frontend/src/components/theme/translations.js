@@ -49,6 +49,21 @@ export const translations = {
     recoverAccount: 'Recover Account',
     recoveryEmail: 'Recovery Email',
     sendRecoveryLink: 'Send Recovery Link',
+    recoveryEmailSent: 'Recovery email sent! Please check your inbox.',
+    failedToSendRecoveryLink: 'Failed to send recovery link.',
+    enterEmailForReset: 'Enter your email address to receive a password reset link',
+    sending: 'Sending...',
+
+    // Reset Password
+    resetPassword: 'Reset Password',
+    enterNewPassword: 'Enter your new password below',
+    passwordsDoNotMatch: 'Passwords do not match',
+    passwordResetSuccess: 'Password reset successful! Redirecting to login...',
+    failedToResetPassword: 'Failed to reset password. Link may be invalid or expired.',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    resetting: 'Resetting...',
+    resetPasswordBtn: 'Reset Password',
 
     // Dashboard
     logout: 'Logout',
@@ -398,6 +413,21 @@ export const translations = {
     recoverAccount: 'অ্যাকাউন্ট পুনরুদ্ধার',
     recoveryEmail: 'পুনরুদ্ধার ইমেইল',
     sendRecoveryLink: 'পুনরুদ্ধার লিঙ্ক পাঠান',
+    recoveryEmailSent: 'পুনরুদ্ধার ইমেইল পাঠানো হয়েছে! আপনার ইনবক্স চেক করুন।',
+    failedToSendRecoveryLink: 'পুনরুদ্ধার লিঙ্ক পাঠাতে ব্যর্থ হয়েছে।',
+    enterEmailForReset: 'পাসওয়ার্ড রিসেট লিঙ্ক পেতে আপনার ইমেইল ঠিকানা লিখুন',
+    sending: 'পাঠানো হচ্ছে...',
+
+    // Reset Password
+    resetPassword: 'পাসওয়ার্ড রিসেট',
+    enterNewPassword: 'নিচে আপনার নতুন পাসওয়ার্ড লিখুন',
+    passwordsDoNotMatch: 'পাসওয়ার্ড মেলেনি',
+    passwordResetSuccess: 'পাসওয়ার্ড রিসেট সফল হয়েছে! লগইনে রিডাইরেক্ট করা হচ্ছে...',
+    failedToResetPassword: 'পাসওয়ার্ড রিসেট করতে ব্যর্থ হয়েছে। লিঙ্কটি অবৈধ বা মেয়াদোত্তীর্ণ হতে পারে।',
+    newPassword: 'নতুন পাসওয়ার্ড',
+    confirmNewPassword: 'নতুন পাসওয়ার্ড নিশ্চিত করুন',
+    resetting: 'রিসেট হচ্ছে...',
+    resetPasswordBtn: 'পাসওয়ার্ড রিসেট করুন',
 
     // Dashboard
     logout: 'লগআউট',

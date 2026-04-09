@@ -24,7 +24,8 @@ const Dashboard = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", profilePicture: null });
   
-  // State Management
+  const [isVisible, setIsVisible] = useState(true);
+  
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [debts, setDebts] = useState([]);
@@ -161,7 +162,7 @@ const Dashboard = ({ onLogout }) => {
       case "overview":
         return (
           <div className="animate-fade-in">
-            <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
+            <BalanceSummary totalIncome={totalIncome} expenses={expenses} isVisible={isVisible} />
             <div className="dashboard-main-grid">
               <OverviewCharts expenses={expenses} incomes={incomes} />
               <div className="section-card premium-card recent-transactions-box">
@@ -335,14 +336,33 @@ const Dashboard = ({ onLogout }) => {
       </aside>
 
       <header className="dashboard-header">
-        <div className="user-welcome">
-          <button className="premium-btn secondary" style={{ padding: '0.5rem', marginRight: '1rem' }} onClick={() => setIsSidebarOpen(true)}>
-            ☰
-          </button>
-          <div>
-            <h2>{t('hello')}, {user.name || t('user')}</h2>
-            <p>{t('moneyToday')}</p>
+        <div className="user-welcome" style={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button className="premium-btn secondary" style={{ padding: '0.5rem', marginRight: '1rem' }} onClick={() => setIsSidebarOpen(true)}>
+              ☰
+            </button>
+            <div>
+              <h2>{t('hello')}, {user.name || t('user')}</h2>
+              <p>{t('moneyToday')}</p>
+            </div>
           </div>
+          <button 
+            className="premium-btn secondary"
+            onClick={() => setIsVisible(!isVisible)}
+            style={{ 
+              borderRadius: '50%', 
+              width: '45px', 
+              height: '45px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              fontSize: '1.2rem',
+              boxShadow: 'var(--shadow-md)'
+            }}
+            title={isVisible ? t('hideBalance') || "Hide Balance" : t('showBalance') || "Show Balance"}
+          >
+            {isVisible ? '👁️' : '🙈'}
+          </button>
         </div>
       </header>
 

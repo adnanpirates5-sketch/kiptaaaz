@@ -1,56 +1,66 @@
 import React, { useState } from "react";
 import { useTranslation } from "../theme/TranslationContext";
+import { authAPI } from "../../api";
+import "./Auth.css";
 
 const ForgotPassword = ({ onBackToLogin }) => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
+    setLoading(true);
 
     try {
-      const response = await fetch('/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      alert(data.message);
-
-      if (response.ok) {
-        // For testing, show the reset token
-        if (data.resetToken) {
-          alert('Reset token (for testing): ' + data.resetToken);
-        }
-      }
+      const response = await authAPI.forgotPassword(email);
+      setMessage(response.data.message || t('recoveryEmailSent'));
+      setLoading(false);
     } catch (err) {
-      alert('Failed to send recovery link: ' + err.message);
+      setError(err.response?.data?.message || t('failedToSendRecoveryLink'));
+      setLoading(false);
     }
   };
 
   return (
-    <div className="form-card">
-      <h2 className="form-title">{t('recoverAccount')}</h2>
+    <div className="auth-container animate-fade-in">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>{t('recoverAccount')}</h2>
+          <p>{t('enterEmailForReset')}</p>
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder={t('recoveryEmail')}
-          className="input-field"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        {message && <div style={{ color: 'var(--success)', marginBottom: '1rem', textAlign: 'center' }}>{message}</div>}
+        {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
 
-        <button className="start-btn">{t('sendRecoveryLink')}</button>
-      </form>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>{t('emailAddress')}</label>
+            <input
+              type="email"
+              className="premium-input"
+              placeholder="name@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-      <p className="switch-text">
-        <span onClick={onBackToLogin}>{t('backToLogin')}</span>
-      </p>
+          <button type="submit" className="premium-btn" disabled={loading}>
+            {loading ? t('sending') : t('sendRecoveryLink')}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <button className="auth-link" onClick={onBackToLogin}>
+            {t('backToLogin')}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
