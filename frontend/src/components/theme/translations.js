@@ -6,6 +6,7 @@ export const translations = {
     register: 'Register',
     about: 'About Us',
     reviews: 'Reviews',
+    userGuide: 'User Guide',
     toggleTheme: 'Toggle Theme',
     switchLanguage: 'Switch Language',
 
@@ -371,6 +372,7 @@ export const translations = {
     login: 'লগইন',
     register: 'রেজিস্টার',
     about: 'আমাদের সম্পর্কে',
+    userGuide: 'নির্দেশিকা',
     toggleTheme: 'থিম পরিবর্তন',
     switchLanguage: 'ভাষা পরিবর্তন',
 

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Landing from "./components/Landing";
 import Features from "./components/Features";
+import UserGuide from "./components/UserGuide";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import TermsConditions from "./components/TermsConditions";
@@ -13,12 +14,14 @@ import Dashboard from "./components/dashboard/Dashboard";
 import NavBar from "./components/theme/NavBar";
 import AboutUs from "./components/AboutUs";
 import Reviews from "./components/Reviews";
+import Modal from "./components/Modal";
 import { ThemeProvider } from "./components/theme/ThemeContext";
 
 import { TranslationProvider } from "./components/theme/TranslationContext";
 
 function App() {
   const [page, setPage] = useState("home");
+  const [showGuide, setShowGuide] = useState(false);
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,15 +43,23 @@ function App() {
             {(page === "home" || page === "about" || page === "reviews") && (
               <NavBar 
                 onNavigate={setPage} 
+                onShowGuide={() => setShowGuide(true)}
               />
             )}
 
         {page === "home" && (
           <>
-            <Landing onGetStarted={() => setPage("login")} />
+            <Landing 
+              onGetStarted={() => setPage("login")} 
+              onShowGuide={() => setShowGuide(true)}
+            />
             <Features />
           </>
         )}
+
+        <Modal isOpen={showGuide} onClose={() => setShowGuide(false)}>
+          <UserGuide />
+        </Modal>
 
         {page === "login" && (
           <Login
