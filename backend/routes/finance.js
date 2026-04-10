@@ -178,20 +178,27 @@ router.get('/savings-goals', authenticateToken, async (req, res) => {
 });
 
 router.post('/savings-goals', authenticateToken, async (req, res) => {
-  const { name, target, current, deadline } = req.body;
-  const goalData = {
-    user: req.user._id,
-    name,
-    target,
-    current
-  };
-  if (deadline) goalData.deadline = deadline;
-  
-  const goal = new SavingsGoal(goalData);
   try {
+    const { name, target, current, deadline } = req.body;
+    
+    if (!name || target === undefined) {
+      return res.status(400).json({ message: 'Name and target are required' });
+    }
+
+    const goalData = {
+      user: req.user._id,
+      name,
+      target: Number(target),
+      current: Number(current || 0)
+    };
+    
+    if (deadline) goalData.deadline = deadline;
+    
+    const goal = new SavingsGoal(goalData);
     const savedGoal = await goal.save();
     res.status(201).json(savedGoal);
   } catch (err) {
+    console.error("Error saving goal:", err);
     res.status(400).json({ message: err.message });
   }
 });
