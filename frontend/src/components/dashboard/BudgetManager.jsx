@@ -66,134 +66,141 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
   };
 
   return (
-    <div className="budget-manager animate-fade-in">
-      <div className="dashboard-main-grid">
-        <div className="section-card premium-card">
-          <div className="section-header">
-            <h3>{t('setBudget')}</h3>
-          </div>
-          <form onSubmit={handleSubmit} className="premium-form">
-            <div className="form-group">
-              <label className="input-label">{t('category')}</label>
+    <div className="budget-manager-premium animate-fade-in">
+      {/* Header Section */}
+      <div className="budget-header-section">
+        <div className="header-content">
+          <h2 className="budget-main-title">💰 {t('setBudget')}</h2>
+          <p className="budget-subtitle">{t('manageYourSpending')}</p>
+        </div>
+      </div>
+
+      {/* Main Budget Grid */}
+      <div className="budget-grid-premium">
+        {/* Add Budget Form */}
+        <div className="budget-form-card">
+          <h3 className="budget-form-title">📊 {t('createBudget')}</h3>
+          <form onSubmit={handleSubmit} className="budget-form-premium">
+            <div className="form-group-premium">
+              <label className="form-label-premium">{t('category')}</label>
               <button 
                 type="button" 
-                className="premium-input select-category-btn" 
+                className="category-select-premium" 
                 onClick={() => setIsModalOpen(true)}
-                style={{ textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <span>{category ? `${getCategoryIcon(category)} ${getCategoryTranslation(category)}` : t('selectCategory')}</span>
-                <span>▼</span>
+                <span className="category-display">
+                  {category ? `${getCategoryIcon(category)} ${getCategoryTranslation(category)}` : t('selectCategory')}
+                </span>
+                <span className="dropdown-arrow">▼</span>
               </button>
             </div>
 
-            <div className="form-group">
-              <label className="input-label">{t('amount')}</label>
-              <div className="currency-input-group" style={{ display: 'flex', gap: '0.5rem' }}>
-                <div className="currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px' }}>
+            <div className="form-group-premium">
+              <label className="form-label-premium">{t('budgetAmount')}</label>
+              <div className="amount-input-group">
+                <div className="currency-buttons-premium">
                   <button 
                     type="button"
+                    className={`curr-btn ${selectedCurrency === '৳' ? 'active' : ''}`}
                     onClick={() => setSelectedCurrency('৳')}
-                    style={{ 
-                      border: 'none', 
-                      background: selectedCurrency === '৳' ? 'var(--primary)' : 'transparent',
-                      color: selectedCurrency === '৳' ? '#fff' : 'var(--text-secondary)',
-                      padding: '0.5rem 0.75rem',
-                      borderRadius: 'var(--radius-sm)',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem'
-                    }}
                   >৳</button>
                   <button 
                     type="button"
+                    className={`curr-btn ${selectedCurrency === '$' ? 'active' : ''}`}
                     onClick={() => setSelectedCurrency('$')}
-                    style={{ 
-                      border: 'none', 
-                      background: selectedCurrency === '$' ? 'var(--primary)' : 'transparent',
-                      color: selectedCurrency === '$' ? '#fff' : 'var(--text-secondary)',
-                      padding: '0.5rem 0.75rem',
-                      borderRadius: 'var(--radius-sm)',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem'
-                    }}
                   >$</button>
                 </div>
-                <div style={{ position: 'relative', flex: 1 }}>
-                  <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{selectedCurrency}</span>
-                  <input
-                    type="number"
-                    className="premium-input"
-                    style={{ paddingLeft: '2.5rem' }}
-                    placeholder="0.00"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
+                <input
+                  type="number"
+                  className="amount-input-premium"
+                  placeholder="0.00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  min="0"
+                  step="0.01"
+                />
               </div>
             </div>
 
-            <button type="submit" className="premium-btn" style={{ width: '100%', marginTop: '0.5rem' }}>
-              🎯 {t('saveBudget')}
+            <button type="submit" className="budget-submit-btn">
+              ✨ {t('saveBudget')}
             </button>
           </form>
         </div>
 
-        <div className="section-card premium-card">
-          <div className="section-header">
-            <h3>{t('budgetProgress')}</h3>
+        {/* Budget List Section */}
+        <div className="budget-list-card">
+          <div className="budget-list-header">
+            <h3 className="budget-list-title">📈 {t('budgetProgress')}</h3>
+            <span className="budget-count-badge">{budgets.length}</span>
           </div>
-          <div className="budget-list">
+          <div className="budget-list-premium">
             {budgets.length === 0 ? (
-              <div className="empty-state">
-                <p>{t('noBudgets')}</p>
+              <div className="budget-empty-state">
+                <div className="empty-icon">📋</div>
+                <p className="empty-text">{t('noBudgets')}</p>
+                <p className="empty-subtext">{t('startByCreatingBudget')}</p>
               </div>
             ) : (
               budgets.map((budget) => {
                 const spent = getSpentForCategory(budget.category);
                 const percentage = Math.min((spent / budget.amount) * 100, 100);
                 const isOver = spent > budget.amount;
+                const remaining = budget.amount - spent;
                 const icon = getCategoryIcon(budget.category);
 
                 return (
-                  <div key={budget.id || budget.category} className="budget-item-card">
-                    <div className="budget-item-header">
-                      <div className="budget-item-info">
-                        <span className="budget-icon">{icon}</span>
-                        <div className="budget-item-details">
-                          <span className="budget-category-name">{getCategoryTranslation(budget.category)}</span>
-                          <span className="budget-usage-text">
-                            {formatValue(spent)} {t('of')} {formatValue(budget.amount)}
-                          </span>
+                  <div key={budget.id || budget.category} className="budget-card-premium">
+                    <div className="budget-card-header-premium">
+                      <div className="category-info-premium">
+                        <div className="category-icon-badge">{icon}</div>
+                        <div className="category-text">
+                          <h4 className="category-name-premium">{getCategoryTranslation(budget.category)}</h4>
+                          <p className="spending-info">
+                            <span className="spent-amount">{formatValue(spent)}</span>
+                            <span className="divider"> / </span>
+                            <span className="total-amount">{formatValue(budget.amount)}</span>
+                          </p>
                         </div>
                       </div>
                       <button 
-                        className="delete-budget-btn" 
+                        className="budget-delete-btn-premium" 
                         onClick={() => onDeleteBudget(budget.category)}
                         title={t('delete')}
                       >
-                        🗑️
+                        ×
                       </button>
                     </div>
+
+                    <div className="budget-stats-row">
+                      <div className="stat-item">
+                        <span className="stat-label">{t('spent')}</span>
+                        <span className="stat-value spent">{formatValue(spent)}</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-label">{t('remaining')}</span>
+                        <span className={`stat-value ${isOver ? 'over' : 'available'}`}>
+                          {isOver ? '-' + formatValue(Math.abs(remaining)) : formatValue(remaining)}
+                        </span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-label">{t('usage')}</span>
+                        <span className="stat-value percentage">{percentage.toFixed(0)}%</span>
+                      </div>
+                    </div>
                     
-                    <div className="budget-progress-container">
-                      <div className="progress-bar-bg">
+                    <div className="progress-section-premium">
+                      <div className="progress-bar-container-premium">
                         <div
-                          className={`progress-bar-fill ${isOver ? 'over' : ''}`}
+                          className={`progress-bar-premium ${isOver ? 'over-budget' : ''}`}
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
-                      <div className="budget-status-footer">
-                        <span className={`status-text ${isOver ? 'over' : ''}`}>
-                          {isOver 
-                            ? `${t('overBy')} ${formatValue(spent - budget.amount)}` 
-                            : `${percentage.toFixed(0)}% ${t('used')}`
-                          }
-                        </span>
-                        {!isOver && (
-                          <span className="remaining-text">
-                            {formatValue(budget.amount - spent)} {t('remaining')}
-                          </span>
+                      <div className="progress-status-premium">
+                        {isOver ? (
+                          <span className="status-warning">⚠️ {t('overBy')} {formatValue(spent - budget.amount)}</span>
+                        ) : (
+                          <span className="status-good">✓ {percentage === 100 ? t('budgetFull') : t('onTrack')}</span>
                         )}
                       </div>
                     </div>

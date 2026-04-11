@@ -238,14 +238,6 @@ const Profile = ({ incomes, expenses, debts }) => {
             </div>
 
             <div className="detail-item">
-              <span className="detail-label">{t('twoFactor')}</span>
-              <div className="status-badge-inline disabled">
-                <span className="status-indicator-dot"></span>
-                {t('notEnabled')}
-              </div>
-            </div>
-
-            <div className="detail-item">
               <span className="detail-label">{t('dataUsage')}</span>
               <div className="usage-info">
                 <div className="usage-stats">
