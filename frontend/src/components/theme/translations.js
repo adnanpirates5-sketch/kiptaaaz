@@ -390,7 +390,35 @@ export const translations = {
     ugAnalyticsTitle: 'Insights & Stats',
     ugAnalyticsTitleDesc: 'Explore interactive charts to visualize your financial trends. Get daily financial tips to improve your habits.',
     ugPersonalizationTitle: 'Personalization',
-    ugPersonalizationTitleDesc: 'Switch between Light and Dark modes. Choose your preferred language and currency in Settings.'
+    ugPersonalizationTitleDesc: 'Switch between Light and Dark modes. Choose your preferred language and currency in Settings.',
+
+    // Report
+    financialReport: 'Financial Report',
+    downloadReport: 'Download Report',
+    reportSummary: 'Report Summary',
+    incomeVsExpense: 'Income vs Expense',
+    budgetAnalysis: 'Budget Analysis',
+    debtOverview: 'Debt Overview',
+    savingsProgress: 'Savings Progress',
+    netBalance: 'Net Balance',
+    totalSavings: 'Total Savings',
+    overBudget: 'Over Budget',
+    withinBudget: 'Within Budget',
+    generatingPDF: 'Generating PDF...',
+    selectDateRange: 'Select Date Range',
+    allTime: 'All Time',
+    thisMonth: 'This Month',
+    lastMonth: 'Last Month',
+    thisYear: 'This Year',
+    customRange: 'Custom Range',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    noDataForPeriod: 'No data available for the selected period.',
+    financialInsights: 'Financial Insights',
+    spendingWarning: 'Warning: You have exceeded your budget in some categories.',
+    savingsWarning: 'Tip: You are behind on your savings goals. Consider increasing your contributions.',
+    debtWarning: 'Attention: Your total debt is high. Focus on high-interest repayments.',
+    healthyBalance: 'Great job! Your net balance is positive and your spending is within limits.'
   },
   bn: {
     // Navbar
@@ -790,6 +818,34 @@ export const translations = {
     ugAnalyticsTitle: 'ইনসাইটস ও পরিসংখ্যান',
     ugAnalyticsTitleDesc: 'আপনার আর্থিক প্রবণতা বোঝার জন্য ইন্টারঅ্যাক্টিভ চার্টগুলো দেখুন। আপনার অভ্যাসের উন্নতির জন্য প্রতিদিনের আর্থিক পরামর্শ পান।',
     ugPersonalizationTitle: 'ব্যক্তিগতকরণ',
-    ugPersonalizationTitleDesc: 'লাইট এবং ডার্ক মোডের মধ্যে পরিবর্তন করুন। সেটিংসে আপনার পছন্দের ভাষা এবং মুদ্রা নির্বাচন করুন।'
+    ugPersonalizationTitleDesc: 'লাইট এবং ডার্ক মোডের মধ্যে পরিবর্তন করুন। সেটিংসে আপনার পছন্দের ভাষা এবং মুদ্রা নির্বাচন করুন।',
+
+    // Report
+    financialReport: 'আর্থিক প্রতিবেদন',
+    downloadReport: 'প্রতিবেদন ডাউনলোড করুন',
+    reportSummary: 'প্রতিবেদনের সারাংশ',
+    incomeVsExpense: 'আয় বনাম খরচ',
+    budgetAnalysis: 'বাজেট বিশ্লেষণ',
+    debtOverview: 'ঋণের ওভারভিউ',
+    savingsProgress: 'সঞ্চয়ের অগ্রগতি',
+    netBalance: 'নিট ব্যালেন্স',
+    totalSavings: 'মোট সঞ্চয়',
+    overBudget: 'বাজেটের অতিরিক্ত',
+    withinBudget: 'বাজেটের মধ্যে',
+    generatingPDF: 'পিডিএফ তৈরি হচ্ছে...',
+    selectDateRange: 'তারিখের পরিসর নির্বাচন করুন',
+    allTime: 'সব সময়',
+    thisMonth: 'এই মাস',
+    lastMonth: 'গত মাস',
+    thisYear: 'এই বছর',
+    customRange: 'কাস্টম রেঞ্জ',
+    startDate: 'শুরু তারিখ',
+    endDate: 'শেষ তারিখ',
+    noDataForPeriod: 'নির্বাচিত সময়ের জন্য কোনো তথ্য নেই।',
+    financialInsights: 'আর্থিক অন্তর্দৃষ্টি',
+    spendingWarning: 'সতর্কতা: আপনি কিছু ক্যাটাগরিতে আপনার বাজেট অতিক্রম করেছেন।',
+    savingsWarning: 'পরামর্শ: আপনি আপনার সঞ্চয় লক্ষ্যে পিছিয়ে আছেন। আপনার অবদান বাড়ানোর কথা ভাবুন।',
+    debtWarning: 'মনোযোগ: আপনার মোট ঋণ অনেক বেশি। উচ্চ-সুদে ঋণ পরিশোধে মনোনিবেশ করুন।',
+    healthyBalance: 'চমৎকার! আপনার নিট ব্যালেন্স ইতিবাচক এবং আপনার খরচ সীমার মধ্যে আছে।'
   }
 };

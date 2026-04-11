@@ -17,6 +17,7 @@ import FinancialTips from "./FinancialTips";
 import OverviewCharts from "./OverviewCharts";
 import Calendar from "./Calendar";
 import Bookmark from "./Bookmark";
+import Report from "./Report";
 import { financeAPI } from "../../api";
 import { useTranslation } from "../theme/TranslationContext";
 
@@ -30,22 +31,25 @@ const Dashboard = ({ onLogout }) => {
   const [expenses, setExpenses] = useState([]);
   const [debts, setDebts] = useState([]);
   const [budgets, setBudgets] = useState([]);
+  const [savingsGoals, setSavingsGoals] = useState([]);
 
   // Load from API on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [incomesRes, expensesRes, debtsRes, budgetsRes] = await Promise.all([
+        const [incomesRes, expensesRes, debtsRes, budgetsRes, savingsRes] = await Promise.all([
           financeAPI.getIncomes(),
           financeAPI.getExpenses(),
           financeAPI.getDebts(),
-          financeAPI.getBudgets()
+          financeAPI.getBudgets(),
+          financeAPI.getSavingsGoals()
         ]);
         
         setIncomes(incomesRes.data);
         setExpenses(expensesRes.data);
         setDebts(debtsRes.data);
         setBudgets(budgetsRes.data);
+        setSavingsGoals(savingsRes.data);
         
         const savedUser = localStorage.getItem('user');
         if (savedUser) setUser(JSON.parse(savedUser));
@@ -250,6 +254,7 @@ const Dashboard = ({ onLogout }) => {
           </div>
         );
       case "stats": return <Stats incomes={incomes} expenses={expenses} budgets={budgets} debts={debts} />;
+      case "report": return <Report incomes={incomes} expenses={expenses} budgets={budgets} debts={debts} savingsGoals={savingsGoals} />;
       case "bookmark": return <Bookmark incomes={incomes} expenses={expenses} />;
       case "calendar": return <Calendar incomes={incomes} expenses={expenses} />;
       case "debt":
@@ -324,6 +329,12 @@ const Dashboard = ({ onLogout }) => {
             onClick={() => { setActiveTab('stats'); setIsSidebarOpen(false); }}
           >
             <span>📊</span> {t('stats')}
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'report' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('report'); setIsSidebarOpen(false); }}
+          >
+            <span>📜</span> {t('financialReport')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'bookmark' ? 'active' : ''}`}
