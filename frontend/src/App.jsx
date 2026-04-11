@@ -53,7 +53,6 @@ function App() {
                 <>
                   <Landing 
                     onGetStarted={() => setPage("login")} 
-                    onShowGuide={() => setShowGuide(true)}
                   />
                   <Features />
                 </>

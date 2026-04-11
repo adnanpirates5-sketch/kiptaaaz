@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "./theme/TranslationContext";
 import "./Landing.css";
 
-const Landing = ({ onGetStarted, onShowGuide }) => {
+const Landing = ({ onGetStarted }) => {
   const { t } = useTranslation();
 
   return (
@@ -35,9 +35,6 @@ const Landing = ({ onGetStarted, onShowGuide }) => {
             <div className="hero-actions">
               <button className="premium-btn" onClick={onGetStarted}>
                 {t('getStarted')}
-              </button>
-              <button className="premium-btn secondary" onClick={onShowGuide}>
-                {t('learnMore')}
               </button>
             </div>
           </div>
