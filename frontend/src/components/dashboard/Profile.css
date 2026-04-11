@@ -2,56 +2,76 @@
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
   animation: fadeIn 0.5s ease-out;
 }
 
-.profile-header-card {
-  position: relative;
-  padding: 3rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+/* ============ INSTAGRAM-STYLE HEADER ============ */
+.profile-header-instagram {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
   overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
 
-.profile-header-bg {
+.profile-cover-area {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, var(--primary) 0%, #818cf8 50%, #a78bfa 100%);
+  position: relative;
+}
+
+.profile-cover-area::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  background: linear-gradient(135deg, var(--primary), #818cf8);
-  opacity: 0.15;
-  z-index: 0;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
 }
 
-.profile-avatar-large {
-  width: 100px;
-  height: 100px;
-  background-color: var(--primary);
-  color: white;
-  border-radius: 50%;
+.profile-main-section {
+  padding: 0 2rem 2rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  font-weight: 700;
-  border: 4px solid var(--card-bg);
-  box-shadow: var(--shadow-lg);
-  z-index: 1;
+  gap: 2rem;
+  align-items: flex-start;
   position: relative;
-  overflow: hidden;
+}
+
+.profile-avatar-container {
+  position: relative;
+  margin-top: -80px;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .avatar-wrapper {
   position: relative;
   cursor: pointer;
-  z-index: 1;
+  display: inline-block;
 }
 
-.avatar-wrapper:hover .avatar-overlay {
-  opacity: 1;
+.avatar-wrapper:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.profile-avatar-instagram {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #818cf8);
+  border: 5px solid var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
 .avatar-img {
@@ -68,23 +88,81 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: var(--transition);
+  transition: opacity 0.3s ease;
   color: white;
-  font-size: 1.5rem;
+  font-size: 2rem;
+}
+
+.avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
 }
 
 .avatar-loader {
   position: absolute;
-  inset: -4px;
-  border: 4px solid transparent;
+  inset: -5px;
+  border: 5px solid transparent;
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  z-index: 2;
+  z-index: 10;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.profile-user-info {
+  flex: 1;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-name-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.profile-name-instagram {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.status-indicator-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-indicator-instagram.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.profile-email-instagram {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.profile-level-instagram {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 600;
 }
 
 .profile-error-msg {
@@ -92,110 +170,415 @@
   font-size: 0.8125rem;
   font-weight: 600;
   margin-top: 0.5rem;
+  background: rgba(239, 68, 68, 0.15);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--danger);
 }
 
-.profile-header-info {
-  z-index: 1;
+/* ============ STATS ROW ============ */
+.profile-stats-instagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-color);
 }
 
-.profile-header-info h2 {
-  font-size: 2rem;
+.stat-item-instagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 0.25rem;
 }
 
-.profile-email-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background-color: var(--primary-light);
-  color: var(--primary);
-  border-radius: var(--radius-full);
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.profile-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.profile-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.info-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.info-item:last-child {
-  border-bottom: none;
-}
-
-.info-label {
+.stat-label-instagram {
   font-size: 0.75rem;
-  font-weight: 700;
   color: var(--text-muted);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.info-value {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.account-status-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--bg-color);
-  border-radius: var(--radius-lg);
-}
-
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--success);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
-}
-
-.achievement-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(to right, #fef3c7, #fde68a);
-  color: #92400e;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-size: 0.875rem;
+.stat-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--border-color);
 }
 
 @media (max-width: 768px) {
-  .profile-header-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem 1.5rem;
+  .profile-header-instagram {
+    border-radius: var(--radius-md);
   }
-  
-  .profile-info-grid {
+
+  .profile-cover-area {
+    height: 120px;
+  }
+
+  .profile-main-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .profile-avatar-container {
+    margin-top: -60px;
+  }
+
+  .profile-avatar-instagram {
+    width: 110px;
+    height: 110px;
+    font-size: 2.5rem;
+  }
+
+  .profile-name-section {
+    justify-content: center;
+  }
+
+  .profile-stats-instagram {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+}
+
+.achievement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgba(254, 243, 199, 0.4);
+}
+
+.achievement-badge.premium::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #fbbf24;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.status-badge.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+/* ============ STATS SECTION ============ */
+.profile-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card-premium {
+  position: relative;
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.stat-bg-decoration {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  opacity: 0.08;
+  top: -30px;
+  right: -30px;
+  z-index: 0;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: var(--radius-lg);
+}
+
+.income-icon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.1));
+}
+
+.income-decoration {
+  background: var(--success);
+}
+
+.expense-icon {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(248, 113, 113, 0.1));
+}
+
+.expense-decoration {
+  background: var(--danger);
+}
+
+.debt-icon {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(96, 165, 250, 0.1));
+}
+
+.debt-decoration {
+  background: #3b82f6;
+}
+
+.transaction-icon {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(192, 132, 250, 0.1));
+}
+
+.transaction-decoration {
+  background: #a855f7;
+}
+
+.stat-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0.4rem 0 0;
+}
+
+/* ============ DETAILS SECTION ============ */
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.profile-detail-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.profile-detail-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.detail-header {
+  margin-bottom: 1.5rem;
+}
+
+.detail-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-divider {
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 1px;
+  margin-top: 0.75rem;
+}
+
+.detail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.email-value {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--primary);
+}
+
+.status-badge-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  width: fit-content;
+}
+
+.status-badge-inline.disabled {
+  background: rgba(107, 114, 128, 0.12);
+  color: var(--text-muted);
+}
+
+.status-indicator-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.status-badge-inline.disabled .status-indicator-dot {
+  background: var(--text-muted);
+}
+
+.usage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.usage-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.usage-percent {
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+
+.progress-bar-modern {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-color);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar-modern .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #a78bfa);
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .profile-header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    padding-top: 2rem;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+
+  .profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+
+  .profile-details-grid {
     grid-template-columns: 1fr;
+  }
+
+  .profile-badges-section {
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
   }
 }

@@ -81,117 +81,182 @@ const Profile = ({ incomes, expenses, debts }) => {
 
   return (
     <div className="profile-container-premium animate-fade-in">
-      {/* Header Card */}
-      <div className="premium-card profile-header-card">
-        <div className="profile-header-bg"></div>
-        <div className="avatar-wrapper" onClick={handleAvatarClick} title={t('changePhoto')}>
-          <div className="profile-avatar-large">
-            {user.profilePicture ? (
-              <img src={user.profilePicture} alt="Profile" className="avatar-img" />
-            ) : (
-              getInitials(user.name)
-            )}
-            <div className="avatar-overlay">
-              <span>📷</span>
-            </div>
-          </div>
-          {loading && <div className="avatar-loader"></div>}
-        </div>
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          onChange={handleFileChange} 
-          accept="image/*" 
-          style={{ display: 'none' }} 
-        />
+      {/* Instagram-Style Premium Header */}
+      <div className="profile-header-instagram">
+        {/* Cover Image Area */}
+        <div className="profile-cover-area"></div>
         
-        <div className="profile-header-info">
-          <h2>{user.name || t('user')}</h2>
-          <div className="profile-email-badge">{user.email || t('noEmail')}</div>
-          {error && <div className="profile-error-msg">{error}</div>}
-          <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-            <span className="achievement-badge">🏆 {getAccountLevel()}</span>
+        {/* Main Profile Section */}
+        <div className="profile-main-section">
+          {/* Avatar with Edit */}
+          <div className="profile-avatar-container">
+            <div className="avatar-wrapper" onClick={handleAvatarClick} title={t('changePhoto')}>
+              <div className="profile-avatar-instagram">
+                {user.profilePicture ? (
+                  <img src={user.profilePicture} alt="Profile" className="avatar-img" />
+                ) : (
+                  getInitials(user.name)
+                )}
+                <div className="avatar-overlay">
+                  <span>📷</span>
+                </div>
+              </div>
+              {loading && <div className="avatar-loader"></div>}
+            </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              accept="image/*" 
+              style={{ display: 'none' }} 
+            />
           </div>
-        </div>
-      </div>
 
-      {/* Stats Quick View */}
-      <div className="profile-stats-grid">
-        <div className="premium-card stat-metric-card income" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">{t('totalEarnings')}</span>
-          <span className="metric-value">{formatValue(totalIncome)}</span>
+          {/* User Info */}
+          <div className="profile-user-info">
+            <div className="profile-name-section">
+              <h1 className="profile-name-instagram">{user.name || t('user')}</h1>
+              <span className="status-indicator-instagram active">✓ {t('activeVerified')}</span>
+            </div>
+            <p className="profile-email-instagram">{user.email || t('noEmail')}</p>
+            <p className="profile-level-instagram">🏆 {getAccountLevel()}</p>
+            {error && <div className="profile-error-msg">{error}</div>}
+          </div>
         </div>
-        <div className="premium-card stat-metric-card expense" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">{t('totalSpending')}</span>
-          <span className="metric-value">{formatValue(totalExpense)}</span>
-        </div>
-        <div className="premium-card stat-metric-card balance" style={{ borderLeftWidth: '4px' }}>
-          <span className="metric-label">{t('activeDebts')}</span>
-          <span className="metric-value" style={{ color: totalDebt > 0 ? 'var(--danger)' : 'var(--text-primary)' }}>
-            {formatValue(totalDebt)}
-          </span>
-        </div>
-      </div>
 
-      <div className="profile-info-grid">
-        {/* Account Details */}
-        <div className="premium-card info-group">
-          <div className="settings-group-header">
-            <span className="settings-group-icon">👤</span>
-            <h4>{t('accountInfo')}</h4>
+        {/* Profile Stats */}
+        <div className="profile-stats-instagram">
+          <div className="stat-item-instagram">
+            <span className="stat-number">{transactionCount}</span>
+            <span className="stat-label-instagram">{t('transactionsCount')}</span>
           </div>
-          
-          <div className="info-item">
-            <span className="info-label">{t('fullName')}</span>
-            <span className="info-value">{user.name || 'N/A'}</span>
-          </div>
-          
-          <div className="info-item">
-            <span className="info-label">{t('emailAddress')}</span>
-            <span className="info-value">{user.email || 'N/A'}</span>
-          </div>
-          
-          <div className="info-item">
-            <span className="info-label">{t('memberSince')}</span>
-            <span className="info-value">
-              {user.createdAt ? new Date(user.createdAt).toLocaleDateString(undefined, { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              }) : 'N/A'}
+          <div className="stat-divider"></div>
+          <div className="stat-item-instagram">
+            <span className="stat-number" style={{color: 'var(--success)'}}>
+              {(((transactionCount/500)*100).toFixed(0))}%
             </span>
+            <span className="stat-label-instagram">{t('dataUsage')}</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat-item-instagram">
+            <span className="stat-number" style={{color: 'var(--primary)'}}>
+              {user.createdAt ? new Date(user.createdAt).toLocaleDateString(undefined, {month: 'short', year: '2-digit'}) : 'N/A'}
+            </span>
+            <span className="stat-label-instagram">{t('memberSince')}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards with Icons */}
+      <div className="profile-stats-container">
+        <div className="stat-card-premium income-card">
+          <div className="stat-icon income-icon">💰</div>
+          <div className="stat-content">
+            <p className="stat-label">{t('totalEarnings')}</p>
+            <p className="stat-value">{formatValue(totalIncome)}</p>
+          </div>
+          <div className="stat-bg-decoration income-decoration"></div>
+        </div>
+
+        <div className="stat-card-premium expense-card">
+          <div className="stat-icon expense-icon">💸</div>
+          <div className="stat-content">
+            <p className="stat-label">{t('totalSpending')}</p>
+            <p className="stat-value">{formatValue(totalExpense)}</p>
+          </div>
+          <div className="stat-bg-decoration expense-decoration"></div>
+        </div>
+
+        <div className="stat-card-premium debt-card">
+          <div className="stat-icon debt-icon">📊</div>
+          <div className="stat-content">
+            <p className="stat-label">{t('activeDebts')}</p>
+            <p className="stat-value" style={{ color: totalDebt > 0 ? 'var(--danger)' : 'var(--success)' }}>
+              {formatValue(totalDebt)}
+            </p>
+          </div>
+          <div className="stat-bg-decoration debt-decoration"></div>
+        </div>
+
+        <div className="stat-card-premium transaction-card">
+          <div className="stat-icon transaction-icon">📈</div>
+          <div className="stat-content">
+            <p className="stat-label">{t('transactionsCount')}</p>
+            <p className="stat-value">{transactionCount}</p>
+          </div>
+          <div className="stat-bg-decoration transaction-decoration"></div>
+        </div>
+      </div>
+
+      {/* Information Sections */}
+      <div className="profile-details-grid">
+        {/* Account Information */}
+        <div className="profile-detail-card">
+          <div className="detail-header">
+            <h3 className="detail-title">👤 {t('accountInfo')}</h3>
+            <div className="detail-divider"></div>
+          </div>
+          
+          <div className="detail-items">
+            <div className="detail-item">
+              <span className="detail-label">{t('fullName')}</span>
+              <span className="detail-value">{user.name || 'N/A'}</span>
+            </div>
+            
+            <div className="detail-item">
+              <span className="detail-label">{t('emailAddress')}</span>
+              <span className="detail-value email-value">{user.email || 'N/A'}</span>
+            </div>
+            
+            <div className="detail-item">
+              <span className="detail-label">{t('memberSince')}</span>
+              <span className="detail-value">
+                {user.createdAt ? new Date(user.createdAt).toLocaleDateString(undefined, { 
+                  year: 'numeric', 
+                  month: 'short', 
+                  day: 'numeric' 
+                }) : 'N/A'}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Security & Status */}
-        <div className="premium-card info-group">
-          <div className="settings-group-header">
-            <span className="settings-group-icon">🛡️</span>
-            <h4>{t('securityStatus')}</h4>
+        {/* Security & Account Status */}
+        <div className="profile-detail-card">
+          <div className="detail-header">
+            <h3 className="detail-title">🛡️ {t('securityStatus')}</h3>
+            <div className="detail-divider"></div>
           </div>
           
-          <div className="info-item">
-            <span className="info-label">{t('accountStatus')}</span>
-            <div className="account-status-card">
-              <div className="status-indicator"></div>
-              <span className="info-value" style={{ color: 'var(--success)' }}>{t('activeVerified')}</span>
+          <div className="detail-items">
+            <div className="detail-item">
+              <span className="detail-label">{t('accountStatus')}</span>
+              <div className="status-badge-inline active">
+                <span className="status-indicator-dot"></span>
+                {t('activeVerified')}
+              </div>
             </div>
-          </div>
 
-          <div className="info-item">
-            <span className="info-label">{t('dataUsage')}</span>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-              <span className="info-value">{transactionCount} {t('transactionsCount')}</span>
-              <span className="info-value" style={{ color: 'var(--text-muted)' }}>{((transactionCount/500)*100).toFixed(1)}% {t('ofLimit')}</span>
+            <div className="detail-item">
+              <span className="detail-label">{t('twoFactor')}</span>
+              <div className="status-badge-inline disabled">
+                <span className="status-indicator-dot"></span>
+                {t('notEnabled')}
+              </div>
             </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--bg-color)', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ width: `${Math.min((transactionCount/500)*100, 100)}%`, height: '100%', backgroundColor: 'var(--primary)' }}></div>
-            </div>
-          </div>
 
-          <div className="info-item">
-            <span className="info-label">{t('twoFactor')}</span>
-            <span className="info-value" style={{ color: 'var(--text-muted)' }}>{t('notEnabled')}</span>
+            <div className="detail-item">
+              <span className="detail-label">{t('dataUsage')}</span>
+              <div className="usage-info">
+                <div className="usage-stats">
+                  <span>{transactionCount} {t('transactionsCount')}</span>
+                  <span className="usage-percent">{((transactionCount/500)*100).toFixed(1)}%</span>
+                </div>
+                <div className="progress-bar-modern">
+                  <div className="progress-fill" style={{ width: `${Math.min((transactionCount/500)*100, 100)}%` }}></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
