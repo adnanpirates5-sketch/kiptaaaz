@@ -1,19 +1,36 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from '../theme/TranslationContext';
 import { useCurrency } from '../theme/useCurrency';
 import './Calendar.css';
 
 const Calendar = ({ incomes = [], expenses = [] }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { currency, convert } = useCurrency();
   
-  // Static for April 2026 as per requirement
-  const YEAR = 2026;
-  const MONTH = 3; // April (0-indexed)
-  const daysInMonth = 30;
-  const firstDayOfMonth = 3; // April 1, 2026 is Wednesday (0: Sun, 1: Mon, 2: Tue, 3: Wed)
+  // Dynamic Month and Year
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 
-  const [selectedDate, setSelectedDate] = useState(1);
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+  const monthNames = [
+    'january', 'february', 'march', 'april', 'may', 'june',
+    'july', 'august', 'september', 'october', 'november', 'december'
+  ];
+
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+    setSelectedDate(1);
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+    setSelectedDate(1);
+  };
 
   const days = useMemo(() => {
     const totalSlots = Math.ceil((daysInMonth + firstDayOfMonth) / 7) * 7;
@@ -33,12 +50,12 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
   const dailyTransactions = useMemo(() => {
     const filteredIncomes = incomes.filter(inc => {
       const d = new Date(inc.date);
-      return d.getFullYear() === YEAR && d.getMonth() === MONTH && d.getDate() === selectedDate;
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth && d.getDate() === selectedDate;
     });
 
     const filteredExpenses = expenses.filter(exp => {
       const d = new Date(exp.date);
-      return d.getFullYear() === YEAR && d.getMonth() === MONTH && d.getDate() === selectedDate;
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth && d.getDate() === selectedDate;
     });
 
     const totalIncome = filteredIncomes.reduce((sum, inc) => sum + inc.amount, 0);
@@ -51,7 +68,7 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
       totalExpense,
       net: totalIncome - totalExpense
     };
-  }, [incomes, expenses, selectedDate]);
+  }, [incomes, expenses, currentYear, currentMonth, selectedDate]);
 
   const formatValue = (value) => {
     const convertedValue = convert(value);
@@ -101,11 +118,11 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
     if (!day) return null;
     const dayIncomes = incomes.filter(inc => {
       const d = new Date(inc.date);
-      return d.getFullYear() === YEAR && d.getMonth() === MONTH && d.getDate() === day;
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth && d.getDate() === day;
     });
     const dayExpenses = expenses.filter(exp => {
       const d = new Date(exp.date);
-      return d.getFullYear() === YEAR && d.getMonth() === MONTH && d.getDate() === day;
+      return d.getFullYear() === currentYear && d.getMonth() === currentMonth && d.getDate() === day;
     });
 
     const totalIn = dayIncomes.reduce((sum, inc) => sum + inc.amount, 0);
@@ -116,10 +133,37 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
     return { totalIn, totalOut };
   };
 
+  const formatYear = (year) => {
+    if (language === 'bn') {
+      const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+      return year.toString().split('').map(d => bnDigits[parseInt(d)]).join('');
+    }
+    return year;
+  };
+
+  const formatDay = (day) => {
+    if (!day) return '';
+    if (language === 'bn') {
+      const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+      return day.toString().split('').map(d => bnDigits[parseInt(d)]).join('');
+    }
+    return day;
+  };
+
   return (
     <div className="calendar-container animate-fade-in">
-      <div className="section-header">
-        <h2 className="premium-title">{t('calendar')} - {t('april2026')}</h2>
+      <div className="section-header calendar-nav-header">
+        <h2 className="premium-title">
+          {t('calendar')} - {t(monthNames[currentMonth])} {formatYear(currentYear)}
+        </h2>
+        <div className="calendar-controls">
+          <button className="premium-btn secondary icon-btn" onClick={handlePrevMonth} title={t('prevMonth')}>
+            <span>←</span>
+          </button>
+          <button className="premium-btn secondary icon-btn" onClick={handleNextMonth} title={t('nextMonth')}>
+            <span>→</span>
+          </button>
+        </div>
       </div>
 
       <div className="calendar-layout-grid">
@@ -138,9 +182,10 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
             {days.map((day, index) => {
               const summary = getDaySummary(day);
               const isSelected = selectedDate === day;
-              const isToday = day === new Date().getDate() && 
-                              new Date().getMonth() === MONTH && 
-                              new Date().getFullYear() === YEAR;
+              const now = new Date();
+              const isToday = day === now.getDate() && 
+                              currentMonth === now.getMonth() && 
+                              currentYear === now.getFullYear();
 
               return (
                 <div 
@@ -150,7 +195,7 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
                 >
                   {day && (
                     <>
-                      <span className="day-number">{day}</span>
+                      <span className="day-number">{formatDay(day)}</span>
                       {summary && (
                         <div className="day-indicators">
                           {summary.totalIn > 0 && <span className="indicator income"></span>}
@@ -168,7 +213,7 @@ const Calendar = ({ incomes = [], expenses = [] }) => {
         {/* Selected Day Details Card */}
         <div className="section-card premium-card calendar-details-card">
           <div className="details-header">
-            <h3>{t('april2026')} {selectedDate}</h3>
+            <h3>{t(monthNames[currentMonth])} {formatDay(selectedDate)}, {formatYear(currentYear)}</h3>
           </div>
 
           <div className="daily-summary-stats">

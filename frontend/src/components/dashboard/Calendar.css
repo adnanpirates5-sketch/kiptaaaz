@@ -2,6 +2,29 @@
   width: 100%;
 }
 
+.calendar-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.calendar-controls {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.icon-btn {
+  padding: 0.5rem 0.75rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  min-width: 45px;
+}
+
 .calendar-layout-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
