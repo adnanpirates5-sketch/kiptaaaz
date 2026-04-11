@@ -9,15 +9,31 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     try {
       const res = await authAPI.login({ email, password });
+      
+      // Check if 2FA is required
+      if (res.data.requires2FA) {
+        setError("Two-Factor Authentication is enabled. Please check your email for the verification code.");
+        return;
+      }
+      
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      onLoginSuccess();
+      
+      // Show success message about email
+      setSuccess('✓ Login successful! A confirmation email has been sent to your inbox.');
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        onLoginSuccess();
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || t('loginFailed'));
     }
@@ -31,6 +47,7 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
           <p>{t('enterDetails')}</p>
         </div>
         
+        {success && <div style={{ color: 'var(--success)', marginBottom: '1rem', textAlign: 'center', fontWeight: '600', padding: '0.75rem', background: 'rgba(34, 197, 94, 0.1)', borderRadius: 'var(--radius-md)' }}>{success}</div>}
         {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>

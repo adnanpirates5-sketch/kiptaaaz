@@ -10,16 +10,25 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     try {
       const res = await authAPI.register({ name, email, password });
       // Backend now returns token and user for auto-login
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      onRegisterSuccess();
+      
+      // Show success message about email
+      setSuccess('✓ Welcome to Kiptaaz! A welcome email has been sent to your inbox.');
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        onRegisterSuccess();
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || t('registrationFailed'));
     }
@@ -33,6 +42,7 @@ const Register = ({ onSwitchToLogin, onBackHome, onRegisterSuccess }) => {
           <p>{t('joinKipta')}</p>
         </div>
         
+        {success && <div style={{ color: 'var(--success)', marginBottom: '1rem', textAlign: 'center', fontWeight: '600', padding: '0.75rem', background: 'rgba(34, 197, 94, 0.1)', borderRadius: 'var(--radius-md)' }}>{success}</div>}
         {error && <div style={{ color: 'var(--danger)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
         
         <form className="auth-form" onSubmit={handleSubmit}>

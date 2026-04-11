@@ -4,78 +4,6 @@ import { useTranslation } from '../theme/TranslationContext';
 import { financeAPI } from '../../api';
 import './SavingsGoals.css';
 
-// Function to get emoji based on goal name
-const getEmojiForGoal = (goalName) => {
-  if (!goalName) return '🎯';
-  
-  const name = goalName.toLowerCase();
-  const emojiMap = {
-    car: '🚗',
-    vehicle: '🚗',
-    bike: '🏍️',
-    motorcycle: '🏍️',
-    vacation: '✈️',
-    travel: '🌍',
-    trip: '✈️',
-    holiday: '🏖️',
-    house: '🏠',
-    home: '🏠',
-    apartment: '🏢',
-    property: '🏠',
-    education: '📚',
-    school: '📚',
-    course: '📚',
-    college: '🎓',
-    university: '🎓',
-    wedding: '💒',
-    phone: '📱',
-    mobile: '📱',
-    laptop: '💻',
-    computer: '💻',
-    iphone: '📱',
-    savings: '💰',
-    emergency: '🆘',
-    'emergency fund': '🆘',
-    health: '⚕️',
-    medical: '⚕️',
-    hospital: '🏥',
-    fitness: '💪',
-    gym: '🏋️',
-    investment: '📈',
-    business: '💼',
-    startup: '🚀',
-    furniture: '🛋️',
-    appliance: '🔧',
-    kitchen: '🍳',
-    baby: '👶',
-    gift: '🎁',
-    clothes: '👕',
-    shopping: '🛍️',
-    food: '🍕',
-    restaurant: '🍽️',
-    book: '📖',
-    music: '🎵',
-    game: '🎮',
-    pet: '🐕',
-    dog: '🐕',
-    cat: '🐱',
-    garden: '🌱',
-    plant: '🌿',
-    debt: '💳',
-    loan: '💰',
-  };
-
-  // Check for keywords in goal name
-  for (const [keyword, emoji] of Object.entries(emojiMap)) {
-    if (name.includes(keyword)) {
-      return emoji;
-    }
-  }
-  
-  // Default emoji if no match found
-  return '🎯';
-};
-
 const SavingsGoals = () => {
   const { currency: globalCurrency, convert, toBase } = useCurrency();
   const { t } = useTranslation();
@@ -152,6 +80,95 @@ const SavingsGoals = () => {
     }
   };
 
+  const getGoalEmoji = (goalName) => {
+    if (!goalName) return '🎯';
+    const name = goalName.toLowerCase();
+    
+    // Travel-related
+    if (name.includes('vacation') || name.includes('trip') || name.includes('travel') || name.includes('holiday') || name.includes('tour') || name.includes('beach') || name.includes('cruise')) return '🏖️';
+    
+    // Vehicle-related
+    if (name.includes('car') || name.includes('vehicle') || name.includes('bike') || name.includes('motorcycle') || name.includes('auto') || name.includes('truck') || name.includes('tesla') || name.includes('jeep')) return '🚗';
+    
+    // Property-related
+    if (name.includes('house') || name.includes('home') || name.includes('apartment') || name.includes('property') || name.includes('real estate') || name.includes('condo') || name.includes('villa')) return '🏠';
+    
+    // Wedding-related
+    if (name.includes('wedding') || name.includes('marriage') || name.includes('honeymoon') || name.includes('nuptial') || name.includes('engagement')) return '💍';
+    
+    // Education-related
+    if (name.includes('education') || name.includes('school') || name.includes('course') || name.includes('learning') || name.includes('university') || name.includes('college') || name.includes('tuition') || name.includes('degree')) return '🎓';
+    
+    // Finance-related
+    if (name.includes('investment') || name.includes('stock') || name.includes('fund') || name.includes('portfolio') || name.includes('crypto') || name.includes('trading')) return '📈';
+    
+    // Emergency funds
+    if (name.includes('emergency') || name.includes('urgent') || name.includes('crisis') || name.includes('rainy day')) return '🆘';
+    
+    // Technology
+    if (name.includes('laptop') || name.includes('computer') || name.includes('phone') || name.includes('gadget') || name.includes('tech') || name.includes('iphone') || name.includes('ipad') || name.includes('drone') || name.includes('console') || name.includes('gaming')) return '💻';
+    
+    // Family/Children
+    if (name.includes('baby') || name.includes('child') || name.includes('kid') || name.includes('family') || name.includes('infant')) return '👶';
+    
+    // Health & Wellness
+    if (name.includes('health') || name.includes('fitness') || name.includes('gym') || name.includes('medical') || name.includes('surgery') || name.includes('wellness') || name.includes('treatment') || name.includes('diet')) return '💪';
+    
+    // Sport & Recreation
+    if (name.includes('sport') || name.includes('skiing') || name.includes('swimming') || name.includes('diving') || name.includes('climbing') || name.includes('hiking') || name.includes('golf') || name.includes('tennis')) return '⚽';
+    
+    // Food & Dining
+    if (name.includes('restaurant') || name.includes('dining') || name.includes('food') || name.includes('culinary') || name.includes('cook') || name.includes('chef')) return '🍽️';
+    
+    // Entertainment
+    if (name.includes('concert') || name.includes('movie') || name.includes('entertainment') || name.includes('cinema') || name.includes('festival') || name.includes('theater') || name.includes('music')) return '🎬';
+    
+    // Pet-related
+    if (name.includes('pet') || name.includes('dog') || name.includes('cat') || name.includes('puppy') || name.includes('kitten')) return '🐕';
+    
+    // Garden & Nature
+    if (name.includes('garden') || name.includes('plant') || name.includes('landscaping') || name.includes('outdoor')) return '🌱';
+    
+    // Art & Creativity
+    if (name.includes('art') || name.includes('paint') || name.includes('drawing') || name.includes('creative') || name.includes('design') || name.includes('craft')) return '🎨';
+    
+    // Photography
+    if (name.includes('camera') || name.includes('photography') || name.includes('photo')) return '📷';
+    
+    // Business & Work
+    if (name.includes('business') || name.includes('startup') || name.includes('office') || name.includes('work') || name.includes('professional')) return '💼';
+    
+    // Jewelry & Accessories
+    if (name.includes('jewelry') || name.includes('watch') || name.includes('necklace') || name.includes('ring') || name.includes('bracelet')) return '💎';
+    
+    // Fashion & Clothing
+    if (name.includes('fashion') || name.includes('clothes') || name.includes('wardrobe') || name.includes('shoe') || name.includes('designer') || name.includes('brand')) return '👗';
+    
+    // Books & Knowledge
+    if (name.includes('book') || name.includes('library') || name.includes('reading') || name.includes('knowledge') || name.includes('literature')) return '📚';
+    
+    // Music & Instruments
+    if (name.includes('music') || name.includes('guitar') || name.includes('piano') || name.includes('instrument') || name.includes('violin') || name.includes('drum')) return '🎸';
+    
+    // Furniture & Home Decor
+    if (name.includes('furniture') || name.includes('decor') || name.includes('interior') || name.includes('bedding') || name.includes('sofa')) return '🛋️';
+    
+    // Fitness Equipment
+    if (name.includes('weights') || name.includes('treadmill') || name.includes('equipment') || name.includes('trainer')) return '🏋️';
+    
+    // Travel Specific
+    if (name.includes('flight') || name.includes('airfare') || name.includes('hotel') || name.includes('accommodation')) return '✈️';
+    
+    // Celebration & Occasions
+    if (name.includes('birthday') || name.includes('anniversary') || name.includes('celebration') || name.includes('party') || name.includes('gift')) return '🎉';
+    
+    // Savings Goal (generic)
+    if (name.includes('saving') || name.includes('goal') || name.includes('target') || name.includes('fund')) return '💰';
+    
+    // Default emoji
+    return '⭐';
+  };
+
   const handleUpdateProgress = async (id, amount, goalCurrency) => {
     if (!amount || isNaN(amount)) return;
     const goal = goals.find(g => (g._id || g.id) === id);
@@ -197,21 +214,17 @@ const SavingsGoals = () => {
           <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('goalName')}</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <input 
                   type="text" 
                   className="premium-input"
                   placeholder="e.g., New Car, Vacation" 
                   value={newGoal.name}
                   onChange={(e) => setNewGoal({...newGoal, name: e.target.value})}
-                  style={{ flex: 1 }}
                   required
+                  style={{ flex: 1 }}
                 />
-                {newGoal.name && (
-                  <span style={{ fontSize: '1.75rem', minWidth: '40px', textAlign: 'center' }}>
-                    {getEmojiForGoal(newGoal.name)}
-                  </span>
-                )}
+                {newGoal.name && <span style={{ fontSize: '1.75rem' }}>{getGoalEmoji(newGoal.name)}</span>}
               </div>
             </div>
             
@@ -295,9 +308,9 @@ const SavingsGoals = () => {
             const progress = (goal.current / goal.target) * 100;
             return (
               <div key={goalId} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ fontSize: '1.75rem' }}>{getEmojiForGoal(goal.name)}</span>
+                <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                    <span style={{ fontSize: '1.5rem' }}>{getGoalEmoji(goal.name)}</span>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
                   </div>
                   <button className="delete-btn" onClick={() => handleDeleteGoal(goalId)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>

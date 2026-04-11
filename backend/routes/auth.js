@@ -108,6 +108,21 @@ router.post('/login', async (req, res) => {
     // Create token if 2FA is NOT enabled
     const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
 
+    // Send login notification email
+    try {
+      const loginTime = new Date().toLocaleString();
+      const userAgent = req.get('user-agent') || 'Unknown Device';
+      await sendEmail({
+        email: user.email,
+        subject: 'New Login to Your Kiptaaz Account',
+        message: `Hello ${user.name},\n\nYou just logged in to your Kiptaaz account.\n\nLogin Time: ${loginTime}\nDevice: ${userAgent}\n\nIf this wasn't you, please reset your password immediately.`,
+        html: `<h1>Login Notification</h1><p>Hello <strong>${user.name}</strong>,</p><p>You just logged in to your Kiptaaz account.</p><p><strong>Login Details:</strong></p><ul><li>Time: ${loginTime}</li><li>Device: ${userAgent}</li></ul><p>If this wasn't you, please reset your password immediately.</p>`,
+      });
+    } catch (emailError) {
+      console.error('Error sending login email:', emailError);
+      // Don't fail login if email fails
+    }
+
     res.json({ message: 'Login successful', token, user: { id: user._id, name: user.name, email: user.email, profilePicture: user.profilePicture } });
   } catch (err) {
     res.status(500).json({ message: err.message });
