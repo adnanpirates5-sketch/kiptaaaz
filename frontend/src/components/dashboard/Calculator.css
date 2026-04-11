@@ -1,0 +1,108 @@
+.kipta-calc-container {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  width: 100%;
+  max-width: 320px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.kipta-calc-display {
+  background: var(--bg-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  text-align: right;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid var(--border-color);
+}
+
+.kipta-calc-history {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  min-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kipta-calc-result {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kipta-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.kipta-calc-btn {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  padding: 1rem 0;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kipta-calc-btn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.kipta-calc-btn.operator {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.kipta-calc-btn.equals {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.kipta-calc-btn.equals:hover {
+  background: var(--primary-hover);
+}
+
+.kipta-calc-btn.clear {
+  color: var(--danger);
+}
+
+.kipta-calc-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: var(--space-2);
+}
+
+.kipta-use-result-btn {
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.kipta-use-result-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

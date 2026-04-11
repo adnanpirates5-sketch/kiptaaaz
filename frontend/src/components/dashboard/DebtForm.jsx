@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from '../theme/TranslationContext';
 import { useCurrency } from "../theme/useCurrency";
 import "./DebtForm.css";
+import Calculator from "./Calculator";
 
 const DebtForm = ({ onAddDebt }) => {
   const { t } = useTranslation();
@@ -11,6 +12,7 @@ const DebtForm = ({ onAddDebt }) => {
   const [amount, setAmount] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState(globalCurrency);
   const [dueDate, setDueDate] = useState("");
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +28,11 @@ const DebtForm = ({ onAddDebt }) => {
     setName("");
     setAmount("");
     setDueDate("");
+  };
+
+  const handleUseCalculatorResult = (result) => {
+    setAmount(result);
+    setShowCalculator(false);
   };
 
   return (
@@ -89,7 +96,7 @@ const DebtForm = ({ onAddDebt }) => {
             <input
               type="number"
               className="premium-input"
-              style={{ paddingLeft: '2.5rem' }}
+              style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
               placeholder={t('amount')}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -97,9 +104,36 @@ const DebtForm = ({ onAddDebt }) => {
               step="0.01"
               required
             />
+            <button 
+              type="button"
+              onClick={() => setShowCalculator(!showCalculator)}
+              style={{ 
+                position: 'absolute', 
+                right: '0.5rem', 
+                top: '50%', 
+                transform: 'translateY(-50%)', 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer',
+                fontSize: '1.2rem',
+                color: showCalculator ? 'var(--primary)' : 'var(--text-muted)'
+              }}
+              title="Calculator"
+            >
+              🔢
+            </button>
           </div>
         </div>
       </div>
+
+      {showCalculator && (
+        <div className="calculator-wrapper animate-fade-in" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
+          <Calculator 
+            onUseResult={handleUseCalculatorResult} 
+            onClose={() => setShowCalculator(false)} 
+          />
+        </div>
+      )}
 
       <div className="form-group">
         <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>
