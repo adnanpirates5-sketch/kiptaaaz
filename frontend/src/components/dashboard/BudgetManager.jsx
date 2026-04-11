@@ -65,6 +65,43 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
     return cat ? t(cat.key) : catName;
   };
 
+  const exportToCSV = () => {
+    if (budgets.length === 0) {
+      alert(t('noBudgets'));
+      return;
+    }
+
+    const csvData = budgets.map(budget => {
+      const spent = getSpentForCategory(budget.category);
+      const percentage = Math.min((spent / budget.amount) * 100, 100);
+      const remaining = budget.amount - spent;
+      return {
+        'Category': getCategoryTranslation(budget.category),
+        'Budget Amount': convert(budget.amount).toFixed(2),
+        'Spent': convert(spent).toFixed(2),
+        'Remaining': convert(remaining).toFixed(2),
+        'Usage %': percentage.toFixed(2),
+        'Currency': globalCurrency
+      };
+    });
+
+    const headers = Object.keys(csvData[0]);
+    const csv = [
+      headers.join(','),
+      ...csvData.map(row => headers.map(header => `"${row[header]}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `budgets-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="budget-manager-premium animate-fade-in">
       {/* Header Section */}
@@ -132,7 +169,37 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
         <div className="budget-list-card">
           <div className="budget-list-header">
             <h3 className="budget-list-title">📈 {t('budgetProgress')}</h3>
-            <span className="budget-count-badge">{budgets.length}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span className="budget-count-badge">{budgets.length}</span>
+              {budgets.length > 0 && (
+                <button 
+                  onClick={exportToCSV}
+                  title="Export to CSV"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary), #818cf8)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.8rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 2px 8px rgba(99, 102, 241, 0.2)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 2px 8px rgba(99, 102, 241, 0.2)';
+                  }}
+                >
+                  📥 Export CSV
+                </button>
+              )}
+            </div>
           </div>
           <div className="budget-list-premium">
             {budgets.length === 0 ? (
