@@ -138,6 +138,8 @@ export const translations = {
     recentTransactions: 'Recent Transactions',
     recentTransactionsDesc: 'Monitor your latest financial activities. You can view, manage, and track all your income and expense entries in detail.',
     seeAllTransactions: 'See All Transactions',
+    bookmark: 'Bookmark',
+    noBookmarks: 'No Bookmarked transaction',
     
     // Savings Goals
     savingsGoals: 'Savings Goals',
@@ -530,6 +532,8 @@ export const translations = {
     recentTransactions: 'সাম্প্রতিক লেনদেন',
     recentTransactionsDesc: 'আপনার সর্বশেষ আর্থিক কার্যক্রম পর্যবেক্ষণ করুন। আপনি আপনার সব আয় এবং ব্যয়ের এন্ট্রি বিস্তারিতভাবে দেখতে ও ম্যানেজ করতে পারেন।',
     seeAllTransactions: 'সব লেনদেন দেখুন',
+    bookmark: 'বুকমার্ক',
+    noBookmarks: 'কোনো বুকমার্ক করা লেনদেন নেই',
     
     // Savings Goals
     savingsGoals: 'সঞ্চয় লক্ষ্য',
