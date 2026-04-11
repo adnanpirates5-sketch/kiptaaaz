@@ -1,0 +1,185 @@
+.calendar-container {
+  width: 100%;
+}
+
+.calendar-layout-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 1024px) {
+  .calendar-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-grid-card {
+  padding: var(--space-6);
+  min-height: 450px;
+}
+
+.calendar-header-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  border: 1px solid transparent;
+  background-color: var(--bg-color);
+}
+
+.calendar-day:not(.empty):hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.calendar-day.empty {
+  cursor: default;
+  background-color: transparent;
+}
+
+.calendar-day.selected {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.calendar-day.selected .day-number {
+  color: white;
+}
+
+.calendar-day.today {
+  border: 2px solid var(--primary);
+}
+
+.day-number {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--text-primary);
+}
+
+.day-indicators {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.indicator.income {
+  background-color: var(--success);
+}
+
+.indicator.expense {
+  background-color: var(--danger);
+}
+
+.calendar-details-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.details-header h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: var(--space-2);
+}
+
+.daily-summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background-color: var(--bg-color);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.summary-item.total {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-color);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.amount.income {
+  color: var(--success);
+}
+
+.amount.expense {
+  color: var(--danger);
+}
+
+.daily-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+.mini-transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  background-color: var(--bg-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  border-left: 3px solid var(--primary);
+}
+
+.mini-transaction-item .cat {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mini-transaction-item .amt {
+  font-weight: 600;
+}
+
+.no-transactions {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-8);
+  font-style: italic;
+}

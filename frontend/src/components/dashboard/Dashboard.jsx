@@ -15,6 +15,7 @@ import DebtSummary from "./DebtSummary";
 import SavingsGoals from "./SavingsGoals";
 import FinancialTips from "./FinancialTips";
 import OverviewCharts from "./OverviewCharts";
+import Calendar from "./Calendar";
 import { financeAPI } from "../../api";
 import { useTranslation } from "../theme/TranslationContext";
 
@@ -248,6 +249,7 @@ const Dashboard = ({ onLogout }) => {
           </div>
         );
       case "stats": return <Stats incomes={incomes} expenses={expenses} budgets={budgets} debts={debts} />;
+      case "calendar": return <Calendar incomes={incomes} expenses={expenses} />;
       case "debt":
         return (
           <div className="animate-fade-in">
@@ -320,6 +322,12 @@ const Dashboard = ({ onLogout }) => {
             onClick={() => { setActiveTab('stats'); setIsSidebarOpen(false); }}
           >
             <span>📊</span> {t('stats')}
+          </button>
+          <button 
+            className={`sidebar-link ${activeTab === 'calendar' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('calendar'); setIsSidebarOpen(false); }}
+          >
+            <span>📅</span> {t('calendar')}
           </button>
           <button 
             className={`sidebar-link ${activeTab === 'debt' ? 'active' : ''}`}
