@@ -3,7 +3,7 @@ import { useCurrency } from '../theme/useCurrency';
 import { useTranslation } from '../theme/TranslationContext';
 import './Dashboard.css';
 
-const BalanceSummary = ({ totalIncome = 0, expenses = [], isVisible = true }) => {
+const BalanceSummary = ({ totalIncome = 0, expenses = [] }) => {
   const { currency, convert } = useCurrency();
   const { t } = useTranslation();
   
@@ -11,7 +11,6 @@ const BalanceSummary = ({ totalIncome = 0, expenses = [], isVisible = true }) =>
   const balance = totalIncome - totalExpenses;
 
   const formatAmount = (amount) => {
-    if (!isVisible) return '••••';
     const convertedValue = convert(amount);
     return `${currency} ${convertedValue.toLocaleString(undefined, { 
       minimumFractionDigits: 2, 

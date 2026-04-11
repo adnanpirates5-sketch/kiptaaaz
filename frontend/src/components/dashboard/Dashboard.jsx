@@ -24,8 +24,6 @@ const Dashboard = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", profilePicture: null });
   
-  const [isVisible, setIsVisible] = useState(true);
-  
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [debts, setDebts] = useState([]);
@@ -186,7 +184,7 @@ const Dashboard = ({ onLogout }) => {
       case "overview":
         return (
           <div className="animate-fade-in">
-            <BalanceSummary totalIncome={totalIncome} expenses={expenses} isVisible={isVisible} />
+            <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
             <div className="dashboard-main-grid">
               <OverviewCharts expenses={expenses} incomes={incomes} />
               <div className="section-card premium-card recent-transactions-box">
@@ -375,23 +373,7 @@ const Dashboard = ({ onLogout }) => {
               <p>{t('moneyToday')}</p>
             </div>
           </div>
-          <button 
-            className="premium-btn secondary"
-            onClick={() => setIsVisible(!isVisible)}
-            style={{ 
-              borderRadius: '50%', 
-              width: '45px', 
-              height: '45px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              fontSize: '1.2rem',
-              boxShadow: 'var(--shadow-md)'
-            }}
-            title={isVisible ? t('hideBalance') || "Hide Balance" : t('showBalance') || "Show Balance"}
-          >
-            {isVisible ? '👁️' : '🙈'}
-          </button>
+
         </div>
       </header>
 
