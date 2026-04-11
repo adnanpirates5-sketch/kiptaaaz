@@ -4,6 +4,78 @@ import { useTranslation } from '../theme/TranslationContext';
 import { financeAPI } from '../../api';
 import './SavingsGoals.css';
 
+// Function to get emoji based on goal name
+const getEmojiForGoal = (goalName) => {
+  if (!goalName) return '🎯';
+  
+  const name = goalName.toLowerCase();
+  const emojiMap = {
+    car: '🚗',
+    vehicle: '🚗',
+    bike: '🏍️',
+    motorcycle: '🏍️',
+    vacation: '✈️',
+    travel: '🌍',
+    trip: '✈️',
+    holiday: '🏖️',
+    house: '🏠',
+    home: '🏠',
+    apartment: '🏢',
+    property: '🏠',
+    education: '📚',
+    school: '📚',
+    course: '📚',
+    college: '🎓',
+    university: '🎓',
+    wedding: '💒',
+    phone: '📱',
+    mobile: '📱',
+    laptop: '💻',
+    computer: '💻',
+    iphone: '📱',
+    savings: '💰',
+    emergency: '🆘',
+    'emergency fund': '🆘',
+    health: '⚕️',
+    medical: '⚕️',
+    hospital: '🏥',
+    fitness: '💪',
+    gym: '🏋️',
+    investment: '📈',
+    business: '💼',
+    startup: '🚀',
+    furniture: '🛋️',
+    appliance: '🔧',
+    kitchen: '🍳',
+    baby: '👶',
+    gift: '🎁',
+    clothes: '👕',
+    shopping: '🛍️',
+    food: '🍕',
+    restaurant: '🍽️',
+    book: '📖',
+    music: '🎵',
+    game: '🎮',
+    pet: '🐕',
+    dog: '🐕',
+    cat: '🐱',
+    garden: '🌱',
+    plant: '🌿',
+    debt: '💳',
+    loan: '💰',
+  };
+
+  // Check for keywords in goal name
+  for (const [keyword, emoji] of Object.entries(emojiMap)) {
+    if (name.includes(keyword)) {
+      return emoji;
+    }
+  }
+  
+  // Default emoji if no match found
+  return '🎯';
+};
+
 const SavingsGoals = () => {
   const { currency: globalCurrency, convert, toBase } = useCurrency();
   const { t } = useTranslation();
@@ -125,14 +197,22 @@ const SavingsGoals = () => {
           <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('goalName')}</label>
-              <input 
-                type="text" 
-                className="premium-input"
-                placeholder="e.g., New Car, Vacation" 
-                value={newGoal.name}
-                onChange={(e) => setNewGoal({...newGoal, name: e.target.value})}
-                required
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <input 
+                  type="text" 
+                  className="premium-input"
+                  placeholder="e.g., New Car, Vacation" 
+                  value={newGoal.name}
+                  onChange={(e) => setNewGoal({...newGoal, name: e.target.value})}
+                  style={{ flex: 1 }}
+                  required
+                />
+                {newGoal.name && (
+                  <span style={{ fontSize: '1.75rem', minWidth: '40px', textAlign: 'center' }}>
+                    {getEmojiForGoal(newGoal.name)}
+                  </span>
+                )}
+              </div>
             </div>
             
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -216,7 +296,10 @@ const SavingsGoals = () => {
             return (
               <div key={goalId} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '1.75rem' }}>{getEmojiForGoal(goal.name)}</span>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
+                  </div>
                   <button className="delete-btn" onClick={() => handleDeleteGoal(goalId)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
                 </div>
                 <div className="goal-stats" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
