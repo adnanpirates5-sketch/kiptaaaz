@@ -21,6 +21,8 @@ export const authAPI = {
   getProfile: () => api.get('/auth/profile'),
   updateProfile: (data) => api.patch('/auth/profile/update', data),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  verify2FA: (data) => api.post('/auth/verify-2fa', data),
+  toggle2FA: () => api.post('/auth/toggle-2fa'),
 };
 
 export const financeAPI = {

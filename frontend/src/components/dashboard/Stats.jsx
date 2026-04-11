@@ -52,14 +52,14 @@ const categories = [
   { name: "Other", key: "other" },
 ];
 
-const CustomTooltip = ({ active, payload, label, currency, t }) => {
+const CustomTooltip = ({ active, payload, label, currency, t, convert }) => {
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip">
         <p className="tooltip-label">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="tooltip-value" style={{ color: entry.color || entry.fill }}>
-            {entry.name}: {currency} {entry.value.toLocaleString()}
+            {entry.name}: {currency} {entry.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         ))}
       </div>
@@ -70,8 +70,16 @@ const CustomTooltip = ({ active, payload, label, currency, t }) => {
 
 const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
   const { t } = useTranslation();
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const [viewType, setViewType] = useState('overview'); // 'overview', 'trends', 'budget', 'debt'
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  };
 
   const getCategoryTranslation = (catName) => {
     const cat = categories.find(c => c.name === catName);
@@ -83,7 +91,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
   const mergedData = Array.from(allCategories).map(cat => {
     const income = incomes.filter(i => i.category === cat).reduce((sum, i) => sum + i.amount, 0);
     const expense = expenses.filter(e => e.category === cat).reduce((sum, e) => sum + e.amount, 0);
-    return { category: getCategoryTranslation(cat), income, expense, balance: income - expense };
+    return { category: getCategoryTranslation(cat), income: convert(income), expense: convert(expense), balance: convert(income - expense) };
   });
 
   // 2. Prepare data for bar charts
@@ -95,7 +103,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
       acc.push({ category: exp.category, amount: exp.amount });
     }
     return acc;
-  }, []);
+  }, []).map(item => ({ ...item, amount: convert(item.amount) }));
 
   const incomeBarData = incomes.reduce((acc, inc) => {
     const existing = acc.find(item => item.category === inc.category);
@@ -105,7 +113,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
       acc.push({ category: inc.category, amount: inc.amount });
     }
     return acc;
-  }, []);
+  }, []).map(item => ({ ...item, amount: convert(item.amount) }));
 
   // 3. Prepare data for Monthly Trend
   const monthlyData = {};
@@ -124,7 +132,12 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
     const dateA = new Date(a.month);
     const dateB = new Date(b.month);
     return dateA - dateB;
-  });
+  }).map(item => ({
+    ...item,
+    income: convert(item.income),
+    expense: convert(item.expense),
+    savings: convert(item.savings)
+  }));
 
   // 4. Prepare data for Budget vs Actual
   const budgetVsActualData = budgets.map(budget => {
@@ -133,17 +146,17 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
       .reduce((sum, exp) => sum + exp.amount, 0);
     return {
       category: getCategoryTranslation(budget.category),
-      budget: budget.amount,
-      actual: actual,
-      remaining: Math.max(0, budget.amount - actual),
-      over: Math.max(0, actual - budget.amount)
+      budget: convert(budget.amount),
+      actual: convert(actual),
+      remaining: convert(Math.max(0, budget.amount - actual)),
+      over: convert(Math.max(0, actual - budget.amount))
     };
   });
 
   // 5. Prepare Debt Data
   const debtPieData = debts.map(debt => ({
     name: debt.name,
-    value: debt.amount,
+    value: convert(debt.amount),
     status: debt.status
   }));
 
@@ -176,7 +189,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend verticalAlign="top" height={36} />
                     <Area type="monotone" dataKey="income" stroke="var(--success)" fillOpacity={1} fill="url(#colorInc)" strokeWidth={3} name={t('totalIncome')} />
                     <Area type="monotone" dataKey="expense" stroke="var(--danger)" fillOpacity={1} fill="url(#colorExp)" strokeWidth={3} name={t('totalExpenses')} />
@@ -195,7 +208,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Line type="monotone" dataKey="savings" stroke="var(--primary)" strokeWidth={4} dot={{ r: 6, fill: 'var(--primary)', strokeWidth: 2, stroke: '#fff' }} name={t('monthlySavings')} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -216,7 +229,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="category" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend />
                     <Bar dataKey="budget" fill="var(--text-muted)" opacity={0.3} radius={[4, 4, 0, 0]} name={t('plannedBudget')} />
                     <Bar dataKey="actual" fill="var(--primary)" radius={[4, 4, 0, 0]} name={t('actualSpent')} />
@@ -254,7 +267,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend verticalAlign="bottom" height={36}/>
                   </PieChart>
                 </ResponsiveContainer>
@@ -271,7 +284,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Bar dataKey="value" fill="var(--danger)" radius={[4, 4, 0, 0]} name={t('amount')} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -292,7 +305,7 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="category" axisLine={false} tickLine={false} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
+                    <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend iconType="circle" />
                     <Bar dataKey="income" fill="var(--success)" radius={[4, 4, 0, 0]} name={t('income')} />
                     <Bar dataKey="expense" fill="var(--danger)" radius={[4, 4, 0, 0]} name={t('expenses')} />
@@ -365,15 +378,15 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
       <div className="stats-summary-grid">
         <div className="premium-card stat-metric-card income">
           <span className="metric-label">{t('totalIncome')}</span>
-          <span className="metric-value">{currency} {totalIncome.toLocaleString()}</span>
+          <span className="metric-value">{formatValue(totalIncome)}</span>
         </div>
         <div className="premium-card stat-metric-card expense">
           <span className="metric-label">{t('totalExpenses')}</span>
-          <span className="metric-value">{currency} {totalExpense.toLocaleString()}</span>
+          <span className="metric-value">{formatValue(totalExpense)}</span>
         </div>
         <div className="premium-card stat-metric-card balance">
           <span className="metric-label">{t('netBalance')}</span>
-          <span className="metric-value">{currency} {balance.toLocaleString()}</span>
+          <span className="metric-value">{formatValue(balance)}</span>
         </div>
       </div>
 

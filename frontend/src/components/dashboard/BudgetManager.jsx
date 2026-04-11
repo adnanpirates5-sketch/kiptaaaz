@@ -23,7 +23,7 @@ const categories = [
 ];
 
 const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
-  const { currency } = useCurrency();
+  const { currency, convert, convertToBase } = useCurrency();
   const { t } = useTranslation();
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
@@ -34,9 +34,17 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
     const num = Number(amount);
     if (!category || !amount || num <= 0) return;
 
-    onAddBudget({ category, amount: num });
+    onAddBudget({ category, amount: convertToBase(num) });
     setCategory("");
     setAmount("");
+  };
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
   };
 
   const getSpentForCategory = (catName) => {
@@ -117,7 +125,7 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
                         <div className="budget-item-details">
                           <span className="budget-category-name">{getCategoryTranslation(budget.category)}</span>
                           <span className="budget-usage-text">
-                            {currency} {spent.toLocaleString()} {t('of')} {currency} {budget.amount.toLocaleString()}
+                            {formatValue(spent)} {t('of')} {formatValue(budget.amount)}
                           </span>
                         </div>
                       </div>
@@ -140,13 +148,13 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
                       <div className="budget-status-footer">
                         <span className={`status-text ${isOver ? 'over' : ''}`}>
                           {isOver 
-                            ? `${t('overBy')} ${currency} ${(spent - budget.amount).toLocaleString()}` 
+                            ? `${t('overBy')} ${formatValue(spent - budget.amount)}` 
                             : `${percentage.toFixed(0)}% ${t('used')}`
                           }
                         </span>
                         {!isOver && (
                           <span className="remaining-text">
-                            {currency} {(budget.amount - spent).toLocaleString()} {t('remaining')}
+                            {formatValue(budget.amount - spent)} {t('remaining')}
                           </span>
                         )}
                       </div>

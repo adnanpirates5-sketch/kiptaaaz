@@ -29,6 +29,18 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     default: null
+  },
+  is2FAEnabled: {
+    type: Boolean,
+    default: false
+  },
+  twoFactorCode: {
+    type: String,
+    default: null
+  },
+  twoFactorCodeExpiry: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true

@@ -4,10 +4,18 @@ import { useTranslation } from '../theme/TranslationContext';
 import "./DebtList.css";
 
 const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  };
 
   const filteredDebts = debts.filter(debt => {
     const matchesSearch = debt.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -60,7 +68,7 @@ const DebtList = ({ debts, onDeleteDebt, onUpdateDebt }) => {
                 </div>
                 
                 <div className="item-actions">
-                  <span className="amount">{currency} {item.amount.toLocaleString()}</span>
+                  <span className="amount">{formatValue(item.amount)}</span>
                   <div className="btn-group">
                     <button 
                       className={`status-btn ${item.status}`}

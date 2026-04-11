@@ -4,7 +4,7 @@ import { useTranslation } from '../theme/TranslationContext';
 import "./DebtSummary.css";
 
 const DebtSummary = ({ debts }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
   
   const pendingDebts = debts.filter(d => d.type === "debt" && d.status !== "paid");
@@ -12,6 +12,14 @@ const DebtSummary = ({ debts }) => {
 
   const totalDebt = pendingDebts.reduce((sum, d) => sum + d.amount, 0);
   const totalLending = pendingLendings.reduce((sum, d) => sum + d.amount, 0);
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  };
 
   return (
     <div className="debt-summary-container">
@@ -23,7 +31,7 @@ const DebtSummary = ({ debts }) => {
           <div className="card-icon">📉</div>
           <div className="card-content">
             <span className="label">{t('totalToPay')}</span>
-            <h2 className="amount">{currency} {totalDebt.toLocaleString()}</h2>
+            <h2 className="amount">{formatValue(totalDebt)}</h2>
             <span className="count">{pendingDebts.length} {t('activeDebts')}</span>
           </div>
         </div>
@@ -32,7 +40,7 @@ const DebtSummary = ({ debts }) => {
           <div className="card-icon">📈</div>
           <div className="card-content">
             <span className="label">{t('totalToReceive')}</span>
-            <h2 className="amount">{currency} {totalLending.toLocaleString()}</h2>
+            <h2 className="amount">{formatValue(totalLending)}</h2>
             <span className="count">{pendingLendings.length} {t('activeLendings')}</span>
           </div>
         </div>
@@ -41,7 +49,7 @@ const DebtSummary = ({ debts }) => {
       <div className="net-balance">
         <span className="label">{t('netDebtPosition')}</span>
         <h3 className={`amount ${(totalLending - totalDebt) >= 0 ? 'positive' : 'negative'}`}>
-          {currency} {(totalLending - totalDebt).toLocaleString()}
+          {formatValue(totalLending - totalDebt)}
         </h3>
       </div>
     </div>

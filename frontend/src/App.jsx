@@ -13,6 +13,7 @@ import NavBar from "./components/theme/NavBar";
 import AboutUs from "./components/AboutUs";
 import { ThemeProvider } from "./components/theme/ThemeContext";
 import { TranslationProvider } from "./components/theme/TranslationContext";
+import { CurrencyProvider } from "./components/theme/useCurrency";
 
 function App() {
   const [page, setPage] = useState("home");
@@ -27,60 +28,62 @@ function App() {
   return (
     <ThemeProvider>
       <TranslationProvider>
-        <BrowserRouter>
-          <div className="app-wrapper">
-            {page === "home" && (
-              <NavBar 
-                onNavigate={setPage} 
-              />
-            )}
+        <CurrencyProvider>
+          <BrowserRouter>
+            <div className="app-wrapper">
+              {page === "home" && (
+                <NavBar 
+                  onNavigate={setPage} 
+                />
+              )}
 
-        {page === "home" && (
-          <>
-            <Landing onGetStarted={() => setPage("login")} />
-            <Features />
-          </>
-        )}
+          {page === "home" && (
+            <>
+              <Landing onGetStarted={() => setPage("login")} />
+              <Features />
+            </>
+          )}
 
-        {page === "login" && (
-          <Login
-            onSwitchToRegister={() => setPage("register")}
-            onBackHome={() => setPage("home")}
-            onForgotPassword={() => setPage("forgot")}
-            onLoginSuccess={() => setPage("dashboard")}
-          />
-        )}
+          {page === "login" && (
+            <Login
+              onSwitchToRegister={() => setPage("register")}
+              onBackHome={() => setPage("home")}
+              onForgotPassword={() => setPage("forgot")}
+              onLoginSuccess={() => setPage("dashboard")}
+            />
+          )}
 
-        {page === "register" && (
-          <Register
-            onSwitchToLogin={() => setPage("login")}
-            onBackHome={() => setPage("home")}
-            onRegisterSuccess={() => setPage("dashboard")}
-          />
-        )}
+          {page === "register" && (
+            <Register
+              onSwitchToLogin={() => setPage("login")}
+              onBackHome={() => setPage("home")}
+              onRegisterSuccess={() => setPage("dashboard")}
+            />
+          )}
 
-        {page === "forgot" && (
-          <ForgotPassword onBackToLogin={() => setPage("login")} />
-        )}
+          {page === "forgot" && (
+            <ForgotPassword onBackToLogin={() => setPage("login")} />
+          )}
 
-        {page === "dashboard" && (
-          <Dashboard onLogout={() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setPage("home");
-          }} />
-        )}
+          {page === "dashboard" && (
+            <Dashboard onLogout={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              setPage("home");
+            }} />
+          )}
 
-        {page === "about" && (
-          <AboutUs onBackHome={() => setPage("home")} />
-        )}
+          {page === "about" && (
+            <AboutUs onBackHome={() => setPage("home")} />
+          )}
 
-        <Routes>
-          <Route path="/terms-and-conditions" element={<TermsConditions />} />
-        </Routes>
+          <Routes>
+            <Route path="/terms-and-conditions" element={<TermsConditions />} />
+          </Routes>
 
-      </div>
-    </BrowserRouter>
+        </div>
+      </BrowserRouter>
+        </CurrencyProvider>
       </TranslationProvider>
     </ThemeProvider>
   );

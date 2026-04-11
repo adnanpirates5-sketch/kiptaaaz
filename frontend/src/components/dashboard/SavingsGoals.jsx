@@ -4,11 +4,19 @@ import { useTranslation } from '../theme/TranslationContext';
 import './SavingsGoals.css';
 
 const SavingsGoals = () => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', deadline: '' });
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  };
 
   useEffect(() => {
     const savedGoals = localStorage.getItem('savingsGoals');
@@ -127,7 +135,7 @@ const SavingsGoals = () => {
                 </div>
                 <div className="goal-stats" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                   <span className="amount" style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
-                    {currency} {goal.current.toLocaleString()} / {currency} {goal.target.toLocaleString()}
+                    {formatValue(goal.current)} / {formatValue(goal.target)}
                   </span>
                   <span className="percent" style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '0.875rem' }}>{progress.toFixed(0)}%</span>
                 </div>

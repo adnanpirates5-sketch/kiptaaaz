@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useTranslation } from '../theme/TranslationContext';
+import { useCurrency } from "../theme/useCurrency";
 import "./DebtForm.css";
 
 const DebtForm = ({ onAddDebt }) => {
   const { t } = useTranslation();
+  const { currency, convertToBase } = useCurrency();
   const [type, setType] = useState("debt");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -16,7 +18,7 @@ const DebtForm = ({ onAddDebt }) => {
     onAddDebt({ 
       type, 
       name: name.trim(), 
-      amount: num, 
+      amount: convertToBase(num), 
       dueDate: dueDate || undefined,
       status: "pending" 
     });
@@ -52,16 +54,20 @@ const DebtForm = ({ onAddDebt }) => {
       </div>
 
       <div className="form-group">
-        <input
-          type="number"
-          placeholder={t('amount')}
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          min="0"
-          step="0.01"
-          className="premium-input"
-          required
-        />
+        <div style={{ position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{currency}</span>
+          <input
+            type="number"
+            className="premium-input"
+            style={{ paddingLeft: '2.5rem' }}
+            placeholder={t('amount')}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            min="0"
+            step="0.01"
+            required
+          />
+        </div>
       </div>
 
       <div className="form-group">

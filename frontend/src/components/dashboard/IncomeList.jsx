@@ -21,12 +21,20 @@ const categories = [
 ];
 
 const IncomeList = ({ incomes = [], onDeleteIncome }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
 
   const getCategoryTranslation = (catName) => {
     const cat = categories.find(c => c.name === catName);
     return cat ? t(cat.key) : catName;
+  };
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency}${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
   };
 
   if (incomes.length === 0) {
@@ -49,7 +57,7 @@ const IncomeList = ({ incomes = [], onDeleteIncome }) => {
               <span className="transaction-desc">{t('income')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span className="transaction-amount income">+{currency}{inc.amount}</span>
+              <span className="transaction-amount income">+{formatValue(inc.amount)}</span>
               {onDeleteIncome && (
                 <button className="delete-btn" onClick={() => onDeleteIncome(inc._id || inc.id)}>
                   ✕

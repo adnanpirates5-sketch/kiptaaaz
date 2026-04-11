@@ -6,7 +6,7 @@ import { useCurrency } from '../theme/useCurrency';
 import { useTranslation } from '../theme/TranslationContext';
 
 const OverviewCharts = ({ expenses = [], incomes = [] }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
 
   // Last 7 days spending data
@@ -33,8 +33,8 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
 
       data.push({
         date: dateStr,
-        expense: dayExpenses,
-        income: dayIncomes,
+        expense: convert(dayExpenses),
+        income: convert(dayIncomes),
       });
     }
     return data;
@@ -79,7 +79,7 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
                 borderRadius: '8px',
                 color: 'var(--text-primary)'
               }}
-              formatter={(value) => `${currency} ${value.toLocaleString()}`}
+              formatter={(value) => `${currency} ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             />
             <Area 
               type="monotone" 

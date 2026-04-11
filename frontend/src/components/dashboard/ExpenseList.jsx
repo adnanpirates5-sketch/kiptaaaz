@@ -21,12 +21,20 @@ const categories = [
 ];
 
 const ExpenseList = ({ expenses = [], onDeleteExpense }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
 
   const getCategoryTranslation = (catName) => {
     const cat = categories.find(c => c.name === catName);
     return cat ? t(cat.key) : catName;
+  };
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency}${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
   };
   
   if (expenses.length === 0) {
@@ -49,7 +57,7 @@ const ExpenseList = ({ expenses = [], onDeleteExpense }) => {
               <span className="transaction-desc">{t('expense')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span className="transaction-amount expense">-{currency}{exp.amount}</span>
+              <span className="transaction-amount expense">-{formatValue(exp.amount)}</span>
               <button className="delete-btn" onClick={() => onDeleteExpense && onDeleteExpense(exp._id || exp.id)}>
                 ✕
               </button>

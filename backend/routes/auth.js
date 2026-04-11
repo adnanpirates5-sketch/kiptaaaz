@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/auth');
+const sendEmail = require('../utils/email');
 
 const router = express.Router();
 
@@ -36,6 +37,19 @@ router.post('/register', async (req, res) => {
     // Create token for auto-login
     const token = jwt.sign({ _id: savedUser._id, email: savedUser.email }, JWT_SECRET, { expiresIn: '1h' });
 
+    // Send welcome email
+    try {
+      await sendEmail({
+        email: savedUser.email,
+        subject: 'Welcome to Kiptaaz!',
+        message: `Hello ${savedUser.name},\n\nWelcome to Kiptaaz! We're glad to have you on board. Start managing your finances today!`,
+        html: `<h1>Welcome to Kiptaaz!</h1><p>Hello <strong>${savedUser.name}</strong>,</p><p>We're glad to have you on board. Start managing your finances today!</p>`,
+      });
+    } catch (emailError) {
+      console.error('Error sending welcome email:', emailError);
+      // Don't fail registration if email fails
+    }
+
     res.status(201).json({ 
       message: 'User registered successfully', 
       token,
@@ -63,10 +77,91 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // Create token
+    // Check if 2FA is enabled
+    if (user.is2FAEnabled) {
+      // Generate 6-digit code
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      user.twoFactorCode = code;
+      user.twoFactorCodeExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+      await user.save();
+
+      // Send code via email
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: 'Your 2FA Verification Code',
+          message: `Your verification code is: ${code}. It will expire in 10 minutes.`,
+          html: `<h1>Two-Factor Authentication</h1><p>Your verification code is: <strong>${code}</strong></p><p>This code will expire in 10 minutes.</p>`,
+        });
+      } catch (err) {
+        console.error('Error sending 2FA email:', err);
+        return res.status(500).json({ message: 'Error sending verification code' });
+      }
+
+      return res.json({ 
+        requires2FA: true, 
+        email: user.email,
+        message: 'Verification code sent to your email' 
+      });
+    }
+
+    // Create token if 2FA is NOT enabled
     const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ message: 'Login successful', token, user: { id: user._id, name: user.name, email: user.email, profilePicture: user.profilePicture } });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Verify 2FA Code
+router.post('/verify-2fa', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    const user = await User.findOne({ 
+      email, 
+      twoFactorCode: code,
+      twoFactorCodeExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired verification code' });
+    }
+
+    // Clear code after successful verification
+    user.twoFactorCode = null;
+    user.twoFactorCodeExpiry = null;
+    await user.save();
+
+    // Create token
+    const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ 
+      message: 'Login successful', 
+      token, 
+      user: { id: user._id, name: user.name, email: user.email, profilePicture: user.profilePicture } 
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Enable/Disable 2FA (Protected)
+router.post('/toggle-2fa', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.is2FAEnabled = !user.is2FAEnabled;
+    await user.save();
+
+    res.json({ 
+      message: `2FA ${user.is2FAEnabled ? 'enabled' : 'disabled'} successfully`, 
+      is2FAEnabled: user.is2FAEnabled 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -112,7 +207,21 @@ router.post('/forgot-password', async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-    res.json({ message: 'Password reset token generated', resetToken });
+    // Send reset email
+    try {
+      const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+      await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Request',
+        message: `You requested a password reset. Please use the following link to reset your password: ${resetUrl}\n\nThis link will expire in 15 minutes.`,
+        html: `<h1>Password Reset Request</h1><p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetUrl}">${resetUrl}</a><p>This link will expire in 15 minutes.</p>`,
+      });
+    } catch (emailError) {
+      console.error('Error sending reset email:', emailError);
+      return res.status(500).json({ message: 'Error sending reset email. Please try again later.' });
+    }
+
+    res.json({ message: 'Password reset link sent to your email' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

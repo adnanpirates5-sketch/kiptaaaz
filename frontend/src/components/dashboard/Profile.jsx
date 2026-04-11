@@ -6,7 +6,7 @@ import "./Profile.css";
 
 const Profile = ({ incomes, expenses, debts }) => {
   const { t } = useTranslation();
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const fileInputRef = useRef(null);
   
   // Get user from localStorage
@@ -18,6 +18,14 @@ const Profile = ({ incomes, expenses, debts }) => {
   const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const totalDebt = debts.filter(d => d.type === 'debt').reduce((sum, d) => sum + d.amount, 0);
   const transactionCount = incomes.length + expenses.length;
+
+  const formatValue = (value) => {
+    const convertedValue = convert(value);
+    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  };
   
   const getInitials = (name) => {
     if (!name) {
@@ -111,16 +119,16 @@ const Profile = ({ incomes, expenses, debts }) => {
       <div className="profile-stats-grid">
         <div className="premium-card stat-metric-card income" style={{ borderLeftWidth: '4px' }}>
           <span className="metric-label">{t('totalEarnings')}</span>
-          <span className="metric-value">{currency} {totalIncome.toLocaleString()}</span>
+          <span className="metric-value">{formatValue(totalIncome)}</span>
         </div>
         <div className="premium-card stat-metric-card expense" style={{ borderLeftWidth: '4px' }}>
           <span className="metric-label">{t('totalSpending')}</span>
-          <span className="metric-value">{currency} {totalExpense.toLocaleString()}</span>
+          <span className="metric-value">{formatValue(totalExpense)}</span>
         </div>
         <div className="premium-card stat-metric-card balance" style={{ borderLeftWidth: '4px' }}>
           <span className="metric-label">{t('activeDebts')}</span>
           <span className="metric-value" style={{ color: totalDebt > 0 ? 'var(--danger)' : 'var(--text-primary)' }}>
-            {currency} {totalDebt.toLocaleString()}
+            {formatValue(totalDebt)}
           </span>
         </div>
       </div>

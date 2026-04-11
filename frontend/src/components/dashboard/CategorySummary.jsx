@@ -31,7 +31,7 @@ const categories = [
 ];
 
 const CategorySummary = ({ expenses }) => {
-  const { currency } = useCurrency();
+  const { currency, convert } = useCurrency();
   const { t } = useTranslation();
 
   const getCategoryTranslation = (catName) => {
@@ -46,7 +46,7 @@ const CategorySummary = ({ expenses }) => {
 
   const data = Object.keys(categoryTotals).map((cat) => ({
     name: getCategoryTranslation(cat),
-    value: categoryTotals[cat],
+    value: convert(categoryTotals[cat]),
   }));
 
   if (data.length === 0) {
@@ -76,7 +76,7 @@ const CategorySummary = ({ expenses }) => {
               ))}
             </Pie>
             <Tooltip 
-              formatter={(value) => `${currency} ${value.toLocaleString()}`}
+              formatter={(value) => `${currency} ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
               contentStyle={{ 
                 backgroundColor: 'var(--card-bg)', 
                 borderColor: 'var(--border-color)',
