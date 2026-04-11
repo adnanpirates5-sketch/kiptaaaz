@@ -1,5 +1,6 @@
 {
   "name": "kiptaaaz-backend",
+  "proxy": "http://localhost:5000",
   "version": "1.0.0",
   "description": "Backend API for Kiptaaz application",
   "main": "Server.js",
