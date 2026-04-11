@@ -5,10 +5,11 @@ import "./DebtForm.css";
 
 const DebtForm = ({ onAddDebt }) => {
   const { t } = useTranslation();
-  const { currency, convertToBase } = useCurrency();
+  const { currency: globalCurrency, toBase } = useCurrency();
   const [type, setType] = useState("debt");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(globalCurrency);
   const [dueDate, setDueDate] = useState("");
 
   const handleSubmit = (e) => {
@@ -18,7 +19,7 @@ const DebtForm = ({ onAddDebt }) => {
     onAddDebt({ 
       type, 
       name: name.trim(), 
-      amount: convertToBase(num), 
+      amount: toBase(num, selectedCurrency), 
       dueDate: dueDate || undefined,
       status: "pending" 
     });
@@ -54,19 +55,49 @@ const DebtForm = ({ onAddDebt }) => {
       </div>
 
       <div className="form-group">
-        <div style={{ position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{currency}</span>
-          <input
-            type="number"
-            className="premium-input"
-            style={{ paddingLeft: '2.5rem' }}
-            placeholder={t('amount')}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            min="0"
-            step="0.01"
-            required
-          />
+        <div className="currency-input-group" style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px' }}>
+            <button 
+              type="button"
+              onClick={() => setSelectedCurrency('৳')}
+              style={{ 
+                border: 'none', 
+                background: selectedCurrency === '৳' ? 'var(--primary)' : 'transparent',
+                color: selectedCurrency === '৳' ? '#fff' : 'var(--text-secondary)',
+                padding: '0.5rem 0.75rem',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >৳</button>
+            <button 
+              type="button"
+              onClick={() => setSelectedCurrency('$')}
+              style={{ 
+                border: 'none', 
+                background: selectedCurrency === '$' ? 'var(--primary)' : 'transparent',
+                color: selectedCurrency === '$' ? '#fff' : 'var(--text-secondary)',
+                padding: '0.5rem 0.75rem',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >$</button>
+          </div>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{selectedCurrency}</span>
+            <input
+              type="number"
+              className="premium-input"
+              style={{ paddingLeft: '2.5rem' }}
+              placeholder={t('amount')}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
         </div>
       </div>
 

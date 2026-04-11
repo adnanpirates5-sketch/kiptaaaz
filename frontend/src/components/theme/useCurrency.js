@@ -29,6 +29,13 @@ export const CurrencyProvider = ({ children }) => {
     return (amount || 0);
   };
 
+  const toBase = (amount, fromCurrency) => {
+    if (fromCurrency === '$') {
+      return (amount || 0) * EXCHANGE_RATE;
+    }
+    return (amount || 0);
+  };
+
   const formatAmount = (amount) => {
     const converted = convert(amount);
     return `${currency} ${converted.toLocaleString(undefined, { 
@@ -38,7 +45,7 @@ export const CurrencyProvider = ({ children }) => {
   };
 
   return (
-    <CurrencyContext.Provider value={{ currency, changeCurrency, convert, convertToBase, formatAmount }}>
+    <CurrencyContext.Provider value={{ currency, changeCurrency, convert, convertToBase, toBase, formatAmount }}>
       {children}
     </CurrencyContext.Provider>
   );
@@ -53,8 +60,11 @@ export const useCurrency = () => {
       changeCurrency: (newCurrency) => localStorage.setItem('currency', newCurrency),
       convert: (a) => a,
       convertToBase: (a) => a,
+      toBase: (a, c) => (c === '$' ? a * EXCHANGE_RATE : a),
       formatAmount: (a) => `৳ ${a}`
     };
   }
   return context;
 };
+
+export { EXCHANGE_RATE };

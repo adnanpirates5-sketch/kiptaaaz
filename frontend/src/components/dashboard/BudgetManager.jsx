@@ -23,10 +23,11 @@ const categories = [
 ];
 
 const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
-  const { currency, convert, convertToBase } = useCurrency();
+  const { currency: globalCurrency, convert, toBase } = useCurrency();
   const { t } = useTranslation();
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(globalCurrency);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = (e) => {
@@ -34,14 +35,17 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
     const num = Number(amount);
     if (!category || !amount || num <= 0) return;
 
-    onAddBudget({ category, amount: convertToBase(num) });
+    onAddBudget({ 
+      category, 
+      amount: toBase(num, selectedCurrency) 
+    });
     setCategory("");
     setAmount("");
   };
 
   const formatValue = (value) => {
     const convertedValue = convert(value);
-    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+    return `${globalCurrency} ${convertedValue.toLocaleString(undefined, { 
       minimumFractionDigits: 2, 
       maximumFractionDigits: 2 
     })}`;
@@ -83,16 +87,50 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
             </div>
 
             <div className="form-group">
-              <label className="input-label">{t('amount')} ({currency})</label>
-              <input
-                type="number"
-                className="premium-input"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                min="0"
-                step="0.01"
-              />
+              <label className="input-label">{t('amount')}</label>
+              <div className="currency-input-group" style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px' }}>
+                  <button 
+                    type="button"
+                    onClick={() => setSelectedCurrency('৳')}
+                    style={{ 
+                      border: 'none', 
+                      background: selectedCurrency === '৳' ? 'var(--primary)' : 'transparent',
+                      color: selectedCurrency === '৳' ? '#fff' : 'var(--text-secondary)',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: 'var(--radius-sm)',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem'
+                    }}
+                  >৳</button>
+                  <button 
+                    type="button"
+                    onClick={() => setSelectedCurrency('$')}
+                    style={{ 
+                      border: 'none', 
+                      background: selectedCurrency === '$' ? 'var(--primary)' : 'transparent',
+                      color: selectedCurrency === '$' ? '#fff' : 'var(--text-secondary)',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: 'var(--radius-sm)',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem'
+                    }}
+                  >$</button>
+                </div>
+                <div style={{ position: 'relative', flex: 1 }}>
+                  <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{selectedCurrency}</span>
+                  <input
+                    type="number"
+                    className="premium-input"
+                    style={{ paddingLeft: '2.5rem' }}
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+              </div>
             </div>
 
             <button type="submit" className="premium-btn" style={{ width: '100%', marginTop: '0.5rem' }}>

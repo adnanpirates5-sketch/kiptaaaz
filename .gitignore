@@ -12,6 +12,7 @@ node_modules/
 # production
 build/
 dist/
+mongodb_data/
 
 # misc
 .DS_Store

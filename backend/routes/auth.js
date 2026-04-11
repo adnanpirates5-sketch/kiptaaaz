@@ -3,11 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/auth');
-<<<<<<< HEAD
 const sendEmail = require('../utils/email');
-=======
-const sendEmail = require('../utils/sendEmail');
->>>>>>> db72b13e84f41cce57ce7e651237407346cbda71
 
 const router = express.Router();
 
@@ -211,7 +207,6 @@ router.post('/forgot-password', async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-<<<<<<< HEAD
     // Send reset email
     try {
       const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
@@ -227,41 +222,6 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     res.json({ message: 'Password reset link sent to your email' });
-=======
-    // Reset password URL - change this to your frontend URL in production
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
-
-    const message = `You are receiving this email because you (or someone else) have requested the reset of a password. Please click on the link below to reset your password:\n\n ${resetUrl}`;
-
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: 'Password Reset Token',
-        message: message,
-        html: `
-          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2>Password Reset Request</h2>
-            <p>You are receiving this email because you (or someone else) have requested the reset of a password for your account.</p>
-            <p>Please click on the button below to reset your password. This link is valid for 15 minutes.</p>
-            <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
-            <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
-            <p>Alternatively, you can copy and paste this link into your browser:</p>
-            <p>${resetUrl}</p>
-          </div>
-        `
-      });
-
-      res.json({ message: 'Email sent successfully' });
-    } catch (err) {
-      console.error('Email send error:', err);
-      user.resetToken = undefined;
-      user.resetTokenExpiry = undefined;
-      await user.save();
-
-      return res.status(500).json({ message: 'Email could not be sent' });
-    }
->>>>>>> db72b13e84f41cce57ce7e651237407346cbda71
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

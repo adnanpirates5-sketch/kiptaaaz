@@ -5,17 +5,18 @@ import { financeAPI } from '../../api';
 import './SavingsGoals.css';
 
 const SavingsGoals = () => {
-  const { currency, convert } = useCurrency();
+  const { currency: globalCurrency, convert, toBase } = useCurrency();
   const { t } = useTranslation();
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', deadline: '' });
+  const [selectedCurrency, setSelectedCurrency] = useState(globalCurrency);
 
   const formatValue = (value) => {
     const convertedValue = convert(value);
-    return `${currency} ${convertedValue.toLocaleString(undefined, { 
+    return `${globalCurrency} ${convertedValue.toLocaleString(undefined, { 
       minimumFractionDigits: 2, 
       maximumFractionDigits: 2 
     })}`;
@@ -48,9 +49,10 @@ const SavingsGoals = () => {
     try {
       const goalData = {
         name: newGoal.name,
-        target: parseFloat(newGoal.target),
-        current: parseFloat(newGoal.current || 0),
+        target: toBase(parseFloat(newGoal.target), selectedCurrency),
+        current: toBase(parseFloat(newGoal.current || 0), selectedCurrency),
       };
+      
       if (newGoal.deadline) {
         goalData.deadline = newGoal.deadline;
       }
@@ -61,7 +63,8 @@ const SavingsGoals = () => {
       setShowForm(false);
     } catch (err) {
       console.error('Error adding goal:', err);
-      setError(t('errorAddingGoal') || 'Failed to add goal. Please try again.');
+      const msg = err.response?.data?.message || err.message;
+      setError(`${t('errorAddingGoal') || 'Failed to add goal'}: ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -70,22 +73,25 @@ const SavingsGoals = () => {
   const handleDeleteGoal = async (id) => {
     try {
       await financeAPI.deleteSavingsGoal(id);
-      setGoals(goals.filter(g => g._id !== id));
+      setGoals(goals.filter(g => (g._id || g.id) !== id));
     } catch (err) {
       console.error('Error deleting goal:', err);
       setError(t('errorDeletingGoal') || 'Failed to delete goal');
     }
   };
 
-  const handleUpdateProgress = async (id, amount) => {
+  const handleUpdateProgress = async (id, amount, goalCurrency) => {
     if (!amount || isNaN(amount)) return;
-    const goal = goals.find(g => g._id === id);
+    const goal = goals.find(g => (g._id || g.id) === id);
     if (!goal) return;
 
     try {
-      const newCurrent = Math.min(goal.target, goal.current + parseFloat(amount));
+      // Convert the added amount to base currency before adding
+      const addedAmountBase = toBase(parseFloat(amount), goalCurrency);
+      const newCurrent = Math.min(goal.target, goal.current + addedAmountBase);
+      
       const res = await financeAPI.updateSavingsGoal(id, { current: newCurrent });
-      setGoals(goals.map(g => (g._id === id ? res.data : g)));
+      setGoals(goals.map(g => ((g._id || g.id) === id ? res.data : g)));
     } catch (err) {
       console.error('Error updating progress:', err);
       setError(t('errorUpdatingGoal') || 'Failed to update goal');
@@ -101,7 +107,18 @@ const SavingsGoals = () => {
         </button>
       </div>
 
-      {error && <div className="error-message" style={{ color: 'var(--danger)', marginBottom: '1rem', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: 'var(--radius-md)' }}>{error}</div>}
+      {error && (
+        <div className="error-message" style={{ 
+          color: 'var(--danger)', 
+          marginBottom: '1rem', 
+          padding: '1rem', 
+          background: 'rgba(239, 68, 68, 0.1)', 
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--danger)'
+        }}>
+          {error}
+        </div>
+      )}
 
       {showForm && (
         <form className="goal-form section-card premium-card" onSubmit={handleAddGoal}>
@@ -117,8 +134,39 @@ const SavingsGoals = () => {
                 required
               />
             </div>
+            
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('targetAmount')} ({currency})</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('currency')}</label>
+              <div className="currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px', width: 'fit-content' }}>
+                <button 
+                  type="button"
+                  onClick={() => setSelectedCurrency('৳')}
+                  style={{ 
+                    border: 'none', 
+                    background: selectedCurrency === '৳' ? 'var(--primary)' : 'transparent',
+                    color: selectedCurrency === '৳' ? '#fff' : 'var(--text-secondary)',
+                    padding: '0.5rem 1rem',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: 'pointer'
+                  }}
+                >৳</button>
+                <button 
+                  type="button"
+                  onClick={() => setSelectedCurrency('$')}
+                  style={{ 
+                    border: 'none', 
+                    background: selectedCurrency === '$' ? 'var(--primary)' : 'transparent',
+                    color: selectedCurrency === '$' ? '#fff' : 'var(--text-secondary)',
+                    padding: '0.5rem 1rem',
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: 'pointer'
+                  }}
+                >$</button>
+              </div>
+            </div>
+
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('targetAmount')} ({selectedCurrency})</label>
               <input 
                 type="number" 
                 className="premium-input"
@@ -129,7 +177,7 @@ const SavingsGoals = () => {
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('currentSavings')} ({currency})</label>
+              <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t('currentSavings')} ({selectedCurrency})</label>
               <input 
                 type="number" 
                 className="premium-input"
@@ -143,7 +191,7 @@ const SavingsGoals = () => {
               <input 
                 type="date" 
                 className="premium-input"
-                value={newGoal.deadline ? newGoal.deadline.split('T')[0] : ''}
+                value={newGoal.deadline || ''}
                 onChange={(e) => setNewGoal({...newGoal, deadline: e.target.value})}
               />
             </div>
@@ -163,12 +211,13 @@ const SavingsGoals = () => {
           </div>
         ) : (
           goals.map(goal => {
+            const goalId = goal._id || goal.id;
             const progress = (goal.current / goal.target) * 100;
             return (
-              <div key={goal._id} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div key={goalId} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
-                  <button className="delete-btn" onClick={() => handleDeleteGoal(goal._id)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
+                  <button className="delete-btn" onClick={() => handleDeleteGoal(goalId)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
                 </div>
                 <div className="goal-stats" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                   <span className="amount" style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
@@ -186,14 +235,40 @@ const SavingsGoals = () => {
                 )}
                 <div className="update-progress" style={{ marginTop: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div className="mini-currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px' }}>
+                      <button 
+                        className={`mini-btn ${globalCurrency === '৳' ? 'active' : ''}`}
+                        style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.75rem' }}
+                        id={`curr-bdt-${goalId}`}
+                        onClick={(e) => {
+                          const parent = e.currentTarget.parentElement;
+                          parent.querySelectorAll('button').forEach(b => b.style.background = 'transparent');
+                          e.currentTarget.style.background = 'var(--primary)';
+                          e.currentTarget.style.color = '#fff';
+                        }}
+                      >৳</button>
+                      <button 
+                        className={`mini-btn ${globalCurrency === '$' ? 'active' : ''}`}
+                        style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.75rem' }}
+                        id={`curr-usd-${goalId}`}
+                        onClick={(e) => {
+                          const parent = e.currentTarget.parentElement;
+                          parent.querySelectorAll('button').forEach(b => b.style.background = 'transparent');
+                          e.currentTarget.style.background = 'var(--primary)';
+                          e.currentTarget.style.color = '#fff';
+                        }}
+                      >$</button>
+                    </div>
                     <input 
                       type="number" 
                       className="premium-input"
                       placeholder={t('addSavings')} 
-                      style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
+                      style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', flex: 1 }}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                          handleUpdateProgress(goal._id, e.target.value);
+                          const selector = e.currentTarget.previousElementSibling;
+                          const isUsd = selector.querySelector('button:last-child').style.background === 'var(--primary)';
+                          handleUpdateProgress(goalId, e.target.value, isUsd ? '$' : '৳');
                           e.target.value = '';
                         }
                       }}
@@ -203,7 +278,17 @@ const SavingsGoals = () => {
                       style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
                       onClick={(e) => {
                         const input = e.currentTarget.previousElementSibling;
-                        handleUpdateProgress(goal._id, input.value);
+                        const selector = input.previousElementSibling;
+                        // Check which button is highlighted
+                        const bdtBtn = selector.querySelector('button:first-child');
+                        const usdBtn = selector.querySelector('button:last-child');
+                        
+                        // Default to global if none selected yet via click
+                        let goalCurr = globalCurrency;
+                        if (usdBtn.style.background.includes('var(--primary)')) goalCurr = '$';
+                        else if (bdtBtn.style.background.includes('var(--primary)')) goalCurr = '৳';
+
+                        handleUpdateProgress(goalId, input.value, goalCurr);
                         input.value = '';
                       }}
                     >

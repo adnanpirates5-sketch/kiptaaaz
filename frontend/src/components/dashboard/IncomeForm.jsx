@@ -24,10 +24,11 @@ const categories = [
 
 const IncomeForm = ({ onAddIncome }) => {
   const { t } = useTranslation();
-  const { currency, convertToBase } = useCurrency();
+  const { currency: globalCurrency, toBase } = useCurrency();
   const [category, setCategory] = useState("");
   const [customCategory, setCustomCategory] = useState("");
   const [amount, setAmount] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(globalCurrency);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
 
@@ -39,7 +40,10 @@ const IncomeForm = ({ onAddIncome }) => {
     if (!finalCategory || !amount || num <= 0) return;
 
     if (onAddIncome) {
-      onAddIncome({ category: finalCategory, amount: convertToBase(num) });
+      onAddIncome({ 
+        category: finalCategory, 
+        amount: toBase(num, selectedCurrency) 
+      });
     }
     setCategory("");
     setCustomCategory("");
@@ -88,20 +92,51 @@ const IncomeForm = ({ onAddIncome }) => {
           />
         )}
 
-        <div style={{ position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{currency}</span>
-          <input
-            type="number"
-            className="premium-input"
-            style={{ paddingLeft: '2.5rem' }}
-            placeholder={t('amount')}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            min="0"
-            step="0.01"
-            required
-          />
+        <div className="currency-input-group" style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="currency-selector" style={{ display: 'flex', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', padding: '2px' }}>
+            <button 
+              type="button"
+              onClick={() => setSelectedCurrency('৳')}
+              style={{ 
+                border: 'none', 
+                background: selectedCurrency === '৳' ? 'var(--primary)' : 'transparent',
+                color: selectedCurrency === '৳' ? '#fff' : 'var(--text-secondary)',
+                padding: '0.5rem 0.75rem',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >৳</button>
+            <button 
+              type="button"
+              onClick={() => setSelectedCurrency('$')}
+              style={{ 
+                border: 'none', 
+                background: selectedCurrency === '$' ? 'var(--primary)' : 'transparent',
+                color: selectedCurrency === '$' ? '#fff' : 'var(--text-secondary)',
+                padding: '0.5rem 0.75rem',
+                borderRadius: 'var(--radius-sm)',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >$</button>
+          </div>
+          <div style={{ position: 'relative', flex: 1 }}>
+            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{selectedCurrency}</span>
+            <input
+              type="number"
+              className="premium-input"
+              style={{ paddingLeft: '2.5rem' }}
+              placeholder={t('amount')}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
         </div>
+        
         <button type="submit" className="premium-btn success" style={{ width: '100%', backgroundColor: 'var(--success)' }}>
           {t('addIncome')}
         </button>
