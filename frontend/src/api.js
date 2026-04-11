@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -15,6 +15,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Better error logging
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
@@ -23,6 +32,7 @@ export const authAPI = {
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
   verify2FA: (data) => api.post('/auth/verify-2fa', data),
   toggle2FA: () => api.post('/auth/toggle-2fa'),
+  resetPassword: (token, newPassword) => api.post('/auth/reset-password', { token, newPassword }),
 };
 
 export const financeAPI = {
@@ -42,6 +52,16 @@ export const financeAPI = {
   getBudgets: () => api.get('/finance/budgets'),
   addBudget: (budget) => api.post('/finance/budgets', budget),
   deleteBudget: (category) => api.delete(`/finance/budgets/${category}`),
+  
+  getSavingsGoals: () => api.get('/finance/savings-goals'),
+  addSavingsGoal: (goal) => api.post('/finance/savings-goals', goal),
+  updateSavingsGoal: (id, updates) => api.patch(`/finance/savings-goals/${id}`, updates),
+  deleteSavingsGoal: (id) => api.delete(`/finance/savings-goals/${id}`),
+};
+
+export const reviewAPI = {
+  getReviews: () => api.get('/reviews'),
+  addReview: (review) => api.post('/reviews', review),
 };
 
 export default api;

@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "../theme/TranslationContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useCurrency } from "../theme/useCurrency";
+import { reviewAPI } from "../../api";
 import "./Settings.css";
 
 const Settings = ({ onLogout }) => {
@@ -9,10 +10,63 @@ const Settings = ({ onLogout }) => {
   const { theme, toggleTheme } = useTheme();
   const { currency, changeCurrency } = useCurrency();
 
+  // Review Form State
+  const [rating, setRating] = React.useState(0);
+  const [hoverRating, setHoverRating] = React.useState(0);
+  const [comment, setComment] = React.useState('');
+  const [showReviewForm, setShowReviewForm] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
   const currencies = [
     { symbol: '৳', name: 'BDT' },
     { symbol: '$', name: 'USD' },
   ];
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (rating === 0 || !comment.trim()) return;
+
+    setLoading(true);
+    try {
+      await reviewAPI.addReview({
+        rating,
+        comment,
+      });
+
+      // Reset form
+      setRating(0);
+      setComment('');
+      setSubmitStatus('success');
+      setTimeout(() => {
+        setSubmitStatus(null);
+        setShowReviewForm(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to submit review:', error);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderStars = () => {
+    return [...Array(5)].map((_, index) => {
+      const starValue = index + 1;
+      return (
+        <span
+          key={index}
+          className={`settings-star ${starValue <= (hoverRating || rating) ? 'filled' : ''}`}
+          onClick={() => setRating(starValue)}
+          onMouseEnter={() => setHoverRating(starValue)}
+          onMouseLeave={() => setHoverRating(0)}
+        >
+          ★
+        </span>
+      );
+    });
+  };
 
   return (
     <div className="settings-container-premium animate-fade-in">
@@ -79,6 +133,72 @@ const Settings = ({ onLogout }) => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Review Section */}
+      <div className="premium-card settings-group-card">
+        <div className="settings-group-header">
+          <span className="settings-group-icon">⭐</span>
+          <h4>{t('reviewsFeedback')}</h4>
+        </div>
+        <div className="setting-info" style={{ marginBottom: '1rem' }}>
+          <span className="setting-description">{t('reviewsDesc')}</span>
+        </div>
+        
+        {!showReviewForm ? (
+          <button 
+            className="premium-btn secondary"
+            onClick={() => setShowReviewForm(true)}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('writeReview')}
+          </button>
+        ) : (
+          <form className="settings-review-form" onSubmit={handleSubmitReview}>
+            {submitStatus === 'success' ? (
+              <div className="submit-success-msg">
+                {t('submitReviewSuccess') || 'Thank you for your review!'}
+              </div>
+            ) : (
+              <>
+                {submitStatus === 'error' && (
+                  <div className="submit-error-msg" style={{ color: 'var(--danger)', marginBottom: '1rem' }}>
+                    {t('submitReviewError') || 'Failed to submit review. Please try again.'}
+                  </div>
+                )}
+                <div className="settings-rating-section">
+                  <div className="settings-stars">
+                    {renderStars()}
+                  </div>
+                </div>
+
+                <div className="settings-form-group">
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder={t('reviewPlaceholder')}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="settings-review-actions">
+                  <button type="submit" className="premium-btn primary" disabled={loading}>
+                    {loading ? t('submitting') || 'Submitting...' : t('submitReview')}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="premium-btn ghost" 
+                    onClick={() => setShowReviewForm(false)}
+                    disabled={loading}
+                  >
+                    {t('cancel')}
+                  </button>
+                </div>
+              </>
+            )}
+          </form>
+        )}
       </div>
 
       {/* Danger Zone */}

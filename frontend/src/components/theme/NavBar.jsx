@@ -3,7 +3,7 @@ import './NavBar.css';
 import { useTranslation } from './TranslationContext';
 import { useTheme } from './ThemeContext';
 
-const NavBar = ({ onNavigate }) => {
+const NavBar = ({ onNavigate, onShowGuide }) => {
   const { t, language, toggleLanguage } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -46,8 +46,21 @@ const NavBar = ({ onNavigate }) => {
             </button>
           </li>
           <li>
+            <button className="nav-link" onClick={() => {
+              onNavigate('home');
+              onShowGuide();
+            }}>
+              {t('userGuide')}
+            </button>
+          </li>
+          <li>
             <button className="nav-link" onClick={() => onNavigate('about')}>
               {t('about')}
+            </button>
+          </li>
+          <li>
+            <button className="nav-link" onClick={() => onNavigate('reviews')}>
+              {t('reviews')}
             </button>
           </li>
         </ul>

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const financeRoutes = require('./routes/finance');
+const reviewRoutes = require('./routes/reviews');
 
 const app = express();
 
@@ -21,6 +22,7 @@ mongoose.connect(MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/finance', financeRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Test route
 app.get('/test', (req, res) => {

@@ -67,6 +67,7 @@
 .hero-actions {
   display: flex;
   gap: 1rem;
+  margin-left: 11.5rem;
 }
 
 /* Hero Visual - Glassmorphism style */
@@ -223,6 +224,7 @@
   
   .hero-actions {
     justify-content: center;
+    margin-left: 0;
   }
 }
 

@@ -24,7 +24,8 @@ const Dashboard = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState({ name: "", email: "", profilePicture: null });
   
-  // State Management
+  const [isVisible, setIsVisible] = useState(true);
+  
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [debts, setDebts] = useState([]);
@@ -154,6 +155,30 @@ const Dashboard = ({ onLogout }) => {
     }
   };
 
+  const exportToCSV = () => {
+    const csvRows = [
+      ['Type', 'Category', 'Amount', 'Date']
+    ];
+
+    incomes.forEach(inc => {
+      csvRows.push(['Income', inc.category, inc.amount, new Date(inc.date).toLocaleDateString()]);
+    });
+
+    expenses.forEach(exp => {
+      csvRows.push(['Expense', exp.category, exp.amount, new Date(exp.date).toLocaleDateString()]);
+    });
+
+    const csvContent = csvRows.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `transactions_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
 
   const renderContent = () => {
@@ -161,7 +186,7 @@ const Dashboard = ({ onLogout }) => {
       case "overview":
         return (
           <div className="animate-fade-in">
-            <BalanceSummary totalIncome={totalIncome} expenses={expenses} />
+            <BalanceSummary totalIncome={totalIncome} expenses={expenses} isVisible={isVisible} />
             <div className="dashboard-main-grid">
               <OverviewCharts expenses={expenses} incomes={incomes} />
               <div className="section-card premium-card recent-transactions-box">
@@ -203,11 +228,16 @@ const Dashboard = ({ onLogout }) => {
       case "transactions":
         return (
           <div className="animate-fade-in">
-            <div className="section-header" style={{ marginBottom: '2rem' }}>
-              <button className="premium-btn secondary" onClick={() => setActiveTab("overview")} style={{ padding: '0.5rem 1rem' }}>
-                ← {t('backToOverview')}
+            <div className="section-header" style={{ marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <button className="premium-btn secondary" onClick={() => setActiveTab("overview")} style={{ padding: '0.5rem 1rem' }}>
+                  ← {t('backToOverview')}
+                </button>
+                <h2 className="premium-title" style={{ margin: 0, fontSize: '1.75rem' }}>{t('allTransactions')}</h2>
+              </div>
+              <button className="premium-btn" onClick={exportToCSV} style={{ padding: '0.5rem 1.5rem', backgroundColor: 'var(--success)', fontSize: '0.9rem' }}>
+                📥 {t('exportCSV')}
               </button>
-              <h2 className="premium-title" style={{ margin: 0, fontSize: '1.75rem' }}>{t('allTransactions')}</h2>
             </div>
             <div className="dashboard-main-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
               <div className="section-card premium-card">
@@ -335,14 +365,33 @@ const Dashboard = ({ onLogout }) => {
       </aside>
 
       <header className="dashboard-header">
-        <div className="user-welcome">
-          <button className="premium-btn secondary" style={{ padding: '0.5rem', marginRight: '1rem' }} onClick={() => setIsSidebarOpen(true)}>
-            ☰
-          </button>
-          <div>
-            <h2>{t('hello')}, {user.name || t('user')}</h2>
-            <p>{t('moneyToday')}</p>
+        <div className="user-welcome" style={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button className="premium-btn secondary" style={{ padding: '0.5rem', marginRight: '1rem' }} onClick={() => setIsSidebarOpen(true)}>
+              ☰
+            </button>
+            <div>
+              <h2>{t('hello')}, {user.name || t('user')}</h2>
+              <p>{t('moneyToday')}</p>
+            </div>
           </div>
+          <button 
+            className="premium-btn secondary"
+            onClick={() => setIsVisible(!isVisible)}
+            style={{ 
+              borderRadius: '50%', 
+              width: '45px', 
+              height: '45px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              fontSize: '1.2rem',
+              boxShadow: 'var(--shadow-md)'
+            }}
+            title={isVisible ? t('hideBalance') || "Hide Balance" : t('showBalance') || "Show Balance"}
+          >
+            {isVisible ? '👁️' : '🙈'}
+          </button>
         </div>
       </header>
 

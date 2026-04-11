@@ -5,6 +5,7 @@ const Income = require('../models/Income');
 const Expense = require('../models/Expense');
 const Debt = require('../models/Debt');
 const Budget = require('../models/Budget');
+const SavingsGoal = require('../models/SavingsGoal');
 
 // --- Incomes ---
 router.get('/incomes', authenticateToken, async (req, res) => {
@@ -161,6 +162,64 @@ router.delete('/budgets/:category', authenticateToken, async (req, res) => {
   try {
     await Budget.findOneAndDelete({ user: req.user._id, category: req.params.category });
     res.json({ message: 'Budget deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// --- Savings Goals ---
+router.get('/savings-goals', authenticateToken, async (req, res) => {
+  try {
+    const goals = await SavingsGoal.find({ user: req.user._id });
+    res.json(goals);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post('/savings-goals', authenticateToken, async (req, res) => {
+  try {
+    const { name, target, current, deadline } = req.body;
+    
+    if (!name || target === undefined) {
+      return res.status(400).json({ message: 'Name and target are required' });
+    }
+
+    const goalData = {
+      user: req.user._id,
+      name,
+      target: Number(target),
+      current: Number(current || 0)
+    };
+    
+    if (deadline) goalData.deadline = deadline;
+    
+    const goal = new SavingsGoal(goalData);
+    const savedGoal = await goal.save();
+    res.status(201).json(savedGoal);
+  } catch (err) {
+    console.error("Error saving goal:", err);
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.patch('/savings-goals/:id', authenticateToken, async (req, res) => {
+  try {
+    const updatedGoal = await SavingsGoal.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      { $set: req.body },
+      { new: true }
+    );
+    res.json(updatedGoal);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.delete('/savings-goals/:id', authenticateToken, async (req, res) => {
+  try {
+    await SavingsGoal.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    res.json({ message: 'Savings goal deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

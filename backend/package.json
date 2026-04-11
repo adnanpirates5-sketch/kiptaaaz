@@ -15,7 +15,11 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.23.0",
+<<<<<<< HEAD
     "nodemailer": "^8.0.4"
+=======
+    "nodemailer": "^8.0.5"
+>>>>>>> db72b13e84f41cce57ce7e651237407346cbda71
   },
   "devDependencies": {
     "nodemon": "^3.0.0"

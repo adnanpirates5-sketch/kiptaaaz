@@ -11,7 +11,7 @@ import { useCurrency } from "../theme/useCurrency";
 import "./Stats.css";
 
 const COLORS = [
-  "#6366f1", // Indigo
+  "#6366f1", // Indigo 
   "#10b981", // Emerald
   "#f59e0b", // Amber
   "#f43f5e", // Rose

@@ -19,28 +19,46 @@ const categories = [
   { name: "Maintenance", icon: "🛠️", key: "maintenance" },
   { name: "Fuel", icon: "⛽", key: "fuel" },
   { name: "Other", icon: "✨", key: "other" },
+  { name: "Custom", icon: "➕", key: "customCategory" },
 ];
 
 const ExpenseForm = ({ onAddExpense }) => {
   const { t } = useTranslation();
   const { currency, convertToBase } = useCurrency();
   const [category, setCategory] = useState("");
+  const [customCategory, setCustomCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const num = Number(amount);
-    if (!category || !amount || num <= 0) return;
+    const finalCategory = isCustom ? customCategory : category;
+
+    if (!finalCategory || !amount || num <= 0) return;
 
     if (onAddExpense) {
-      onAddExpense({ category, amount: convertToBase(num) });
+      onAddExpense({ category: finalCategory, amount: convertToBase(num) });
     }
     setCategory("");
+    setCustomCategory("");
     setAmount("");
+    setIsCustom(false);
+  };
+
+  const handleSelectCategory = (cat) => {
+    if (cat === "Custom") {
+      setIsCustom(true);
+      setCategory("Custom");
+    } else {
+      setIsCustom(false);
+      setCategory(cat);
+    }
   };
 
   const getCategoryTranslation = (catName) => {
+    if (catName === "Custom") return t('custom');
     const cat = categories.find(c => c.name === catName);
     return cat ? t(cat.key) : catName;
   };
@@ -58,6 +76,17 @@ const ExpenseForm = ({ onAddExpense }) => {
         >
           {category ? getCategoryTranslation(category) : t('selectCategory')}
         </button>
+
+        {isCustom && (
+          <input
+            type="text"
+            className="premium-input animate-fade-in"
+            placeholder={t('enterCategoryName')}
+            value={customCategory}
+            onChange={(e) => setCustomCategory(e.target.value)}
+            required
+          />
+        )}
 
         <div style={{ position: 'relative' }}>
           <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>{currency}</span>
@@ -81,7 +110,7 @@ const ExpenseForm = ({ onAddExpense }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         categories={categories}
-        onSelectCategory={setCategory}
+        onSelectCategory={handleSelectCategory}
       />
     </>
   );

@@ -7,6 +7,7 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -46,14 +47,24 @@ const Login = ({ onSwitchToRegister, onBackHome, onForgotPassword, onLoginSucces
           </div>
           <div className="form-group">
             <label>{t('password')}</label>
-            <input
-              type="password"
-              className="premium-input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="premium-input"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? t('hidePassword') : t('showPassword')}
+              >
+                {showPassword ? '👁️' : '🙈'}
+              </button>
+            </div>
             <span className="forgot-password" onClick={onForgotPassword}>
               {t('forgotPassword')}
             </span>

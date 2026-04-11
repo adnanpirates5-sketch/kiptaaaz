@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCurrency } from '../theme/useCurrency';
 import { useTranslation } from '../theme/TranslationContext';
+import { financeAPI } from '../../api';
 import './SavingsGoals.css';
 
 const SavingsGoals = () => {
@@ -8,6 +9,8 @@ const SavingsGoals = () => {
   const { t } = useTranslation();
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', deadline: '' });
 
   const formatValue = (value) => {
@@ -19,46 +22,74 @@ const SavingsGoals = () => {
   };
 
   useEffect(() => {
-    const savedGoals = localStorage.getItem('savingsGoals');
-    if (savedGoals) {
-      setGoals(JSON.parse(savedGoals));
-    }
+    fetchGoals();
   }, []);
 
-  const handleAddGoal = (e) => {
+  const fetchGoals = async () => {
+    setLoading(true);
+    try {
+      const res = await financeAPI.getSavingsGoals();
+      setGoals(res.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching goals:', err);
+      setError(t('errorFetchingGoals') || 'Failed to load goals');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddGoal = async (e) => {
     e.preventDefault();
     if (!newGoal.name || !newGoal.target) return;
 
-    const goal = {
-      id: Date.now(),
-      ...newGoal,
-      target: parseFloat(newGoal.target),
-      current: parseFloat(newGoal.current || 0),
-    };
-
-    const updatedGoals = [...goals, goal];
-    setGoals(updatedGoals);
-    localStorage.setItem('savingsGoals', JSON.stringify(updatedGoals));
-    setNewGoal({ name: '', target: '', current: '', deadline: '' });
-    setShowForm(false);
-  };
-
-  const handleDeleteGoal = (id) => {
-    const updatedGoals = goals.filter(g => g.id !== id);
-    setGoals(updatedGoals);
-    localStorage.setItem('savingsGoals', JSON.stringify(updatedGoals));
-  };
-
-  const handleUpdateProgress = (id, amount) => {
-    if (!amount || isNaN(amount)) return;
-    const updatedGoals = goals.map(g => {
-      if (g.id === id) {
-        return { ...g, current: Math.min(g.target, g.current + parseFloat(amount)) };
+    setLoading(true);
+    setError(null);
+    try {
+      const goalData = {
+        name: newGoal.name,
+        target: parseFloat(newGoal.target),
+        current: parseFloat(newGoal.current || 0),
+      };
+      if (newGoal.deadline) {
+        goalData.deadline = newGoal.deadline;
       }
-      return g;
-    });
-    setGoals(updatedGoals);
-    localStorage.setItem('savingsGoals', JSON.stringify(updatedGoals));
+      
+      const res = await financeAPI.addSavingsGoal(goalData);
+      setGoals([...goals, res.data]);
+      setNewGoal({ name: '', target: '', current: '', deadline: '' });
+      setShowForm(false);
+    } catch (err) {
+      console.error('Error adding goal:', err);
+      setError(t('errorAddingGoal') || 'Failed to add goal. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteGoal = async (id) => {
+    try {
+      await financeAPI.deleteSavingsGoal(id);
+      setGoals(goals.filter(g => g._id !== id));
+    } catch (err) {
+      console.error('Error deleting goal:', err);
+      setError(t('errorDeletingGoal') || 'Failed to delete goal');
+    }
+  };
+
+  const handleUpdateProgress = async (id, amount) => {
+    if (!amount || isNaN(amount)) return;
+    const goal = goals.find(g => g._id === id);
+    if (!goal) return;
+
+    try {
+      const newCurrent = Math.min(goal.target, goal.current + parseFloat(amount));
+      const res = await financeAPI.updateSavingsGoal(id, { current: newCurrent });
+      setGoals(goals.map(g => (g._id === id ? res.data : g)));
+    } catch (err) {
+      console.error('Error updating progress:', err);
+      setError(t('errorUpdatingGoal') || 'Failed to update goal');
+    }
   };
 
   return (
@@ -69,6 +100,8 @@ const SavingsGoals = () => {
           {showForm ? t('cancel') : t('newGoal')}
         </button>
       </div>
+
+      {error && <div className="error-message" style={{ color: 'var(--danger)', marginBottom: '1rem', padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', borderRadius: 'var(--radius-md)' }}>{error}</div>}
 
       {showForm && (
         <form className="goal-form section-card premium-card" onSubmit={handleAddGoal}>
@@ -110,17 +143,21 @@ const SavingsGoals = () => {
               <input 
                 type="date" 
                 className="premium-input"
-                value={newGoal.deadline}
+                value={newGoal.deadline ? newGoal.deadline.split('T')[0] : ''}
                 onChange={(e) => setNewGoal({...newGoal, deadline: e.target.value})}
               />
             </div>
           </div>
-          <button type="submit" className="premium-btn" style={{ marginTop: '1.5rem', width: '200px' }}>🎯 {t('addGoal')}</button>
+          <button type="submit" className="premium-btn" disabled={loading} style={{ marginTop: '1.5rem', width: '200px' }}>
+            {loading ? t('adding...') || 'Adding...' : `🎯 ${t('addGoal')}`}
+          </button>
         </form>
       )}
 
+      {loading && !showForm && <div className="loading-state" style={{ textAlign: 'center', padding: '2rem' }}>{t('loading...') || 'Loading...'}</div>}
+
       <div className="goals-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
-        {goals.length === 0 ? (
+        {!loading && goals.length === 0 ? (
           <div className="empty-state" style={{ textAlign: 'center', gridColumn: '1/-1', padding: '4rem 0', color: 'var(--text-muted)' }}>
             <p>{t('noGoals')}</p>
           </div>
@@ -128,10 +165,10 @@ const SavingsGoals = () => {
           goals.map(goal => {
             const progress = (goal.current / goal.target) * 100;
             return (
-              <div key={goal.id} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div key={goal._id} className="goal-card section-card premium-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{goal.name}</h3>
-                  <button className="delete-btn" onClick={() => handleDeleteGoal(goal.id)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
+                  <button className="delete-btn" onClick={() => handleDeleteGoal(goal._id)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
                 </div>
                 <div className="goal-stats" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                   <span className="amount" style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)' }}>
@@ -156,7 +193,7 @@ const SavingsGoals = () => {
                       style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                          handleUpdateProgress(goal.id, e.target.value);
+                          handleUpdateProgress(goal._id, e.target.value);
                           e.target.value = '';
                         }
                       }}
@@ -166,7 +203,7 @@ const SavingsGoals = () => {
                       style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
                       onClick={(e) => {
                         const input = e.currentTarget.previousElementSibling;
-                        handleUpdateProgress(goal.id, input.value);
+                        handleUpdateProgress(goal._id, input.value);
                         input.value = '';
                       }}
                     >
