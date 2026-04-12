@@ -139,6 +139,7 @@ export const translations = {
     seeAllTransactions: 'See All Transactions',
     bookmark: 'Bookmark',
     noBookmarks: 'No Bookmarked transaction',
+    amountTooLarge: 'Amount is too large. Maximum allowed is 1,000,000,000.',
     
     // Savings Goals
     savingsGoals: 'Savings Goals',
@@ -560,6 +561,7 @@ export const translations = {
     seeAllTransactions: 'সব লেনদেন দেখুন',
     bookmark: 'বুকমার্ক',
     noBookmarks: 'কোনো বুকমার্ক করা লেনদেন নেই',
+    amountTooLarge: 'পরিমাণ অনেক বেশি। সর্বোচ্চ ১,০০০,০০০,০০০ অনুমোদিত।',
     
     // Savings Goals
     savingsGoals: 'সঞ্চয় লক্ষ্য',

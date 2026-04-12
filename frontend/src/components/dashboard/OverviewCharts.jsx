@@ -42,8 +42,15 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
 
   const chartData = getLast7DaysData();
 
+  const formatYAxis = (value) => {
+    if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}B`;
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+    return value;
+  };
+
   return (
-    <div className="section-card premium-card overview-charts" style={{ gridColumn: 'span 2' }}>
+    <div className="section-card premium-card overview-charts">
       <div className="section-header">
         <h3>{t('last7Days')}</h3>
       </div>
@@ -70,7 +77,9 @@ const OverviewCharts = ({ expenses = [], incomes = [] }) => {
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
+              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tickFormatter={formatYAxis}
+              width={40}
             />
             <Tooltip 
               contentStyle={{ 

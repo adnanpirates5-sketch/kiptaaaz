@@ -35,6 +35,12 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
     const num = Number(amount);
     if (!category || !amount || num <= 0) return;
 
+    // Limit maximum amount to 1 billion
+    if (num > 1000000000) {
+      alert(t('amountTooLarge') || 'Amount is too large. Maximum allowed is 1,000,000,000.');
+      return;
+    }
+
     onAddBudget({ 
       category, 
       amount: toBase(num, selectedCurrency) 
@@ -154,6 +160,7 @@ const BudgetManager = ({ budgets, onAddBudget, onDeleteBudget, expenses }) => {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   min="0"
+                  max="1000000000"
                   step="0.01"
                 />
               </div>

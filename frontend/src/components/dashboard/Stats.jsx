@@ -164,6 +164,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
   const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const balance = totalIncome - totalExpense;
 
+  const formatYAxis = (value) => {
+    if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}B`;
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+    return value;
+  };
+
   const renderActiveView = () => {
     switch(viewType) {
       case 'trends':
@@ -188,7 +195,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+                      tickFormatter={formatYAxis}
+                      width={40}
+                    />
                     <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend verticalAlign="top" height={36} />
                     <Area type="monotone" dataKey="income" stroke="var(--success)" fillOpacity={1} fill="url(#colorInc)" strokeWidth={3} name={t('totalIncome')} />
@@ -207,7 +220,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                   <LineChart data={trendData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+                      tickFormatter={formatYAxis}
+                      width={40}
+                    />
                     <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Line type="monotone" dataKey="savings" stroke="var(--primary)" strokeWidth={4} dot={{ r: 6, fill: 'var(--primary)', strokeWidth: 2, stroke: '#fff' }} name={t('monthlySavings')} />
                   </LineChart>
@@ -228,7 +247,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                   <BarChart data={budgetVsActualData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="category" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+                      tickFormatter={formatYAxis}
+                      width={40}
+                    />
                     <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend />
                     <Bar dataKey="budget" fill="var(--text-muted)" opacity={0.3} radius={[4, 4, 0, 0]} name={t('plannedBudget')} />
@@ -283,7 +308,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                   <BarChart data={debtPieData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+                      tickFormatter={formatYAxis}
+                      width={40}
+                    />
                     <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Bar dataKey="value" fill="var(--danger)" radius={[4, 4, 0, 0]} name={t('amount')} />
                   </BarChart>
@@ -304,7 +335,13 @@ const Stats = ({ incomes, expenses, budgets = [], debts = [] }) => {
                   <BarChart data={mergedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="category" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+                      tickFormatter={formatYAxis}
+                      width={40}
+                    />
                     <Tooltip content={<CustomTooltip currency={currency} t={t} convert={convert} />} />
                     <Legend iconType="circle" />
                     <Bar dataKey="income" fill="var(--success)" radius={[4, 4, 0, 0]} name={t('income')} />

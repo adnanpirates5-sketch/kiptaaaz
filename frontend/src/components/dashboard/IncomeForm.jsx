@@ -41,6 +41,12 @@ const IncomeForm = ({ onAddIncome }) => {
     
     if (!finalCategory || !amount || num <= 0) return;
 
+    // Limit maximum amount to 1 billion
+    if (num > 1000000000) {
+      alert(t('amountTooLarge') || 'Amount is too large. Maximum allowed is 1,000,000,000.');
+      return;
+    }
+
     if (onAddIncome) {
       onAddIncome({ 
         category: finalCategory, 
@@ -138,6 +144,7 @@ const IncomeForm = ({ onAddIncome }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               min="0"
+              max="1000000000"
               step="0.01"
               required
             />

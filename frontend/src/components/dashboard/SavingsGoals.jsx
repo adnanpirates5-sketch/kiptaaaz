@@ -44,13 +44,22 @@ const SavingsGoals = () => {
     e.preventDefault();
     if (!newGoal.name || !newGoal.target) return;
 
+    const targetNum = parseFloat(newGoal.target);
+    const currentNum = parseFloat(newGoal.current || 0);
+
+    // Limit maximum amount to 1 billion
+    if (targetNum > 1000000000 || currentNum > 1000000000) {
+      alert(t('amountTooLarge') || 'Amount is too large. Maximum allowed is 1,000,000,000.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const goalData = {
         name: newGoal.name,
-        target: toBase(parseFloat(newGoal.target), selectedCurrency),
-        current: toBase(parseFloat(newGoal.current || 0), selectedCurrency),
+        target: toBase(targetNum, selectedCurrency),
+        current: toBase(currentNum, selectedCurrency),
       };
       
       if (newGoal.deadline) {
@@ -174,9 +183,16 @@ const SavingsGoals = () => {
     const goal = goals.find(g => (g._id || g.id) === id);
     if (!goal) return;
 
+    const amountNum = parseFloat(amount);
+    // Limit maximum amount to 1 billion
+    if (amountNum > 1000000000) {
+      alert(t('amountTooLarge') || 'Amount is too large. Maximum allowed is 1,000,000,000.');
+      return;
+    }
+
     try {
       // Convert the added amount to base currency before adding
-      const addedAmountBase = toBase(parseFloat(amount), goalCurrency);
+      const addedAmountBase = toBase(amountNum, goalCurrency);
       const newCurrent = Math.min(goal.target, goal.current + addedAmountBase);
       
       const res = await financeAPI.updateSavingsGoal(id, { current: newCurrent });
@@ -267,6 +283,7 @@ const SavingsGoals = () => {
                 value={newGoal.target}
                 onChange={(e) => setNewGoal({...newGoal, target: e.target.value})}
                 required
+                max="1000000000"
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -277,6 +294,7 @@ const SavingsGoals = () => {
                 placeholder="0.00" 
                 value={newGoal.current}
                 onChange={(e) => setNewGoal({...newGoal, current: e.target.value})}
+                max="1000000000"
               />
             </div>
             <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -360,6 +378,7 @@ const SavingsGoals = () => {
                       className="premium-input"
                       placeholder={t('addSavings')} 
                       style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem', flex: 1 }}
+                      max="1000000000"
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           const selector = e.currentTarget.previousElementSibling;

@@ -243,7 +243,7 @@ const Dashboard = ({ onLogout }) => {
                 📥 {t('exportCSV')}
               </button>
             </div>
-            <div className="dashboard-main-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+            <div className="dashboard-main-grid">
               <div className="section-card premium-card">
                 <IncomeList incomes={incomes} onDeleteIncome={deleteIncome} />
               </div>
